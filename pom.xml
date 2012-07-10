@@ -1,0 +1,48 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.exadel</groupId>
+    <artifactId>students</artifactId>
+    <version>1.0</version>
+    <name>Students</name>
+    <packaging>pom</packaging>
+
+    <modules>
+		<module>core</module>
+        <module>web</module>
+    </modules>
+
+    <repositories>
+        <repository>
+            <id>maven-restlet</id>
+            <name>Public online Restlet repository</name>
+            <url>http://maven.restlet.org</url>
+        </repository>
+        <repository>
+            <id>Java.net</id>
+            <url>http://download.java.net/maven/2</url>
+        </repository>
+    </repositories>
+
+    <dependencyManagement>
+        <dependencies>
+
+            <dependency>
+                <groupId>com.vaadin</groupId>
+                <artifactId>vaadin</artifactId>
+                <version>6.8.0</version>
+            </dependency>
+			
+            <dependency>
+                <groupId>com.exadel</groupId>
+                <artifactId>students-core</artifactId>
+                <version>1.0</version>
+            </dependency>
+
+			
+         </dependencies>
+    </dependencyManagement>
+
+
+</project>
