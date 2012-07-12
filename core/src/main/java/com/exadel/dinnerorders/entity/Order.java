@@ -5,13 +5,13 @@ import java.util.List;
 
 
 public class Order {
-    private long id;
-    private long userID;
+    private Long id;
+    private Long userID;
     private double cost;
     private Date datePayment;
     private Date dateOrder;
     private List<MenuItem> menuItemList;
-    private Order(long id, long userID, double cost, Date dateOrder, Date datePayment){
+    private Order(Long id, Long userID, double cost, Date dateOrder, Date datePayment){
         this.id = id;
         this.userID = userID;
         this.cost = cost;
