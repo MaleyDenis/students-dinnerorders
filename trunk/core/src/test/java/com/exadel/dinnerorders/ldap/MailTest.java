@@ -1,6 +1,7 @@
 package com.exadel.dinnerorders.ldap;
 
 import com.exadel.dinnerorders.service.Mail;
+import junit.framework.Assert;
 import org.apache.commons.mail.EmailException;
 import org.junit.Test;
 
@@ -9,10 +10,16 @@ import org.junit.Test;
  * Date: 12.07.12
  */
 public class MailTest {
-    @Test(expected = EmailException.class)
-    public void testSendSimpleEmail() throws EmailException {
+     @Test
+    public void testSendSimpleEmail() {
         Mail m = new Mail();
-        m.sendSimpleEmail("dimashulgin2012@gmail.com","67912311","yex.by");
+        try {
+
+            m.sendSimpleEmail("dimashulgin2012@gmail.com", "67912311", "shulgindima2011@yandex.ru");
+            Assert.assertTrue(true);
+        } catch (EmailException e) {
+            Assert.assertTrue(false);
+        }
 
     }
 }
