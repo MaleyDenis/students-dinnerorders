@@ -1,4 +1,4 @@
-package com.exadel.dinnerorders.ldap;
+package com.exadel.dinnerorders.service;
 
 import com.exadel.dinnerorders.service.Mail;
 import junit.framework.Assert;

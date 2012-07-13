@@ -1,0 +1,24 @@
+<component name="ArtifactManager">
+  <artifact type="exploded-war" name="students-web:war exploded">
+    <output-path>$PROJECT_DIR$/web/target/students-web-1.0</output-path>
+    <root id="root">
+      <element id="javaee-facet-resources" facet="students-web/web/Web" />
+      <element id="directory" name="WEB-INF">
+        <element id="directory" name="classes">
+          <element id="module-output" name="students-web" />
+        </element>
+        <element id="directory" name="lib">
+          <element id="archive" name="students-core-1.0.jar">
+            <element id="module-output" name="students-core" />
+          </element>
+          <element id="library" level="project" name="Maven: junit:junit:4.10" />
+          <element id="library" level="project" name="Maven: org.hamcrest:hamcrest-core:1.1" />
+          <element id="library" level="project" name="Maven: org.apache.commons:commons-email:1.2" />
+          <element id="library" level="project" name="Maven: javax.mail:mail:1.4" />
+          <element id="library" level="project" name="Maven: javax.activation:activation:1.1" />
+          <element id="library" level="project" name="Maven: com.vaadin:vaadin:6.8.0" />
+        </element>
+      </element>
+    </root>
+  </artifact>
+</component>
