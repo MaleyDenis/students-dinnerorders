@@ -4,7 +4,6 @@ import java.util.Map;
 import java.util.HashMap;
 import java.util.Date;
 import java.util.List;
-import java.util.ArrayList;
 
 public class Menu {
     private Long id;
@@ -40,13 +39,6 @@ public class Menu {
     public Map<Weekday, List<MenuItem>> getItems() {
         if(items == null){
             items = new HashMap<Weekday, List<MenuItem>>();
-            items.put(Weekday.MONDAY, new ArrayList<MenuItem>());
-            items.put(Weekday.TUESDAY, new ArrayList<MenuItem>());
-            items.put(Weekday.WEDNESDAY, new ArrayList<MenuItem>());
-            items.put(Weekday.THURSDAY, new ArrayList<MenuItem>());
-            items.put(Weekday.FRIDAY, new ArrayList<MenuItem>());
-            items.put(Weekday.SATURDAY, new ArrayList<MenuItem>());
-            items.put(Weekday.SUNDAY, new ArrayList<MenuItem>());
         }
         return items;
     }
