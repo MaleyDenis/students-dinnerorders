@@ -6,11 +6,8 @@ import org.apache.commons.mail.EmailException;
 import org.apache.commons.mail.SimpleEmail;
 
 /**
- * Created with IntelliJ IDEA.
- * User: 12
+ * User: Dmitry Shulgin
  * Date: 12.07.12
- * Time: 20:02
- * To change this template use File | Settings | File Templates.
  */
 public class Mail {
     Email email;
