@@ -1,5 +1,6 @@
-package com.exadel.dinnerorders.service;
+package com.exadel.dinnerorders.ldap;
 
+import com.exadel.dinnerorders.service.Mail;
 import org.apache.commons.mail.EmailException;
 import org.junit.Test;
 
