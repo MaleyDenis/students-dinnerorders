@@ -11,8 +11,8 @@ public class Ldap {
     private final String settings = "com.sun.jndi.ldap.LdapCtxFactory";
     private final String ldapURL;
 
-    public Ldap(String serverURL){
-        ldapURL = serverURL;
+    public Ldap(String URL) {
+        ldapURL = URL;
         environment.put(Context.INITIAL_CONTEXT_FACTORY, settings);
         environment.put(Context.PROVIDER_URL, ldapURL);
     }
@@ -39,6 +39,9 @@ public class Ldap {
     }
 
     public boolean checkUser(String login, String password) {
+        if (login == null) {
+            throw new NullPointerException();
+        }
         String userCN = isLoginExist(login);
         if ( userCN == null) {
             throw new IllegalUserLoginException(login);
@@ -62,7 +65,7 @@ public class Ldap {
             while ( searchResult.hasMore() ){
                 SearchResult resultUnit = (SearchResult)searchResult.next();
                 Attributes resultUnitAttributes = resultUnit.getAttributes();
-                if (resultUnitAttributes.get("uid").get().equals(login)) {
+                if (checkAllAttributes(resultUnitAttributes, login)) {
                     return resultUnit.getName().substring(("cn=").length());
                 }
             }
@@ -70,5 +73,20 @@ public class Ldap {
             namingException.printStackTrace();
         }
         return null;
+    }
+
+    private boolean checkAllAttributes(Attributes resultUnitAttributes, String login) {
+        try {
+            Attribute attribute = resultUnitAttributes.get("uid");
+            int amount = attribute.size();
+            for (int i = 0; i < amount; i++){
+                if (attribute.get(i).equals(login)) {
+                    return true;
+                }
+            }
+        } catch (NamingException namingException) {
+            namingException.printStackTrace();
+        }
+        return false;
     }
 }
