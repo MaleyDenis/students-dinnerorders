@@ -19,16 +19,18 @@ public class LdapService {
     }
 
     private NamingEnumeration getAttributes() {
+        NamingEnumeration result = null;
         try {
             DirContext dirContext = new InitialDirContext(environment);
             SearchControls controls = createSearchControls();
             String searchFilter = "(objectclass=person)";
             String startSearchBase = "ou=addressbook";
-            return dirContext.search(startSearchBase, searchFilter, controls);
+            result = dirContext.search(startSearchBase, searchFilter, controls);
+            dirContext.close();
         } catch (NamingException namingException) {
             namingException.printStackTrace();
         }
-        return null;
+        return result;
     }
 
     private SearchControls createSearchControls() {

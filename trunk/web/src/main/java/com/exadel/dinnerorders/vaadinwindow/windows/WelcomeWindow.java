@@ -2,15 +2,11 @@ package com.exadel.dinnerorders.vaadinwindow.windows;
 
 import com.exadel.dinnerorders.vaadinwindow.application.WebApplication;
 import com.exadel.dinnerorders.vaadinwindow.events.AuthenticationEvent;
-import com.exadel.dinnerorders.vaadinwindow.events.AuthenticationEventHandler;
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
-import com.vaadin.Application;
-import com.vaadin.terminal.ExternalResource;
 import com.vaadin.ui.*;
 
 public class WelcomeWindow extends Window {
-    private EventBus eventBus;
     private Label welcomeLabel;
     private Panel welcomePanel;
 
@@ -18,21 +14,11 @@ public class WelcomeWindow extends Window {
         super();
         initComponents();
         addComponent(welcomePanel);
-        addEventsHandler();
     }
 
-    private void addEventsHandler() {
-        eventBus = WebApplication.getInstance().getEventBus();
-        eventBus.register(new AuthenticationEventHandler() {
-            @Subscribe
-            public void authenticationPassed(AuthenticationEvent aEvent) {
-                welcomeLabel.setValue("<h1>Welcome! You log in as " + WebApplication.getInstance().getUserName() + "</h1>");
-                Application applicationController = welcomeLabel.getApplication();
-                Window currentMainWindow = applicationController.getMainWindow();
-                applicationController.setMainWindow(welcomeLabel.getWindow());
-                currentMainWindow.open(new ExternalResource(welcomeLabel.getWindow().getURL()));
-            }
-        });
+    @Subscribe
+    public void addEventsHandler(AuthenticationEvent authenticationEvent) {
+        welcomeLabel.setValue("<h1>Welcome! You log in as " + WebApplication.getInstance().getUserName() + "</h1>");
     }
 
     private void initComponents() {
