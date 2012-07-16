@@ -1,7 +1,7 @@
 package com.exadel.dinnerorders.vaadinwindow.application;
 
-import com.google.gwt.event.shared.EventBus;
-import com.google.gwt.event.shared.SimpleEventBus;
+
+import com.google.common.eventbus.EventBus;
 
 public class WebApplication {
     private EventBus eventBus;
@@ -9,7 +9,7 @@ public class WebApplication {
     private static WebApplication selfReference = null;
 
     private WebApplication() {
-        eventBus = new SimpleEventBus();
+        eventBus = new EventBus();
         selfReference = this;
     }
 

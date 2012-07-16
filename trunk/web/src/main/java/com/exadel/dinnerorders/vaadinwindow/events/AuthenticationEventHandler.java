@@ -1,7 +1,7 @@
 package com.exadel.dinnerorders.vaadinwindow.events;
+import com.google.common.eventbus.Subscribe;
 
-import com.google.gwt.event.shared.EventHandler;
-
-public interface AuthenticationEventHandler extends EventHandler {
+public interface AuthenticationEventHandler {
+    @Subscribe
     public void authenticationPassed(AuthenticationEvent aEvent);
 }
