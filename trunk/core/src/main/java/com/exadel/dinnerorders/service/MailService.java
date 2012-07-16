@@ -1,22 +1,21 @@
 package com.exadel.dinnerorders.service;
 
 import com.exadel.dinnerorders.entity.SystemResource;
+import java.util.Properties;
 import org.apache.commons.mail.DefaultAuthenticator;
 import org.apache.commons.mail.Email;
 import org.apache.commons.mail.EmailException;
 import org.apache.commons.mail.SimpleEmail;
 
-import java.util.Properties;
-
 /**
  * User: Dmitry Shulgin
  * Date: 12.07.12
  */
-public class Mail {
+public class MailService {
     Email email;
     ProjectLogger projectLogger;
 
-    public Mail() {
+    public MailService() {
         projectLogger = new ProjectLogger(Configuration.class);
     }
 

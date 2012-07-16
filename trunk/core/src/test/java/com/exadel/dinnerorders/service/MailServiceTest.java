@@ -12,7 +12,7 @@ import java.util.Properties;
  * User: Dmitry Shulgin
  * Date: 12.07.12
  */
-public class MailTest {
+public class MailServiceTest {
     @Test
     public void testSendSimpleEmail() {
         Properties myProps = new Properties();
@@ -31,7 +31,7 @@ public class MailTest {
 
     }
     // public void testSendSimpleEmail() {
-    //     Mail m = new Mail();
+    //     MailService m = new MailService();
     //     try {
 
     //          m.sendSimpleEmail("dimashulgin2012@gmail.com", "67912311", "shulgindima2011@yandex.ru");

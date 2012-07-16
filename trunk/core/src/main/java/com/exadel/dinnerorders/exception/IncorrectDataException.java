@@ -1,4 +1,4 @@
-package com.exadel.dinnerorders.entity;
+package com.exadel.dinnerorders.exception;
 
 public class IncorrectDataException extends Exception {
     public IncorrectDataException(String e){
