@@ -11,7 +11,7 @@ public class Order {
     private Date datePayment;
     private Date dateOrder;
     private List<MenuItem> menuItemList;
-    private Order(Long id, Long userID, double cost, Date dateOrder, Date datePayment){
+    public Order(Long id, Long userID, double cost, Date dateOrder, Date datePayment){
         this.id = id;
         this.userID = userID;
         this.cost = cost;
