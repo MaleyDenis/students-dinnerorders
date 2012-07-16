@@ -1,10 +1,10 @@
 package com.exadel.dinnerorders.vaadinwindow.windows;
 
 import com.exadel.dinnerorders.vaadinwindow.application.WebApplication;
-import com.exadel.dinnerorders.vaadinwindow.application.WebApplicationController;
 import com.exadel.dinnerorders.vaadinwindow.events.AuthenticationEvent;
 import com.exadel.dinnerorders.vaadinwindow.events.AuthenticationEventHandler;
-import com.google.gwt.event.shared.EventBus;
+import com.google.common.eventbus.EventBus;
+import com.google.common.eventbus.Subscribe;
 import com.vaadin.Application;
 import com.vaadin.terminal.ExternalResource;
 import com.vaadin.ui.*;
@@ -23,8 +23,8 @@ public class WelcomeWindow extends Window {
 
     private void addEventsHandler() {
         eventBus = WebApplication.getInstance().getEventBus();
-        eventBus.addHandler(AuthenticationEvent.TYPE, new AuthenticationEventHandler() {
-            @Override
+        eventBus.register(new AuthenticationEventHandler() {
+            @Subscribe
             public void authenticationPassed(AuthenticationEvent aEvent) {
                 welcomeLabel.setValue("<h1>Welcome! You log in as " + WebApplication.getInstance().getUserName() + "</h1>");
                 Application applicationController = welcomeLabel.getApplication();

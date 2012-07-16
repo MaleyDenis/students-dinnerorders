@@ -29,7 +29,7 @@ public class LoginFormListener implements LoginForm.LoginListener {
         LdapService ldap = new LdapService("ldap://ldap.eltegra.by:389/dc=exadel,dc=com");
         String login = loginEvent.getLoginParameter("username");
         WebApplication.getInstance().setUserName(ldap.getUserName(login));
-        WebApplication.getInstance().getEventBus().fireEvent(new AuthenticationEvent());
+        WebApplication.getInstance().getEventBus().post(new AuthenticationEvent());
     }
 
     private boolean isInformationValid(LoginForm.LoginEvent loginEvent) {
