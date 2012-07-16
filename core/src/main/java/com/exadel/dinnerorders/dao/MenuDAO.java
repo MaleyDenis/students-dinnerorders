@@ -4,7 +4,6 @@ import com.exadel.dinnerorders.entity.Menu;
 import com.exadel.dinnerorders.entity.MenuItem;
 import com.mysql.jdbc.Connection;
 import com.mysql.jdbc.PreparedStatement;
-import java.sql.Timestamp;
 import java.util.List;
 import java.sql.SQLException;
 
@@ -13,55 +12,86 @@ import java.sql.SQLException;
  * Date: 13.7.12
  */
 
-public class MenuDAO extends BaseDAO{
-    public boolean create(Object newItem) {
+public class MenuDAO extends BaseDAO<Menu>{
+    public boolean create(Menu newItem){
         Connection connection = connection();
         if(connection != null){
             try{
-                if(newItem instanceof Menu){
-                    Menu newMenu = (Menu)newItem;
-                    PreparedStatement preparedStatement = (PreparedStatement)connection.prepareStatement("INSERT INTO menus VALUES(?, ?, ?, ?)");
-                    preparedStatement.setLong(1, newMenu.getId());
-                    preparedStatement.setString(2, newMenu.getCafeName());
-                    preparedStatement.setTimestamp(3, new Timestamp(newMenu.getDateStart().getTime()));
-                    preparedStatement.setTimestamp(4,  new Timestamp(newMenu.getDateEnd().getTime()));
-                    preparedStatement.executeUpdate();
-                    for(List<MenuItem> items : newMenu.getItems().values()){
-                        for(MenuItem item : items){
-                            preparedStatement = (PreparedStatement)connection.prepareStatement("INSERT INTO menu_menuitem VALUES(?, ?)");
-                            preparedStatement.setLong(1, newMenu.getId());
-                            preparedStatement.setLong(2, item.getId());
-                            preparedStatement.executeUpdate();
-                        }
+                PreparedStatement preparedStatement = (PreparedStatement)connection.prepareStatement("INSERT INTO menus VALUES(?, ?, ?, ?);");
+                preparedStatement.setLong(1, newItem.getId());
+                preparedStatement.setString(2, newItem.getCafeName());
+                preparedStatement.setTimestamp(3, newItem.getDateStart());
+                preparedStatement.setTimestamp(4, newItem.getDateEnd());
+                preparedStatement.executeUpdate();
+                for(List<MenuItem> items : newItem.getItems().values()){
+                    for(MenuItem item : items){
+                        preparedStatement = (PreparedStatement)connection.prepareStatement("INSERT INTO menu_menuitem VALUES(?, ?);");
+                        preparedStatement.setLong(1, newItem.getId());
+                        preparedStatement.setLong(2, item.getId());
+                        preparedStatement.executeUpdate();
                     }
                 }
-                if(newItem instanceof MenuItem){
-                    MenuItem newMenuItem = (MenuItem)newItem;
-                    PreparedStatement preparedStatement = (PreparedStatement)connection.prepareStatement("INSERT INTO menuitem VALUE(?, ?, ?, ?)");
-                    preparedStatement.setLong(1, newMenuItem.getId());
-                    preparedStatement.setString(2, newMenuItem.getWeekday().name());
-                    preparedStatement.setString(3, newMenuItem.getDescription());
-                    preparedStatement.setDouble(4, newMenuItem.getCost());
-                    preparedStatement.executeUpdate();
-                }
+                disconnect(connection);
+                return true;
             }catch(SQLException e){
                 e.printStackTrace();
             }
-            disconnect(connection);
-            return true;
         }
+        disconnect(connection);
         return false;
     }
 
-    public boolean update(Object item) {
+    public boolean update(Menu item){
+        Connection connection = connection();
+        if(connection != null){
+            try{
+                StringBuilder query = new StringBuilder("UPDATE menus SET ");
+                query.append("cafename = '").append(item.getCafeName()).append("', datestart = '").append(item.getDateStart());
+                query.append("', dateend = '").append(item.getDateEnd()).append("' WHERE").append(" id = '").append(item.getId());
+                query.append("';");
+                PreparedStatement preparedStatement = (PreparedStatement)connection.prepareStatement(query.toString());
+                preparedStatement.executeUpdate();
+                query = new StringBuilder("DELETE FROM menu_menuitem WHERE idmenu = \"");
+                query.append(item.getId()).append("\";");
+                preparedStatement = (PreparedStatement)connection.prepareStatement(query.toString());
+                preparedStatement.executeUpdate();
+                for(List<MenuItem> items : item.getItems().values()){
+                    for(MenuItem menuItem : items){
+                        preparedStatement = (PreparedStatement)connection.prepareStatement("INSERT INTO menu_menuitem VALUES(?, ?);");
+                        preparedStatement.setLong(1, item.getId());
+                        preparedStatement.setLong(2, menuItem.getId());
+                        preparedStatement.executeUpdate();
+                    }
+                }
+                disconnect(connection);
+                return true;
+            }catch(SQLException e){
+                e.printStackTrace();
+            }
+        }
+        disconnect(connection);
         return false;
     }
 
-    public boolean delete(Object item) {
+    public boolean delete(Menu item){
+        Connection connection = connection();
+        if(connection != null){
+            try{
+                PreparedStatement preparedStatement = (PreparedStatement)connection.prepareStatement("DELETE FROM menus WHERE id = '" + item.getId() +"';");
+                preparedStatement.executeUpdate();
+                preparedStatement = (PreparedStatement)connection.prepareStatement("DELETE FROM menu_menuitem WHERE idmenu = '" + item.getId() + "';");
+                preparedStatement.executeUpdate();
+                disconnect(connection);
+                return true;
+            }catch(SQLException e){
+                e.printStackTrace();
+            }
+        }
+        disconnect(connection);
         return false;
     }
 
-    public Object read() {
+    public Menu read() {
         return null;
     }
 }

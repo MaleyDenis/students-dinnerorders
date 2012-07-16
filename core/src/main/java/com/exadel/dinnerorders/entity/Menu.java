@@ -2,17 +2,17 @@ package com.exadel.dinnerorders.entity;
 
 import java.util.Map;
 import java.util.HashMap;
-import java.util.Date;
 import java.util.List;
+import java.sql.Timestamp;
 
 public class Menu {
     private Long id;
     private String cafeName;
-    private Date dateStart;
-    private Date dateEnd;
+    private Timestamp dateStart;
+    private Timestamp dateEnd;
     private Map<Weekday, List<MenuItem>> items;
 
-    public Menu(Long id, String cafeName, Date dateStart, Date dateEnd, Map<Weekday, List<MenuItem>> items) {
+    public Menu(Long id, String cafeName, Timestamp dateStart, Timestamp dateEnd, Map<Weekday, List<MenuItem>> items) {
         this.id = id;
         this.cafeName = cafeName;
         this.dateStart = dateStart;
@@ -28,11 +28,11 @@ public class Menu {
         return cafeName;
     }
 
-    public Date getDateStart() {
+    public Timestamp getDateStart() {
         return dateStart;
     }
 
-    public Date getDateEnd() {
+    public Timestamp getDateEnd() {
         return dateEnd;
     }
 
