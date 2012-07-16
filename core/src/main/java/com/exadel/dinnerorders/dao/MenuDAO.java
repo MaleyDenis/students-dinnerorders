@@ -9,7 +9,7 @@ import java.util.List;
 import java.sql.SQLException;
 
 /**
- * User: Сенсей
+ * User: Василий Силин
  * Date: 13.7.12
  */
 
@@ -45,16 +45,7 @@ public class MenuDAO extends BaseDAO{
                     preparedStatement.executeUpdate();
                 }
             }catch(SQLException e){
-                System.out.println("Create: SQLException caught");
-                System.out.println("---");
-                while ( e != null ){
-                    System.out.println("Message   : " + e.getMessage());
-                    System.out.println("SQLState  : " + e.getSQLState());
-                    System.out.println("ErrorCode : " + e.getErrorCode());
-                    System.out.println("---");
-                    e = e.getNextException();
-                }
-
+                e.printStackTrace();
             }
             disconnect(connection);
             return true;
