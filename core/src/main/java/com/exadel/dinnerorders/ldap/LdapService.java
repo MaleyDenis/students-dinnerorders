@@ -1,17 +1,18 @@
 package com.exadel.dinnerorders.ldap;
 
+import com.exadel.dinnerorders.exception.IllegalUserLoginException;
 import java.util.Hashtable;
 import javax.naming.Context;
 import javax.naming.NamingEnumeration;
 import javax.naming.NamingException;
 import javax.naming.directory.*;
 
-public class Ldap {
+public class LdapService {
     private Hashtable environment = new Hashtable();
     private final String settings = "com.sun.jndi.ldap.LdapCtxFactory";
     private final String ldapURL;
 
-    public Ldap(String URL) {
+    public LdapService(String URL) {
         ldapURL = URL;
         environment.put(Context.INITIAL_CONTEXT_FACTORY, settings);
         environment.put(Context.PROVIDER_URL, ldapURL);

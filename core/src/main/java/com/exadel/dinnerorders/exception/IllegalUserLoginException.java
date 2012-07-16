@@ -1,4 +1,4 @@
-package com.exadel.dinnerorders.ldap;
+package com.exadel.dinnerorders.exception;
 
 
 public class IllegalUserLoginException extends RuntimeException {
