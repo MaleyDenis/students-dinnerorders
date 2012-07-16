@@ -22,10 +22,10 @@ public class Configuration {
         try {
             fis = new FileInputStream("core\\src\\main\\resources\\properties.properties");
             prop.load(fis);
-        } catch (FileNotFoundException e) {
-            logger.error("FileNotFoundException");
+        } catch (FileNotFoundException  e) {
+            logger.error("File properties.properties has not been found ",e);
         } catch (IOException e) {
-            logger.error("IOException");
+            logger.error("Work function named prop.load(FileInputStream f) has been interrupted",e);
         }
 
         String result = prop.getProperty(value.getValue());
