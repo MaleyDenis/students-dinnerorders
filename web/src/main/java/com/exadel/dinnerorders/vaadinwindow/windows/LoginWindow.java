@@ -19,7 +19,6 @@ public class LoginWindow extends Window {
     }
 
     private void initWindowComponents() {
-
         loginForm = new LoginForm();
         loginForm.setCaption("Enter login and password");
         loginForm.setWidth("100%");
