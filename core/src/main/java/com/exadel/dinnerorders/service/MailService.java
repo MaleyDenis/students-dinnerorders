@@ -22,7 +22,7 @@ public class MailService {
 
     }
 
-    public void sendSimpleEmail(String sender, String sendPassword, String receiver) {
+    public void sendSimpleEmail( String receiver) {
 
         Properties myProps = new Properties();
         Email email = new SimpleEmail();
@@ -32,7 +32,7 @@ public class MailService {
         email.setSmtpPort(Integer.parseInt(Configuration.getProperty(SystemResource.PORT)));
         //////////////////////
 
-        email.setAuthenticator(new DefaultAuthenticator(sender, sendPassword));
+        email.setAuthenticator(new DefaultAuthenticator(Configuration.getProperty(SystemResource.LOGIN), Configuration.getProperty(SystemResource.PASSWORD)));
         email.setSSL(true);
 
         try {
