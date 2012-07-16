@@ -1,22 +1,25 @@
 package com.exadel.dinnerorders.service;
 
 import com.exadel.dinnerorders.entity.SystemResource;
-import java.util.Properties;
 import org.apache.commons.mail.DefaultAuthenticator;
 import org.apache.commons.mail.Email;
 import org.apache.commons.mail.EmailException;
 import org.apache.commons.mail.SimpleEmail;
+import org.apache.log4j.Logger;
+
+import java.util.Properties;
 
 /**
  * User: Dmitry Shulgin
  * Date: 12.07.12
  */
 public class MailService {
-    Email email;
-    ProjectLogger projectLogger;
+    private Email email;
+    private Logger logger = Logger.getLogger(MailService.class);
 
     public MailService() {
-        projectLogger = new ProjectLogger(Configuration.class);
+
+
     }
 
     public void sendSimpleEmail(String sender, String sendPassword, String receiver) {
@@ -25,8 +28,8 @@ public class MailService {
         Email email = new SimpleEmail();
 
         ///////////////using PropertiesWork
-        email.setHostName(SystemResource.HOST.toString());
-        email.setSmtpPort(Integer.parseInt(SystemResource.PORT.toString()));
+        email.setHostName(Configuration.getProperty(SystemResource.HOST));
+        email.setSmtpPort(Integer.parseInt(Configuration.getProperty(SystemResource.PORT)));
         //////////////////////
 
         email.setAuthenticator(new DefaultAuthenticator(sender, sendPassword));
@@ -40,7 +43,7 @@ public class MailService {
             email.send();
 
         } catch (EmailException e) {
-            projectLogger.error("EmailException");
+            logger.error("EmailException");
         }
 
 
