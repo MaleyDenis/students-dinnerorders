@@ -1,6 +1,7 @@
 package com.exadel.dinnerorders.vaadinwindow.windows;
 
 import com.exadel.dinnerorders.vaadinwindow.listener.LoginFormListener;
+import com.google.gwt.user.client.ui.FormPanel;
 import com.vaadin.ui.*;
 
 public class LoginWindow extends Window {
@@ -29,4 +30,5 @@ public class LoginWindow extends Window {
         layout.setSpacing(true);
         layout.setWidth("100%");
     }
+
 }
