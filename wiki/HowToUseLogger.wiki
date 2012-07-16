@@ -35,6 +35,5 @@ public class Configuration {
 ...
        
 
-useful:
-http://forum.vingrad.ru/articles/topic-215351/kw-log-%D0%BB%D0%BE%D0%B3%D0%B8.html 
+ 
  
