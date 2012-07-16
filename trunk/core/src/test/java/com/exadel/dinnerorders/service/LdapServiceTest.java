@@ -1,6 +1,7 @@
-package com.exadel.dinnerorders.ldap;
+package com.exadel.dinnerorders.service;
 
 import com.exadel.dinnerorders.exception.IllegalUserLoginException;
+import com.exadel.dinnerorders.service.LdapService;
 import org.junit.Test;
 
 public class LdapServiceTest {
