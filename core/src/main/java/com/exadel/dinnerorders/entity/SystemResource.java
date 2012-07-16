@@ -1,25 +1,23 @@
 package com.exadel.dinnerorders.entity;
 
-import com.exadel.dinnerorders.service.Configuration;
-
 public enum SystemResource {
-    HOST {
-        public String toString() {
+    HOST("host"), PORT("port");
 
-                return (Configuration.getProperty("host"));
+    public String getValue() {
+        return value;
+    }
 
-        }
-    },
-    PORT {
-        public String toString() {
+    String value;
 
-                return (Configuration.getProperty("port"));
-
-        }
-    };
+    private SystemResource(String value) {
+        this.value = value;
+    }
 
 
 }
+
+
+
 
 
 
