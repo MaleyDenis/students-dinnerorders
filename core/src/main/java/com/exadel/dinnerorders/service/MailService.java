@@ -43,7 +43,7 @@ public class MailService {
             email.send();
 
         } catch (EmailException e) {
-            logger.error("EmailException");
+            logger.error("Email of receiver has not been found ",e);
         }
 
 
