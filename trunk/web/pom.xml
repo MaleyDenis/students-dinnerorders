@@ -58,6 +58,12 @@
         	<artifactId>mail</artifactId>
         	<version>1.4</version>
         </dependency>
+
+        <dependency>
+            <groupId>com.vaadin</groupId>
+            <artifactId>vaadin</artifactId>
+         </dependency>
+
     </dependencies>
 
 </project>
