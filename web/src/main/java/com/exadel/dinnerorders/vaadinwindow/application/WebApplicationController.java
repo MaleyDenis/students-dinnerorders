@@ -12,9 +12,6 @@ import com.vaadin.ui.Window;
 public class WebApplicationController extends Application {
     private EventBus eventBus = WebApplication.getInstance().getEventBus();
     private WelcomeWindow welcomeWindow;
-    {
-        eventBus.register(this);
-    }
 
     @Override
     public void init() {
@@ -22,6 +19,7 @@ public class WebApplicationController extends Application {
         setMainWindow(loginWindow);
         createWindows();
         addSubWindows();
+        eventBus.register(this);
     }
 
     private void createWindows() {
