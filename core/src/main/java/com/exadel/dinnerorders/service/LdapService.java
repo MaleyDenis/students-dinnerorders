@@ -90,4 +90,12 @@ public class LdapService {
         }
         return false;
     }
+
+    public String getUserName(String login) {
+        String userName = isLoginExist(login);
+        if (login == null) {
+            throw new IllegalUserLoginException(login);
+        } else
+            return userName;
+    }
 }
