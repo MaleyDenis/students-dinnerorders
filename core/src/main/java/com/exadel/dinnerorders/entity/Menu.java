@@ -1,5 +1,6 @@
 package com.exadel.dinnerorders.entity;
 
+import java.util.ArrayList;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.List;
@@ -41,5 +42,16 @@ public class Menu {
             items = new HashMap<Weekday, List<MenuItem>>();
         }
         return items;
+    }
+
+    public void addItem(MenuItem newItem){
+        List<MenuItem> menuForDay = items.get(newItem.getWeekday());
+        if(menuForDay == null){
+            menuForDay = new ArrayList<MenuItem>();
+            menuForDay.add(newItem);
+            items.put(newItem.getWeekday(), menuForDay);
+        }else{
+            menuForDay.add(newItem);
+        }
     }
 }
