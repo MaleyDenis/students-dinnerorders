@@ -1,0 +1,1 @@
+mysql -hlocalhost -P3306 -uroot -proot -v < script.sql
