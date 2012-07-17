@@ -13,7 +13,7 @@ public class LoginFormListener implements LoginForm.LoginListener {
     public void onLogin(LoginForm.LoginEvent loginEvent) {
         if (isInformationValid(loginEvent)) {
             showWelcomePage(loginEvent);
-        } else {
+       } else {
             clearForm(loginEvent);
         }
     }
@@ -26,7 +26,7 @@ public class LoginFormListener implements LoginForm.LoginListener {
     }
 
     private void showWelcomePage(LoginForm.LoginEvent loginEvent) {
-        LdapService ldap = new LdapService("ldap://ldap.eltegra.by:389/dc=exadel,dc=com");
+        LdapService ldap = new LdapService();
         String login = loginEvent.getLoginParameter("username");
         Application.getInstance().setUserName(ldap.getUserName(login));
         Application.getInstance().getEventBus().post(new AuthenticationEvent());
@@ -34,7 +34,7 @@ public class LoginFormListener implements LoginForm.LoginListener {
 
     private boolean isInformationValid(LoginForm.LoginEvent loginEvent) {
         try {
-            LdapService ldap = new LdapService("ldap://ldap.eltegra.by:389/dc=exadel,dc=com");
+            LdapService ldap = new LdapService();
             String login = loginEvent.getLoginParameter("username");
             String password = loginEvent.getLoginParameter("password");
             return ldap.checkUser(login, password);

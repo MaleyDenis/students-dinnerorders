@@ -4,6 +4,7 @@ public enum SystemResource {
     HOST("host"),
     PORT("port"),
     LOGIN("login"),
+    LDAP("ldap"),
     PASSWORD("password");
 
     public String getValue() {
