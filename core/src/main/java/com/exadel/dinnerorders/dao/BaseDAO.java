@@ -9,7 +9,8 @@ import java.sql.SQLException;
  * Date: 13.7.12
  */
 
-public abstract class BaseDAO <E> implements DAO <E>{
+public abstract class BaseDAO<E> implements DAO<E>{
+
     protected Connection connection(){
         Connection connection = null;
         try{
