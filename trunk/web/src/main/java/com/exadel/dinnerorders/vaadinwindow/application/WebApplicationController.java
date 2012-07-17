@@ -5,12 +5,12 @@ import com.exadel.dinnerorders.vaadinwindow.windows.LoginWindow;
 import com.exadel.dinnerorders.vaadinwindow.windows.WelcomeWindow;
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
-import com.vaadin.Application;
 import com.vaadin.terminal.ExternalResource;
 import com.vaadin.ui.Window;
 
-public class WebApplicationController extends Application {
-    private EventBus eventBus = WebApplication.getInstance().getEventBus();
+public class WebApplicationController extends com.vaadin.Application {
+
+    private EventBus eventBus = Application.getInstance().getEventBus();
     private WelcomeWindow welcomeWindow;
 
     @Override
