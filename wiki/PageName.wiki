@@ -1,4 +1,4 @@
-  How to add new property
+#How to add new property
 = Introduction =
 
 if you want to add new property, you should write your property's name   in {{{properties.properties}}} file in the following format:
