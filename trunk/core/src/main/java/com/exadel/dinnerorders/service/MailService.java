@@ -14,15 +14,12 @@ import java.util.Properties;
  * Date: 12.07.12
  */
 public class MailService {
-    private Email email;
     private Logger logger = Logger.getLogger(MailService.class);
 
     public MailService() {
-
-
     }
 
-    public void sendSimpleEmail( String receiver) {
+    public void sendSimpleEmail(String receiver) {
 
         Properties myProps = new Properties();
         Email email = new SimpleEmail();
