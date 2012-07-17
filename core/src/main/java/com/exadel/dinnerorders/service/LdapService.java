@@ -1,6 +1,9 @@
 package com.exadel.dinnerorders.service;
 
+import com.exadel.dinnerorders.entity.SystemResource;
 import com.exadel.dinnerorders.exception.IllegalUserLoginException;
+import org.apache.log4j.Logger;
+
 import java.util.Hashtable;
 import javax.naming.Context;
 import javax.naming.NamingEnumeration;
@@ -9,11 +12,12 @@ import javax.naming.directory.*;
 
 public class LdapService {
     private Hashtable<String, String> environment = new Hashtable<String, String>();
+    private Logger logger = Logger.getLogger(LdapService.class);
 
-    public LdapService(String url) {
+    public LdapService() {
         String settings = "com.sun.jndi.ldap.LdapCtxFactory";
         environment.put(Context.INITIAL_CONTEXT_FACTORY, settings);
-        environment.put(Context.PROVIDER_URL, url);
+        environment.put(Context.PROVIDER_URL, Configuration.getProperty(SystemResource.LDAP));
     }
 
     private NamingEnumeration<SearchResult> getAttributes() {
@@ -30,7 +34,7 @@ public class LdapService {
             result = dirContext.search(startSearchBase, searchFilter, controls);
             dirContext.close();
         } catch (NamingException namingException) {
-            namingException.printStackTrace();
+            logger.error("Naming exception " + getClass().getPackage().getName() + " getAttributes");
         }
         return result;
     }
@@ -52,7 +56,7 @@ public class LdapService {
             DirContext dirContext = new InitialDirContext(environment);
             dirContext.close();
         } catch (NamingException namingException) {
-            namingException.printStackTrace();
+            logger.error("Naming exception " + getClass().getPackage().getName() + " checkUser");
             return false;
         }
         return true;
@@ -69,7 +73,7 @@ public class LdapService {
                 }
             }
         } catch (NamingException namingException) {
-            namingException.printStackTrace();
+            logger.error("Naming exception at " + getClass().getPackage().getName() + " isLoginExist");
         }
         return null;
     }
@@ -84,7 +88,7 @@ public class LdapService {
                 }
             }
         } catch (NamingException namingException) {
-            namingException.printStackTrace();
+            logger.error("Naming exception at " + getClass().getPackage().getName() + " checkAllAttributes");
         }
         return false;
     }

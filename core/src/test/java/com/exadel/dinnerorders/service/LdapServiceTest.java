@@ -7,13 +7,13 @@ public class LdapServiceTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void testCheckUserLoginForException() {
-        LdapService ldapService = new LdapService("ldap://ldap.eltegra.by:389/dc=exadel,dc=com");
+        LdapService ldapService = new LdapService();
         ldapService.checkUser(null, "somePassword");
     }
 
     @Test(expected = IllegalUserLoginException.class)
     public void testCheckUserForIllegalUserLoginException() {
-        LdapService ldapService = new LdapService("ldap://ldap.eltegra.by:389/dc=exadel,dc=com");
+        LdapService ldapService = new LdapService();
         ldapService.checkUser("badLogin", "somePassword");
     }
 }
