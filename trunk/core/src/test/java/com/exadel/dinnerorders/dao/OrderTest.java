@@ -5,8 +5,10 @@ import junit.framework.Assert;
 import junit.framework.TestCase;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
+import java.util.Collection;
 import java.util.Date;
 
 /**
@@ -18,14 +20,12 @@ import java.util.Date;
     public void setUp() throws Exception {
 
     }
+
     @After
     public void tearDown() throws Exception {
 
     }
 
-    private void initialization(){
-
-    }
     @Test
     public void testCreate() throws Exception {
         OrderDAO orderDAO = new OrderDAO();
@@ -44,7 +44,7 @@ import java.util.Date;
         assertTrue(orderDAO.create(order2));
     }
 
-
+    @Test
     public void testUpdate() throws Exception {
         OrderDAO orderDAO = new OrderDAO();
         Date date = new Date();
@@ -55,6 +55,17 @@ import java.util.Date;
         orderDAO.update(order2);
     }
 
+    @Test
+    public void  testLoadAll() throws Exception {
+        OrderDAO orderDAO = new OrderDAO();
+        Collection<Order> collection = orderDAO.loadAll();
+        for (Order order : collection) {
+            System.out.println(order.getCost());
+        }
+
+    }
+
+    @Test
     public void testDelete() throws Exception {
         OrderDAO orderDAO = new OrderDAO();
         Date date = new Date();
@@ -68,7 +79,11 @@ import java.util.Date;
         assertTrue(orderDAO.delete(order3));
     }
 
-    public void testRead() throws Exception {
-
+    @Test
+    public void testLoad() throws Exception {
+        OrderDAO orderDAO = new OrderDAO();
+        System.out.println(orderDAO.load((long)6).getCost());
     }
+
 }
+

@@ -8,6 +8,7 @@ import com.mysql.jdbc.Statement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
@@ -24,7 +25,7 @@ public class OrderDAO extends BaseDAO<Order> {
                 pst.setLong(2,newItem.getUserID());
                 pst.setDouble(3, newItem.getCost());
                 pst.setTimestamp(4, new java.sql.Timestamp(newItem.getDateOrder().getTime()));
-                pst.setTimestamp(5,new java.sql.Timestamp(newItem.getDatePayment().getTime()));
+                pst.setTimestamp(5, new java.sql.Timestamp(newItem.getDatePayment().getTime()));
                 pst.executeUpdate();
                 pst.close();
                 disconnect(connection);
@@ -46,8 +47,8 @@ public class OrderDAO extends BaseDAO<Order> {
                 datePayment = item.getDatePayment();
                 PreparedStatement preparedStatement = (PreparedStatement)connection.prepareStatement
                         ("UPDATE orderv15 SET" +" cost = ?,datePayment = ? ");
-                preparedStatement.setDouble(1,cost);
-                preparedStatement.setTimestamp(2,new java.sql.Timestamp(datePayment.getTime()));
+                preparedStatement.setDouble(1, cost);
+                preparedStatement.setTimestamp(2, new java.sql.Timestamp(datePayment.getTime()));
                 preparedStatement.executeUpdate();
                 preparedStatement.close();
                 disconnect(connection);
@@ -79,13 +80,10 @@ public class OrderDAO extends BaseDAO<Order> {
         return false;
     }
 
-    public Order read() {
-        return  null;
-    }
-    public List<Order> readL(){
+    @Override
+    public Collection<Order> loadAll() {
         Order order;
         List<Order> orders = new ArrayList<Order>();
-
         Connection connection = connection();
         try {
             Statement statement = (Statement)connection.createStatement();
@@ -103,7 +101,21 @@ public class OrderDAO extends BaseDAO<Order> {
             e.printStackTrace();
         }
         return orders;
-
     }
-
+    public Order load(Long id) {
+        Connection connection = connection();
+        Order order = null;
+        try {
+            PreparedStatement preparedStatement = (PreparedStatement)connection.prepareStatement("SELECT * FROM orderv15 WHERE id = ?");
+            preparedStatement.setLong(1,id);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()){
+            order = new Order(resultSet.getLong(1),resultSet.getLong(2),resultSet.getDouble(3),
+                    resultSet.getDate(4),resultSet.getDate(5));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return  order;
+    }
 }
