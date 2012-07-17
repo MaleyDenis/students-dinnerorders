@@ -91,8 +91,12 @@ public class OrderDAO extends BaseDAO<Order> {
             Statement statement = (Statement)connection.createStatement();
             ResultSet resultSet = statement.executeQuery("SELECT * FROM orderv15");
             while (resultSet.next()){
-                order = new Order(resultSet.getLong("id"),resultSet.getLong("userID"),resultSet.getDouble("cost"),
-                        resultSet.getDate("dateOrder"),resultSet.getDate("datePayment"));
+                order = new Order(
+                        resultSet.getLong("id"),
+                        resultSet.getLong("userID"),
+                        resultSet.getDouble("cost"),
+                        resultSet.getDate("dateOrder"),
+                        resultSet.getDate("datePayment"));
                 orders.add(order);
             }
         } catch (SQLException e) {
