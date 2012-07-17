@@ -1,0 +1,24 @@
+#How to add new property
+= Introduction =
+
+if you want to add new property, you should write your property's name   in {{{properties.properties}}} file in the following format:
+
+{{{ 
+<property's name> = ${<property's name>}
+ }}}
+
+for example:
+*host = ${host}*
+
+then you should write your property in {{{development.properties}}} in the next format:
+{{{
+<property's name> = ${<property's value>}  
+*Attencion!!! ${<property's VALUE>}
+}}}
+
+= Details =
+
+Add your content here.  Format your content with:
+  * Text in *bold* or _italic_
+  * Headings, paragraphs, and lists
+  * Automatic links to other wiki pages
