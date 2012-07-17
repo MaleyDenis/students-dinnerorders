@@ -24,6 +24,35 @@
             <url>http://download.java.net/maven/2</url>
         </repository>
     </repositories>
+    <profiles>
+        <profile>
+            <modules>
+                <module>
+                    core
+                </module>
+            </modules>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <id>development</id>
+            <build>
+                <resources>
+                    <resource>
+                        <directory>src/main/resources</directory>
+
+                        <filtering>true</filtering>
+                    </resource>
+                </resources>
+            </build>
+            <properties>
+                <host>smtp.gmail.com</host>
+                <login>dimashulgin2012@gmail.com</login>
+                <port>465</port>
+                <password>67912311</password>
+            </properties>
+
+        </profile>
+    </profiles>
 
     <dependencyManagement>
         <dependencies>
