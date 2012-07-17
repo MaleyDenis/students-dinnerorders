@@ -20,7 +20,7 @@ public class Configuration {
         Properties prop = new Properties();
         FileInputStream fis = null;
         try {
-            fis = new FileInputStream("core\\src\\main\\resources\\properties.properties");
+            fis = new FileInputStream("core\\target\\classes\\properties.properties");
             prop.load(fis);
         } catch (FileNotFoundException  e) {
             logger.error("File properties.properties has not been found ",e);
