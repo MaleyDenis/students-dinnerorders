@@ -51,4 +51,12 @@ public class Order {
     public long getId() {
         return id;
     }
+
+    public List<MenuItem> getMenuItemList() {
+        return menuItemList;
+    }
+
+    public void setMenuItemList(List<MenuItem> menuItemList) {
+        this.menuItemList = menuItemList;
+    }
 }
