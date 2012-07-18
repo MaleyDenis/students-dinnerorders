@@ -24,60 +24,7 @@
             <url>http://download.java.net/maven/2</url>
         </repository>
     </repositories>
-    <profiles>
-        <profile>
-            <modules>
-                <module>
-                    core
-                </module>
-            </modules>
-            <activation>
-                <activeByDefault>true</activeByDefault>
-            </activation>
-            <id>development</id>
-            <build>
-            <filters>
-                <filter>src/main/resources/development.properties</filter>
-                </filters>
-                <resources>
-                    <resource>
-                        <directory>src/main/resources</directory>
 
-
-                        <filtering>true</filtering>
-
-                    </resource>
-                </resources>
-            </build>
-        </profile>
-
-        <profile>
-               <modules>
-                   <module>
-                       core
-                   </module>
-               </modules>
-               <activation>
-                   <activeByDefault>false</activeByDefault>
-               </activation>
-               <id>production</id>
-               <build>
-               <filters>
-                   <filter>src/main/resources/production.properties</filter>
-                   </filters>
-                   <resources>
-                       <resource>
-                           <directory>src/main/resources</directory>
-
-
-                           <filtering>true</filtering>
-
-                       </resource>
-                   </resources>
-               </build>
-           </profile>
-
-    </profiles>
 
     <dependencyManagement>
         <dependencies>
