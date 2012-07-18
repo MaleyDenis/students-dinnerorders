@@ -18,7 +18,7 @@ import java.util.ArrayList;
  */
 
 public class MenuItemDAO extends BaseDAO<MenuItem> {
-    private Logger logger = Logger.getLogger(BaseDAO.class);
+    private Logger logger = Logger.getLogger(MenuItemDAO.class);
 
     public boolean create(MenuItem newItem) {
         Connection connection = connection();
