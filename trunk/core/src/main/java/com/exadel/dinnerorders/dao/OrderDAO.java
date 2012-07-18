@@ -1,10 +1,14 @@
 package com.exadel.dinnerorders.dao;
 
+import com.exadel.dinnerorders.entity.MenuItem;
 import com.exadel.dinnerorders.entity.Order;
 
+import com.exadel.dinnerorders.entity.Weekday;
 import com.mysql.jdbc.Connection;
 import com.mysql.jdbc.PreparedStatement;
 import com.mysql.jdbc.Statement;
+import org.apache.log4j.Logger;
+
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -14,26 +18,34 @@ import java.util.List;
 
 
 public class OrderDAO extends BaseDAO<Order> {
+    private final Logger logger = Logger.getLogger(OrderDAO.class);
 
-    public boolean create(Order newItem)  {
+    public boolean create(Order orderItem)  {
         Connection connection = connection();
         try {
             if (connection != null){
                 PreparedStatement pst = (PreparedStatement)connection.prepareStatement
                         ("INSERT INTO dinnerorders.order VALUES(?,?,?,?,?)");
-                pst.setLong(1,newItem.getId());
-                pst.setLong(2,newItem.getUserID());
-                pst.setDouble(3, newItem.getCost());
-                pst.setTimestamp(4, new java.sql.Timestamp(newItem.getDateOrder().getTime()));
-                pst.setTimestamp(5, new java.sql.Timestamp(newItem.getDatePayment().getTime()));
+                pst.setLong(1, orderItem.getId());
+                pst.setLong(2, orderItem.getUserID());
+                pst.setDouble(3, orderItem.getCost());
+                pst.setTimestamp(4, new java.sql.Timestamp(orderItem.getDateOrder().getTime()));
+                pst.setTimestamp(5, new java.sql.Timestamp(orderItem.getDatePayment().getTime()));
                 pst.executeUpdate();
-
+                List<MenuItem> list = orderItem.getMenuItemList();
                 pst.close();
+                for (MenuItem menuItem:list){
+                    PreparedStatement preparedStatement = (PreparedStatement)connection.prepareStatement
+                            ("INSERT INTO dinnerorders.order_menuitem (order_id, menu_item_id) VALUE (?,?)");
+                    preparedStatement.setLong(1, orderItem.getId());
+                    preparedStatement.setLong(2, menuItem.getId());
+                    preparedStatement.executeUpdate();
+                }
                 disconnect(connection);
                 return true;
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            logger.error("Create error the method",e);
         }
         return false;
     }
@@ -58,7 +70,7 @@ public class OrderDAO extends BaseDAO<Order> {
             }
         }
         catch (SQLException e) {
-            e.printStackTrace();
+           logger.error("Update error the method",e);
         }
         return false;
     }
@@ -71,20 +83,36 @@ public class OrderDAO extends BaseDAO<Order> {
                         ("DELETE FROM dinnerorders.order WHERE order_id=?");
                 preparedStatement.setLong(1,item.getId());
                 preparedStatement.executeUpdate();
+                deleteFromOrderItemsTable(item);
                 preparedStatement.close();
                 disconnect(connection);
                 return true;
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+           logger.error("Delete error the method",e);
         }
         return false;
     }
 
-    @Override
+    private void deleteFromOrderItemsTable(Order item) {
+        Connection connection = connection();
+        PreparedStatement preparedStatement = null;
+        try {
+            preparedStatement = (PreparedStatement)connection.prepareStatement
+                    ("DELETE FROM dinnerorders.order_menuitem WHERE order_id=?");
+            preparedStatement.setLong(1,item.getId());
+            preparedStatement.executeUpdate();
+            preparedStatement.close();
+            disconnect(connection);
+        } catch (SQLException e) {
+           logger.error("DeleteFromOrderItemsTable error the method",e);
+        }
+    }
+
     public Collection<Order> loadAll() {
-        Order order;
+        Order order = null;
         List<Order> orders = new ArrayList<Order>();
+        List<MenuItem> menuItems =null;
         Connection connection = connection();
         try {
             Statement statement = (Statement)connection.createStatement();
@@ -96,13 +124,42 @@ public class OrderDAO extends BaseDAO<Order> {
                         resultSet.getDouble(3),
                         resultSet.getDate(4),
                         resultSet.getDate(5));
-                orders.add(order);
             }
+            menuItems = getOrderMenuItem(order,connection);
+            order.setMenuItemList(menuItems);
+            orders.add(order);
         } catch (SQLException e) {
-            e.printStackTrace();
+           logger.error("LoadAll error the method",e);
         }
         return orders;
     }
+
+    private List<MenuItem> getOrderMenuItem(Order order, Connection connection) {
+        List<MenuItem> menuItems = new ArrayList<MenuItem>();
+        List <Long> menuItemID = new ArrayList<Long>();
+        try {
+            Statement statement = (Statement)connection.createStatement();
+            ResultSet resultSet = statement.executeQuery
+                    ("SELECT * FROM dinnerorders.order_menuitem WHERE order_id = " + order.getId());
+            while (resultSet.next()){
+                menuItemID.add(resultSet.getLong(2));
+            }
+            PreparedStatement preparedStatement = (PreparedStatement)connection.prepareStatement
+                    ("SELECT * FROM dinnerorders.menuitem");
+            ResultSet resultSet1 = preparedStatement.executeQuery();
+            while (resultSet1.next()){
+                if (menuItemID.contains(resultSet1.getLong(1))){
+                    MenuItem menuItem = new MenuItem(resultSet.getLong(1),
+                            Weekday.valueOf(resultSet1.getString(2)), resultSet1.getString(3),resultSet1.getDouble(4));
+                    menuItems.add(menuItem);
+                }
+            }
+        } catch (SQLException e) {
+            logger.error("GetOrderMenuItem error the method",e);
+        }
+        return menuItems;
+    }
+
     public Order load(Long id) {
         Connection connection = connection();
         Order order = null;
@@ -115,8 +172,9 @@ public class OrderDAO extends BaseDAO<Order> {
             order = new Order(resultSet.getLong(1),resultSet.getLong(2),resultSet.getDouble(3),
                     resultSet.getDate(4),resultSet.getDate(5));
             }
+            order.setMenuItemList(getOrderMenuItem(order, connection));
         } catch (SQLException e) {
-            e.printStackTrace();
+           logger.error("Load error the method",e);
         }
         return  order;
     }
