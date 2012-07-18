@@ -4,6 +4,9 @@ import com.exadel.dinnerorders.entity.MenuItem;
 import com.exadel.dinnerorders.entity.Weekday;
 import com.mysql.jdbc.Connection;
 import com.mysql.jdbc.PreparedStatement;
+
+import org.apache.log4j.Logger;
+
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Collection;
@@ -13,13 +16,15 @@ import java.util.ArrayList;
  * User: Василий Силин
  * Date: 16.7.12
  */
+
 public class MenuItemDAO extends BaseDAO<MenuItem> {
+    private Logger logger = Logger.getLogger(BaseDAO.class);
 
     public boolean create(MenuItem newItem) {
         Connection connection = connection();
         if (connection != null) {
             try {
-                PreparedStatement preparedStatement = (PreparedStatement) connection.prepareStatement("INSERT INTO menuitems VALUE(?, ?, ?, ?);");
+                PreparedStatement preparedStatement = (PreparedStatement) connection.prepareStatement("INSERT INTO menuitem VALUE(?, ?, ?, ?);");
                 preparedStatement.setLong(1, newItem.getId());
                 preparedStatement.setString(2, newItem.getWeekday().name());
                 preparedStatement.setString(3, newItem.getDescription());
@@ -28,7 +33,7 @@ public class MenuItemDAO extends BaseDAO<MenuItem> {
                 disconnect(connection);
                 return true;
             } catch (SQLException e) {
-                e.printStackTrace();
+                logger.error("MenuItemDAO: create has failed.", e);
             }
         }
         disconnect(connection);
@@ -39,16 +44,16 @@ public class MenuItemDAO extends BaseDAO<MenuItem> {
         Connection connection = connection();
         if (connection != null) {
             try {
-                StringBuilder query = new StringBuilder("UPDATE menuitems SET ");
-                query.append("weekday = '").append(item.getWeekday().name()).append("', description = '");
-                query.append(item.getDescription()).append("', cost = '").append(item.getCost()).append("' WHERE");
-                query.append(" id = '").append(item.getId()).append("';");
-                PreparedStatement preparedStatement = (PreparedStatement) connection.prepareStatement(query.toString());
+                PreparedStatement preparedStatement = (PreparedStatement) connection.prepareStatement("UPDATE menuitem SET weekday = ?, description = ?, cost = ? WHERE menuitem_id = ?;");
+                preparedStatement.setString(1, item.getWeekday().name());
+                preparedStatement.setString(2, item.getDescription());
+                preparedStatement.setDouble(3, item.getCost());
+                preparedStatement.setLong(4, item.getId());
                 preparedStatement.executeUpdate();
                 disconnect(connection);
                 return true;
             } catch (SQLException e) {
-                e.printStackTrace();
+                logger.error("MenuItemDAO: update has failed.", e);
             }
         }
         disconnect(connection);
@@ -59,12 +64,13 @@ public class MenuItemDAO extends BaseDAO<MenuItem> {
         Connection connection = connection();
         if (connection != null) {
             try {
-                PreparedStatement preparedStatement = (PreparedStatement) connection.prepareStatement("DELETE FROM menuitems WHERE id = '" + item.getId() + "';");
+                PreparedStatement preparedStatement = (PreparedStatement) connection.prepareStatement("DELETE FROM menuitem WHERE menuitem_id = ?;");
+                preparedStatement.setLong(1, item.getId());
                 preparedStatement.executeUpdate();
                 disconnect(connection);
                 return true;
             } catch (SQLException e) {
-                e.printStackTrace();
+                logger.error("MenuItemDAO: delete has failed.", e);
             }
         }
         disconnect(connection);
@@ -75,7 +81,7 @@ public class MenuItemDAO extends BaseDAO<MenuItem> {
         Connection connection = connection();
         if (connection != null) {
             try {
-                PreparedStatement menuStatement = (PreparedStatement) connection.prepareStatement("SELECT * FROM menuitems WHERE id = ?;");
+                PreparedStatement menuStatement = (PreparedStatement) connection.prepareStatement("SELECT * FROM menuitem WHERE menuitem_id = ?;");
                 menuStatement.setLong(1, id);
                 ResultSet menuItemResultSet = menuStatement.executeQuery();
                 if(menuItemResultSet.next()){
@@ -87,7 +93,7 @@ public class MenuItemDAO extends BaseDAO<MenuItem> {
                     return newMenuItem;
                 }
             } catch (SQLException e) {
-                e.printStackTrace();
+                logger.error("MenuItemDAO: load has failed.", e);
             }
         }
         disconnect(connection);
@@ -99,7 +105,7 @@ public class MenuItemDAO extends BaseDAO<MenuItem> {
         Connection connection = connection();
         if (connection != null) {
             try {
-                PreparedStatement menuStatement = (PreparedStatement) connection.prepareStatement("SELECT * FROM menuitems;");
+                PreparedStatement menuStatement = (PreparedStatement) connection.prepareStatement("SELECT * FROM menuitem;");
                 ResultSet menuItemResultSet = menuStatement.executeQuery();
                 while(menuItemResultSet.next()){
                     Long id = menuItemResultSet.getLong(1);
@@ -112,7 +118,7 @@ public class MenuItemDAO extends BaseDAO<MenuItem> {
                 disconnect(connection);
                 return items;
             } catch (SQLException e) {
-                e.printStackTrace();
+                logger.error("MenuItemDAO: load all has failed.", e);
             }
         }
         disconnect(connection);

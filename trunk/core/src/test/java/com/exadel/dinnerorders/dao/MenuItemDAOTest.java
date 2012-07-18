@@ -2,6 +2,7 @@ package com.exadel.dinnerorders.dao;
 
 import com.exadel.dinnerorders.entity.MenuItem;
 import com.exadel.dinnerorders.entity.Weekday;
+
 import junit.framework.Assert;
 import junit.framework.TestCase;
 import org.junit.Before;

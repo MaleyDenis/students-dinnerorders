@@ -37,7 +37,7 @@ PRIMARY KEY (menuitem_id)
 ENGINE=InnoDB;
 
 CREATE TABLE IF NOT EXISTS dinnerorders.menu_menuitem (
-id bigint(20) NOT  NULL,
+id bigint(20) NOT NULL AUTO_INCREMENT,
 menu_id  bigint(20) NOT NULL ,
 menuitem_id bigint(20) NOT NULL,
 PRIMARY KEY (id)
