@@ -18,7 +18,7 @@ public abstract class BaseDAO<E> implements DAO<E>{
         Connection connection = null;
         try{
             Class.forName("com.mysql.jdbc.Driver");
-            connection = (Connection)DriverManager.getConnection("jdbc:mysql://localhost:3306/dinnerorders", "root", "root");
+            connection = (Connection)DriverManager.getConnection("jdbc:mysql://localhost:3306/dinnerorders", "root", "12345");
         }catch(ClassNotFoundException e){
             logger.error("BaseDAO: class has not been found.", e);
         }catch(SQLException e){

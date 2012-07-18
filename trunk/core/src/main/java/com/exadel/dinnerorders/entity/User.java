@@ -9,12 +9,14 @@ public class User {
     private int id;
     private String ldapLogin;
     private String userName;
+    private String role;
 
 
-    public User(int id, String userName, String ldapLogin) {
+    public User(int id, String ldapLogin, String userName, String role) {
         this.id = id;
         this.userName = userName;
         this.ldapLogin = ldapLogin;
+        this.role = role;
     }
 
 
@@ -22,6 +24,7 @@ public class User {
         this.id = newUser.getId();
         this.userName = newUser.getUserName();
         this.ldapLogin = newUser.getLdapLogin();
+        this.role = newUser.role;
     }
 
     public User() {
@@ -53,5 +56,12 @@ public class User {
         this.userName = userName;
     }
 
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
+    }
 
 }
