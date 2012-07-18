@@ -9,6 +9,14 @@ date_order  timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' ON UPDATE CURRENT_T
 PRIMARY KEY (id)
 )
 ENGINE=InnoDB;
+COLLATE=utf8;
+
+CREATE TABLE IF NOT EXISTS  dinnerorders.order_menuitem(
+order_id bigint(20) NOT  NULL;
+munu_item_id bigint(20) NOT NULL;
+)
+ENGINE=InnoDB;
+COLLATE=utf8;
 
 CREATE TABLE IF NOT EXISTS dinnerorders.menus (
 id  bigint(20) NOT NULL ,

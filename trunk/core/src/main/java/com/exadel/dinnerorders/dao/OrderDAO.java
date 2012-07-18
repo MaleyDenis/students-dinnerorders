@@ -20,13 +20,14 @@ public class OrderDAO extends BaseDAO<Order> {
         try {
             if (connection != null){
                 PreparedStatement pst = (PreparedStatement)connection.prepareStatement
-                        ("INSERT INTO orderv15 VALUES(?,?,?,?,?)");
+                        ("INSERT INTO dinnerorders.order VALUES(?,?,?,?,?)");
                 pst.setLong(1,newItem.getId());
                 pst.setLong(2,newItem.getUserID());
                 pst.setDouble(3, newItem.getCost());
                 pst.setTimestamp(4, new java.sql.Timestamp(newItem.getDateOrder().getTime()));
                 pst.setTimestamp(5, new java.sql.Timestamp(newItem.getDatePayment().getTime()));
                 pst.executeUpdate();
+
                 pst.close();
                 disconnect(connection);
                 return true;
@@ -46,7 +47,7 @@ public class OrderDAO extends BaseDAO<Order> {
                 cost = item.getCost();
                 datePayment = item.getDatePayment();
                 PreparedStatement preparedStatement = (PreparedStatement)connection.prepareStatement
-                        ("UPDATE orderv15 SET" +" cost = ?,datePayment = ? ");
+                        ("UPDATE dinnerorders.order SET" +" cost = ?,date_payment = ? ");
                 preparedStatement.setDouble(1, cost);
                 preparedStatement.setTimestamp(2, new java.sql.Timestamp(datePayment.getTime()));
                 preparedStatement.executeUpdate();
@@ -67,7 +68,7 @@ public class OrderDAO extends BaseDAO<Order> {
         try {
             if (connection != null){
                 PreparedStatement preparedStatement = (PreparedStatement)connection.prepareStatement
-                        ("DELETE FROM orderv15 WHERE id=?");
+                        ("DELETE FROM dinnerorders.order WHERE order_id=?");
                 preparedStatement.setLong(1,item.getId());
                 preparedStatement.executeUpdate();
                 preparedStatement.close();
@@ -87,14 +88,14 @@ public class OrderDAO extends BaseDAO<Order> {
         Connection connection = connection();
         try {
             Statement statement = (Statement)connection.createStatement();
-            ResultSet resultSet = statement.executeQuery("SELECT * FROM orderv15");
+            ResultSet resultSet = statement.executeQuery("SELECT * FROM dinnerorders.order");
             while (resultSet.next()){
                 order = new Order(
-                        resultSet.getLong("id"),
-                        resultSet.getLong("userID"),
-                        resultSet.getDouble("cost"),
-                        resultSet.getDate("dateOrder"),
-                        resultSet.getDate("datePayment"));
+                        resultSet.getLong(1),
+                        resultSet.getLong(2),
+                        resultSet.getDouble(3),
+                        resultSet.getDate(4),
+                        resultSet.getDate(5));
                 orders.add(order);
             }
         } catch (SQLException e) {
@@ -106,7 +107,8 @@ public class OrderDAO extends BaseDAO<Order> {
         Connection connection = connection();
         Order order = null;
         try {
-            PreparedStatement preparedStatement = (PreparedStatement)connection.prepareStatement("SELECT * FROM orderv15 WHERE id = ?");
+            PreparedStatement preparedStatement = (PreparedStatement)connection.prepareStatement
+                    ("SELECT * FROM dinnerorders.order WHERE order_id = ?");
             preparedStatement.setLong(1,id);
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()){
