@@ -10,7 +10,7 @@ PRIMARY KEY (order_id)
 )
 ENGINE=InnoDB;
 
-CREATE TABLE IF NOT EXISTS  dinnerorders.order_menuitem(
+CREATE TABLE IF NOT EXISTS  dinnerorders.order_menuitem (
 id bigint(20) NOT  NULL,
 order_id bigint(20) NOT  NULL,
 menu_item_id bigint(20) NOT NULL,
