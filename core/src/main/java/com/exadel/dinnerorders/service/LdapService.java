@@ -34,7 +34,7 @@ public class LdapService {
             result = dirContext.search(startSearchBase, searchFilter, controls);
             dirContext.close();
         } catch (NamingException namingException) {
-            logger.error("Naming exception " + getClass().getPackage().getName() + " getAttributes");
+            logger.error("Naming exception " + getClass().getPackage().getName() + " getAttributes", namingException);
         }
         return result;
     }
@@ -56,7 +56,7 @@ public class LdapService {
             DirContext dirContext = new InitialDirContext(environment);
             dirContext.close();
         } catch (NamingException namingException) {
-            logger.error("Naming exception " + getClass().getPackage().getName() + " checkUser");
+            logger.error("Naming exception " + getClass().getPackage().getName() + " checkUser", namingException);
             return false;
         }
         return true;
@@ -73,7 +73,7 @@ public class LdapService {
                 }
             }
         } catch (NamingException namingException) {
-            logger.error("Naming exception at " + getClass().getPackage().getName() + " isLoginExist");
+            logger.error("Naming exception at " + getClass().getPackage().getName() + " isLoginExist", namingException);
         }
         return null;
     }
@@ -88,7 +88,7 @@ public class LdapService {
                 }
             }
         } catch (NamingException namingException) {
-            logger.error("Naming exception at " + getClass().getPackage().getName() + " checkAllAttributes");
+            logger.error("Naming exception at " + getClass().getPackage().getName() + " checkAllAttributes", namingException);
         }
         return false;
     }

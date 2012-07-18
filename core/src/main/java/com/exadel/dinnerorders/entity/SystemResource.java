@@ -5,7 +5,12 @@ public enum SystemResource {
     PORT("port"),
     LOGIN("login"),
     LDAP("ldap"),
-    PASSWORD("password");
+    PASSWORD("password"),
+    DATABASE_HOST("databaseHost"),
+    DATABASE_PORT("databasePort"),
+    DATABASE_NAME("databaseName"),
+    DATABASE_LOGIN("databaseLogin"),
+    DATABASE_PASSWORD("databasePass");
 
     public String getValue() {
         return value;
