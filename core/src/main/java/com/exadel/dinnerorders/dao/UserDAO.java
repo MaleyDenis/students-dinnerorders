@@ -27,7 +27,7 @@ public class UserDAO extends BaseDAO<User> {
     public boolean create(User newItem) {
 
         try {
-            PreparedStatement preparedStatement = (PreparedStatement) connection.prepareStatement("INSERT INTO test (LDAPLOGIN,USERNAME) VALUES(?, ?);");
+            PreparedStatement preparedStatement = (PreparedStatement) connection.prepareStatement("INSERT INTO users (LDAPLOGIN,USERNAME) VALUES(?, ?);");
             preparedStatement.setString(1, newItem.getLdapLogin());
             preparedStatement.setString(2, newItem.getUserName());
             preparedStatement.execute();
@@ -50,7 +50,7 @@ public class UserDAO extends BaseDAO<User> {
         connection = connection();
         PreparedStatement preparedStatement = null;
         try {
-            preparedStatement = (PreparedStatement) connection.prepareStatement("UPDATE  test  SET  LDAPLOGIN = ? , USERNAME= ? WHERE ID = ?");
+            preparedStatement = (PreparedStatement) connection.prepareStatement("UPDATE  users  SET  LDAPLOGIN = ? , USERNAME= ? WHERE ID = ?");
             preparedStatement.setString(2, item.getLdapLogin());
             preparedStatement.setString(3, item.getUserName());
             preparedStatement.setInt(1, item.getId());
@@ -73,7 +73,7 @@ public class UserDAO extends BaseDAO<User> {
         connection = connection();
 
         try {
-            PreparedStatement preparedStatement = (PreparedStatement) connection.prepareStatement(("DELETE FROM test WHERE ID =  ?"));
+            PreparedStatement preparedStatement = (PreparedStatement) connection.prepareStatement(("DELETE FROM users WHERE ID =  ?"));
             preparedStatement.setInt(1, item.getId());
             preparedStatement.executeUpdate();
 
@@ -89,7 +89,7 @@ public class UserDAO extends BaseDAO<User> {
     public User load(Long id) {
         connection = connection();
         try {
-            PreparedStatement preparedStatement = (PreparedStatement) connection.prepareStatement(("SELECT FROM test WHERE ID =  ?"));
+            PreparedStatement preparedStatement = (PreparedStatement) connection.prepareStatement(("SELECT FROM users WHERE ID =  ?"));
             preparedStatement.setLong(1, id);
             ResultSet resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
@@ -106,7 +106,7 @@ public class UserDAO extends BaseDAO<User> {
         connection = connection();
         ArrayList<User> users = new ArrayList<User>();
         try {
-            PreparedStatement preparedStatement = (PreparedStatement) connection.prepareStatement(("SELECT * FROM test"));
+            PreparedStatement preparedStatement = (PreparedStatement) connection.prepareStatement(("SELECT * FROM users"));
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
                 User user = new User(resultSet.getInt("ID"), resultSet.getString("LDAPLOGIN"), resultSet.getString("USERNAME"));

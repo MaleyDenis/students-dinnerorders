@@ -3,9 +3,9 @@ package com.exadel.dinnerorders.service;
 import com.exadel.dinnerorders.entity.SystemResource;
 import org.apache.log4j.Logger;
 
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Properties;
 
 /**
@@ -18,9 +18,9 @@ public class Configuration {
     public static String getProperty(SystemResource value) {
 
         Properties prop = new Properties();
-        FileInputStream fis = null;
+      InputStream fis = null;
         try {
-            fis = new FileInputStream("core\\target\\classes\\properties.properties");
+            fis = Configuration.class.getResourceAsStream("/properties.properties");
             prop.load(fis);
         } catch (FileNotFoundException  e) {
             logger.error("File properties.properties has not been found ",e);
