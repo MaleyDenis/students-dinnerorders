@@ -1,5 +1,6 @@
 package com.exadel.dinnerorders.dao;
 
+import com.exadel.dinnerorders.entity.Role;
 import com.exadel.dinnerorders.entity.User;
 import com.mysql.jdbc.Connection;
 import com.mysql.jdbc.PreparedStatement;
@@ -27,9 +28,13 @@ public class UserDAO extends BaseDAO<User> {
     public boolean create(User newItem) {
 
         try {
-            PreparedStatement preparedStatement = (PreparedStatement) connection.prepareStatement("INSERT INTO users (LDAPLOGIN,USERNAME) VALUES(?, ?);");
+            PreparedStatement preparedStatement = (PreparedStatement) connection.prepareStatement("INSERT INTO user (LDAPLOGIN,USERNAME,ROLE) VALUES(?, ?, ?);");
             preparedStatement.setString(1, newItem.getLdapLogin());
             preparedStatement.setString(2, newItem.getUserName());
+            if(newItem.getRole()!=null)
+            preparedStatement.setString(3,newItem.getRole());
+            else
+            preparedStatement.setString(3, Role.ADMIN.getValue());
             preparedStatement.execute();
 
         } catch (SQLException e) {
@@ -50,10 +55,14 @@ public class UserDAO extends BaseDAO<User> {
         connection = connection();
         PreparedStatement preparedStatement = null;
         try {
-            preparedStatement = (PreparedStatement) connection.prepareStatement("UPDATE  users  SET  LDAPLOGIN = ? , USERNAME= ? WHERE ID = ?");
-            preparedStatement.setString(2, item.getLdapLogin());
-            preparedStatement.setString(3, item.getUserName());
-            preparedStatement.setInt(1, item.getId());
+            preparedStatement = (PreparedStatement) connection.prepareStatement("UPDATE  user  SET  LDAPLOGIN = ? , USERNAME= ?, ROLE= ?  WHERE ID = ?");
+            preparedStatement.setString(1, item.getLdapLogin());
+            preparedStatement.setString(2, item.getUserName());
+            if(item.getRole()!=null)
+            preparedStatement.setString(3,item.getRole());
+            else
+            preparedStatement.setString(3,"user");
+            preparedStatement.setInt(4, item.getId());
 
             preparedStatement.execute();
         } catch (SQLException e) {
@@ -73,7 +82,7 @@ public class UserDAO extends BaseDAO<User> {
         connection = connection();
 
         try {
-            PreparedStatement preparedStatement = (PreparedStatement) connection.prepareStatement(("DELETE FROM users WHERE ID =  ?"));
+            PreparedStatement preparedStatement = (PreparedStatement) connection.prepareStatement(("DELETE FROM user WHERE ID =  ?"));
             preparedStatement.setInt(1, item.getId());
             preparedStatement.executeUpdate();
 
@@ -89,11 +98,11 @@ public class UserDAO extends BaseDAO<User> {
     public User load(Long id) {
         connection = connection();
         try {
-            PreparedStatement preparedStatement = (PreparedStatement) connection.prepareStatement(("SELECT FROM users WHERE ID =  ?"));
+            PreparedStatement preparedStatement = (PreparedStatement) connection.prepareStatement(("SELECT FROM user WHERE ID =  ?"));
             preparedStatement.setLong(1, id);
             ResultSet resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
-                User user = new User(resultSet.getInt("ID"), resultSet.getString("LDAPLOGIN"), resultSet.getString("USERNAME"));
+                User user = new User(resultSet.getInt("ID"), resultSet.getString("LDAPLOGIN"), resultSet.getString("USERNAME"),resultSet.getString("ROLE"));
                 return user;
             }
         } catch (SQLException e) {
@@ -106,10 +115,10 @@ public class UserDAO extends BaseDAO<User> {
         connection = connection();
         ArrayList<User> users = new ArrayList<User>();
         try {
-            PreparedStatement preparedStatement = (PreparedStatement) connection.prepareStatement(("SELECT * FROM users"));
+            PreparedStatement preparedStatement = (PreparedStatement) connection.prepareStatement(("SELECT * FROM user"));
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
-                User user = new User(resultSet.getInt("ID"), resultSet.getString("LDAPLOGIN"), resultSet.getString("USERNAME"));
+                User user = new User(resultSet.getInt("ID"), resultSet.getString("LDAPLOGIN"), resultSet.getString("USERNAME"),resultSet.getString("ROLE"));
                 users.add(user);
             }
             return users;

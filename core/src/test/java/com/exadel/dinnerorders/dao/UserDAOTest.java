@@ -1,6 +1,5 @@
 package com.exadel.dinnerorders.dao;
 
-import com.exadel.dinnerorders.entity.User;
 import org.junit.Test;
 
 /**
@@ -12,9 +11,9 @@ public class UserDAOTest {
 
     @Test
     public void testCreate() throws Exception {
-        User user = new User(13, "test", "test");
 
-        userDAO.create(user);
+
+
     }
 
     @Test

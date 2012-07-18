@@ -18,10 +18,10 @@ public class Configuration {
     public static String getProperty(SystemResource value) {
 
         Properties prop = new Properties();
-      InputStream fis = null;
+      InputStream is = null;
         try {
-            fis = Configuration.class.getResourceAsStream("/properties.properties");
-            prop.load(fis);
+            is = Configuration.class.getResourceAsStream("/properties.properties");
+            prop.load(is);
         } catch (FileNotFoundException  e) {
             logger.error("File properties.properties has not been found ",e);
         } catch (IOException e) {
