@@ -30,13 +30,13 @@ public class MenuItemDAO extends BaseDAO<MenuItem> {
                 preparedStatement.setString(3, newItem.getDescription());
                 preparedStatement.setDouble(4, newItem.getCost());
                 preparedStatement.executeUpdate();
-                disconnect(connection);
                 return true;
             } catch (SQLException e) {
                 logger.error("MenuItemDAO: create has failed.", e);
+            }  finally{
+                disconnect(connection);
             }
         }
-        disconnect(connection);
         return false;
     }
 
@@ -50,13 +50,13 @@ public class MenuItemDAO extends BaseDAO<MenuItem> {
                 preparedStatement.setDouble(3, item.getCost());
                 preparedStatement.setLong(4, item.getId());
                 preparedStatement.executeUpdate();
-                disconnect(connection);
                 return true;
             } catch (SQLException e) {
                 logger.error("MenuItemDAO: update has failed.", e);
+            }  finally{
+                disconnect(connection);
             }
         }
-        disconnect(connection);
         return false;
     }
 
@@ -67,13 +67,13 @@ public class MenuItemDAO extends BaseDAO<MenuItem> {
                 PreparedStatement preparedStatement = (PreparedStatement) connection.prepareStatement("DELETE FROM menuitem WHERE menuitem_id = ?;");
                 preparedStatement.setLong(1, item.getId());
                 preparedStatement.executeUpdate();
-                disconnect(connection);
                 return true;
             } catch (SQLException e) {
                 logger.error("MenuItemDAO: delete has failed.", e);
+            } finally{
+                disconnect(connection);
             }
         }
-        disconnect(connection);
         return false;
     }
 
@@ -89,14 +89,14 @@ public class MenuItemDAO extends BaseDAO<MenuItem> {
                     String description = menuItemResultSet.getString(3);
                     Double cost = menuItemResultSet.getDouble(4);
                     MenuItem newMenuItem = new MenuItem(id, weekday, description, cost);
-                    disconnect(connection);
                     return newMenuItem;
                 }
             } catch (SQLException e) {
                 logger.error("MenuItemDAO: load has failed.", e);
+            }  finally{
+                disconnect(connection);
             }
         }
-        disconnect(connection);
         return null;
     }
 
@@ -115,13 +115,13 @@ public class MenuItemDAO extends BaseDAO<MenuItem> {
                     MenuItem newMenuItem = new MenuItem(id, weekday, description, cost);
                     items.add(newMenuItem);
                 }
-                disconnect(connection);
                 return items;
             } catch (SQLException e) {
                 logger.error("MenuItemDAO: load all has failed.", e);
+            }  finally{
+                disconnect(connection);
             }
         }
-        disconnect(connection);
         return null;
     }
 }
