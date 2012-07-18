@@ -3,11 +3,13 @@ package com.exadel.dinnerorders.dao;
 import com.exadel.dinnerorders.entity.User;
 import com.mysql.jdbc.Connection;
 import com.mysql.jdbc.PreparedStatement;
+import org.apache.log4j.Logger;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
+
 
 /**
  * User: Dima Shulgin
@@ -15,7 +17,7 @@ import java.util.Collection;
  */
 public class UserDAO extends BaseDAO<User> {
     Connection connection;
-
+    private Logger logger = Logger.getLogger(UserDAO.class);
 
     public UserDAO() {
         connection = connection();
@@ -31,7 +33,7 @@ public class UserDAO extends BaseDAO<User> {
             preparedStatement.execute();
 
         } catch (SQLException e) {
-            e.printStackTrace();
+           logger.error("Error in the function create",e);
 
         } finally {
             disconnect(connection);
@@ -55,7 +57,7 @@ public class UserDAO extends BaseDAO<User> {
 
             preparedStatement.execute();
         } catch (SQLException e) {
-            e.printStackTrace();
+            logger.error("Error in the function update",e);
 
         } finally {
             disconnect(connection);
@@ -76,7 +78,7 @@ public class UserDAO extends BaseDAO<User> {
             preparedStatement.executeUpdate();
 
         } catch (SQLException e) {
-            e.printStackTrace();
+            logger.error("Error in the function delete",e);
         } finally {
             disconnect(connection);
         }
@@ -95,7 +97,7 @@ public class UserDAO extends BaseDAO<User> {
                 return user;
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            logger.error("Error in the function load",e);
         }
         return null;
     }
@@ -112,7 +114,7 @@ public class UserDAO extends BaseDAO<User> {
             }
             return users;
         } catch (SQLException e) {
-            e.printStackTrace();
+            logger.error("Error in the function loadAll",e);
         }
         return null;
     }
