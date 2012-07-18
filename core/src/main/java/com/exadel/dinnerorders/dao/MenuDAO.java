@@ -42,13 +42,13 @@ public class MenuDAO extends BaseDAO<Menu> {
                         preparedStatement.executeUpdate();
                     }
                 }
-                disconnect(connection);
                 return true;
             } catch (SQLException e) {
                 logger.error("MenuDAO: create has failed.", e);
+            }  finally{
+                disconnect(connection);
             }
         }
-        disconnect(connection);
         return false;
     }
 
@@ -73,13 +73,13 @@ public class MenuDAO extends BaseDAO<Menu> {
                         preparedStatement.executeUpdate();
                     }
                 }
-                disconnect(connection);
                 return true;
             } catch (SQLException e) {
                 logger.error("MenuDAO: update has failed.", e);
+            }  finally{
+                disconnect(connection);
             }
         }
-        disconnect(connection);
         return false;
     }
 
@@ -93,13 +93,13 @@ public class MenuDAO extends BaseDAO<Menu> {
                 preparedStatement = (PreparedStatement) connection.prepareStatement("DELETE FROM menu_menuitem WHERE menu_id = ?;");
                 preparedStatement.setLong(1, item.getId());
                 preparedStatement.executeUpdate();
-                disconnect(connection);
                 return true;
             } catch (SQLException e) {
                 logger.error("MenuDAO: delete has failed.", e);
+            }  finally{
+                disconnect(connection);
             }
         }
-        disconnect(connection);
         return false;
     }
 
@@ -132,14 +132,14 @@ public class MenuDAO extends BaseDAO<Menu> {
                             newMenu.addItem(newMenuItem);
                         }
                     }
-                    disconnect(connection);
                     return newMenu;
                 }
             } catch (SQLException e) {
                 logger.error("MenuDAO: load has failed.", e);
+            }  finally{
+                disconnect(connection);
             }
         }
-        disconnect(connection);
         return null;
     }
 
@@ -174,13 +174,13 @@ public class MenuDAO extends BaseDAO<Menu> {
                     }
                     menus.add(newMenu);
                 }
-                disconnect(connection);
                 return menus;
             } catch (SQLException e) {
                 logger.error("MenuDAO: load all has failed.", e);
+            }  finally{
+                disconnect(connection);
             }
         }
-        disconnect(connection);
         return null;
     }
 }
