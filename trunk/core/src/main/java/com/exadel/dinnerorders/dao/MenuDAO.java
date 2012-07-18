@@ -22,7 +22,7 @@ import java.util.ArrayList;
  */
 
 public class MenuDAO extends BaseDAO<Menu> {
-    private Logger logger = Logger.getLogger(BaseDAO.class);
+    private Logger logger = Logger.getLogger(MenuDAO.class);
 
     public boolean create(Menu newItem) {
         Connection connection = connection();

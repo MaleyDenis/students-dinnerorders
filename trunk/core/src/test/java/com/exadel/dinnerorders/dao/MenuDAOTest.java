@@ -61,5 +61,6 @@ public class MenuDAOTest extends TestCase {
     @Test
     public void testDelete() throws Exception {
         Assert.assertTrue(menuDAO.delete(menu));
+        Assert.assertTrue(menuDAO.load(menu.getId()) == null);
     }
 }

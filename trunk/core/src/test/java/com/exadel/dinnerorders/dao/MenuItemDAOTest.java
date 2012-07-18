@@ -56,5 +56,8 @@ public class MenuItemDAOTest extends TestCase {
         Assert.assertTrue(menuItemDAO.delete(menuItem1));
         Assert.assertTrue(menuItemDAO.delete(menuItem2));
         Assert.assertTrue(menuItemDAO.delete(menuItem3));
+        Assert.assertTrue(menuItemDAO.load(menuItem1.getId()) == null);
+        Assert.assertTrue(menuItemDAO.load(menuItem2.getId()) == null);
+        Assert.assertTrue(menuItemDAO.load(menuItem2.getId()) == null);
     }
 }
