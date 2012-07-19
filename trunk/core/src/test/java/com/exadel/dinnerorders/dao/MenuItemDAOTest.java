@@ -5,6 +5,7 @@ import com.exadel.dinnerorders.entity.Weekday;
 
 import junit.framework.Assert;
 import junit.framework.TestCase;
+import org.junit.After;
 import org.junit.Before;
 
 /**
@@ -19,14 +20,11 @@ public class MenuItemDAOTest extends TestCase {
     private MenuItemDAO menuItemDAO;
 
     @Before
-    protected void setUp(){
+    protected void setUp() throws Exception {
         menuItem1 = new MenuItem((long)7, Weekday.MONDAY, "4", (double)1);
         menuItem2 = new MenuItem((long)5, Weekday.TUESDAY, "5", (double)2);
         menuItem3 = new MenuItem((long)6, Weekday.WEDNESDAY, "6", (double)3);
         menuItemDAO = new MenuItemDAO();
-    }
-
-    public void testCreate() throws Exception {
         Assert.assertTrue(menuItemDAO.create(menuItem1));
         Assert.assertTrue(menuItemDAO.create(menuItem2));
         Assert.assertTrue(menuItemDAO.create(menuItem3));
@@ -47,7 +45,8 @@ public class MenuItemDAOTest extends TestCase {
         Assert.assertTrue(menuItemDAO.loadAll() != null);
     }
 
-    public void testDelete() throws Exception {
+    @After
+    public void tearDown() throws Exception {
         Assert.assertTrue(menuItemDAO.delete(menuItem1));
         Assert.assertTrue(menuItemDAO.delete(menuItem2));
         Assert.assertTrue(menuItemDAO.delete(menuItem3));
