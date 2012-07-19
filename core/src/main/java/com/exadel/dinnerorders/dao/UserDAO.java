@@ -23,7 +23,9 @@ public class UserDAO extends BaseDAO<User> {
     public boolean create(User newItem) {
         Connection connection = connection();
         try {
-            PreparedStatement preparedStatement = (PreparedStatement) connection.prepareStatement("INSERT INTO user (LDAPLOGIN,USERNAME,ROLE) VALUES(?, ?, ?);");
+            PreparedStatement preparedStatement =
+                    preparedStatement = (PreparedStatement) connection.prepareStatement("INSERT INTO user (LDAPLOGIN,USERNAME,ROLE) VALUES(?, ?, ?);");
+
             preparedStatement.setString(1, newItem.getLdapLogin());
             preparedStatement.setString(2, newItem.getUserName());
             if (newItem.getRole() != null)
@@ -56,6 +58,7 @@ public class UserDAO extends BaseDAO<User> {
                 preparedStatement.setString(3, item.getRole().name());
             else
                 preparedStatement.setString(3, Role.USER.name());
+
             preparedStatement.setLong(4, item.getId());
 
             preparedStatement.execute();
@@ -128,5 +131,43 @@ public class UserDAO extends BaseDAO<User> {
         return null;
     }
 
+    public boolean dropTable() {
+        Connection connection = connection();
+
+        try {
+            PreparedStatement preparedStatement = (PreparedStatement) connection.prepareStatement(("DELETE FROM user WHERE id>0"));
+            preparedStatement.execute();
+
+        } catch (SQLException e) {
+            logger.error("Error in the  drop  function", e);
+            return false;
+        } finally {
+            disconnect(connection);
+        }
+        return true;
+    }
+
+    public Long getMaxIndex() {
+        Long maxIndex ;
+        Connection connection = connection();
+
+        try {
+            PreparedStatement preparedStatement = (PreparedStatement) connection.prepareStatement(("SELECT MAX(ID) FROM (user)"));
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if(resultSet.next()){
+            maxIndex=new Long(resultSet.getInt("MAX(ID)") );
+                return maxIndex;
+            }
+
+
+        } catch (SQLException e) {
+            logger.error("Error! Don't get max value of index", e);
+            return null;
+        } finally {
+            disconnect(connection);
+        }
+
+     return  null;
+    }
 
 }

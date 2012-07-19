@@ -31,8 +31,10 @@ public class UserDAOTest {
 
     @Test
     public void testUpdate() throws Exception {
-        long id = 2;
+
+        long id = userDAO.getMaxIndex() + 1;
         User user = new User(id, "testLogin2", "testName2", Role.USER);
+        userDAO.dropTable();
         userDAO.create(user);
         user.setLdapLogin("updateLogin");
         user.setUserName("updateName");
@@ -53,6 +55,7 @@ public class UserDAOTest {
 
         long id = 3;
         User user = new User(id, "testLogin3", "testName3", Role.USER);
+        userDAO.dropTable();
         userDAO.create(user);
 
         Collection collection = userDAO.loadAll();
@@ -70,8 +73,9 @@ public class UserDAOTest {
 
     @Test
     public void testLoad() throws Exception {
-        long id = 4;
+        long id = userDAO.getMaxIndex() + 1;
         User user = new User(id, "testLogin4", "testName4", Role.USER);
+        userDAO.dropTable();
         userDAO.create(user);
         User user1 = userDAO.load(id);
         if (user1.getUserName().equals(user.getUserName())) {
@@ -86,12 +90,20 @@ public class UserDAOTest {
 
     @Test
     public void testLoadAll() throws Exception {
-        long id = 5;
-               User user = new User(id, "testLogin5", "testName5", Role.USER);
-               userDAO.create(user);
-      int quantity = userDAO.loadAll().size();
+        long id = userDAO.getMaxIndex() + 1;
+        User user = new User(id, "testLogin5", "testName5", Role.USER);
+        userDAO.dropTable();
+        int quantity1 = 45;
+        while (quantity1 != 0) {
+            id = id + 1;
+            userDAO.create(user);
+            --quantity1;
+        }
 
-        if (quantity==5) {
+
+        int quantity2 = userDAO.loadAll().size();
+
+        if (quantity2 == 45) {
 
             Assert.assertTrue(true);
         } else {
