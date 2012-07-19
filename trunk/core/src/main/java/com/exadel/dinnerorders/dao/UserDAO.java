@@ -56,7 +56,7 @@ public class UserDAO extends BaseDAO<User> {
                 preparedStatement.setString(3, item.getRole().name());
             else
                 preparedStatement.setString(3, Role.USER.name());
-            preparedStatement.setLong(4, item.getId());
+                preparedStatement.setLong(4, item.getId());
 
             preparedStatement.execute();
         } catch (SQLException e) {
