@@ -56,7 +56,7 @@ public class UserDAO extends BaseDAO<User> {
                 preparedStatement.setString(3, item.getRole().name());
             else
                 preparedStatement.setString(3, Role.USER.name());
-                preparedStatement.setLong(4, item.getId());
+            preparedStatement.setLong(4, item.getId());
 
             preparedStatement.execute();
         } catch (SQLException e) {
@@ -100,8 +100,11 @@ public class UserDAO extends BaseDAO<User> {
                 return user;
             }
         } catch (SQLException e) {
-            logger.error("Error (SQLException in load function!",e);
+            logger.error("Error (SQLException in load function!", e);
+        } finally {
+            disconnect(connection);
         }
+
         return null;
     }
 
@@ -118,7 +121,10 @@ public class UserDAO extends BaseDAO<User> {
             return users;
         } catch (SQLException e) {
             logger.error("Error in the function loadAll", e);
+        } finally {
+            disconnect(connection);
         }
+
         return null;
     }
 
