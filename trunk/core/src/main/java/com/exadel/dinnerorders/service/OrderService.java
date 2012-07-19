@@ -7,7 +7,6 @@ import com.google.common.collect.Ordering;
 
 import java.util.Collection;
 import java.util.Comparator;
-import java.util.List;
 
 
 public class OrderService {
@@ -18,8 +17,7 @@ public class OrderService {
     };
     public static Collection<Order> sorted(Collection<Order> orders){
         Ordering<Order> orderOrdering = Ordering.from(byDate);
-        List<Order> orderList = orderOrdering.reverse().sortedCopy(orders);
-        return orderList;
+        return orderOrdering.reverse().sortedCopy(orders);
     }
     public static Collection<Order>sortedAll(){
         OrderDAO orderDAO = new OrderDAO();

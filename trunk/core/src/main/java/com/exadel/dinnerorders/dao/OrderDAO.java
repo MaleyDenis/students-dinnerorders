@@ -101,7 +101,7 @@ public class OrderDAO extends BaseDAO<Order> {
 
     private void deleteFromOrderItemsTable(Order item) {
         Connection connection = connection();
-        PreparedStatement preparedStatement = null;
+        PreparedStatement preparedStatement;
         try {
             preparedStatement = (PreparedStatement)connection.prepareStatement
                     ("DELETE FROM dinnerorders.order_menuitem WHERE order_id=?");
@@ -116,9 +116,9 @@ public class OrderDAO extends BaseDAO<Order> {
     }
 
     public Collection<Order> loadAll() {
-        Order order = null;
+        Order order;
         List<Order> orders = new ArrayList<Order>();
-        List<MenuItem> menuItems =null;
+        List<MenuItem> menuItems;
         Connection connection = connection();
         try {
             Statement statement = (Statement)connection.createStatement();
@@ -183,7 +183,9 @@ public class OrderDAO extends BaseDAO<Order> {
             order = new Order(resultSet.getLong(1),resultSet.getLong(2),resultSet.getDouble(3),
                     resultSet.getDate(4),resultSet.getDate(5));
             }
-            order.setMenuItemList(getOrderMenuItem(order, connection));
+            if (order != null) {
+                order.setMenuItemList(getOrderMenuItem(order, connection));
+            }
         } catch (SQLException e) {
            logger.error("Load error the method",e);
         } finally {
