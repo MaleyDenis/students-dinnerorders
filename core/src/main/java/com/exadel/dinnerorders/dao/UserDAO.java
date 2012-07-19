@@ -20,21 +20,17 @@ public class UserDAO extends BaseDAO<User> {
 
     private Logger logger = Logger.getLogger(UserDAO.class);
 
-    public UserDAO() {
-
-    }
-
-
-    public boolean create(User newItem) {
+     public boolean create(User newItem) {
         Connection connection = connection();
         try {
             PreparedStatement preparedStatement = (PreparedStatement) connection.prepareStatement("INSERT INTO user (LDAPLOGIN,USERNAME,ROLE) VALUES(?, ?, ?);");
             preparedStatement.setString(1, newItem.getLdapLogin());
             preparedStatement.setString(2, newItem.getUserName());
             if (newItem.getRole() != null)
-                preparedStatement.setString(3, newItem.getRole());
+
+                preparedStatement.setString(3, newItem.getRole().toString().toLowerCase());
             else
-                preparedStatement.setString(3, Role.ADMIN.getValue());
+                preparedStatement.setString(3, Role.ADMIN.toString().toLowerCase());
             preparedStatement.execute();
 
         } catch (SQLException e) {
@@ -58,10 +54,10 @@ public class UserDAO extends BaseDAO<User> {
             preparedStatement.setString(1, item.getLdapLogin());
             preparedStatement.setString(2, item.getUserName());
             if (item.getRole() != null)
-                preparedStatement.setString(3, item.getRole());
+                preparedStatement.setString(3, item.getRole().toString().toLowerCase());
             else
-                preparedStatement.setString(3, "user");
-            preparedStatement.setInt(4, item.getId());
+                preparedStatement.setString(3,Role.USER.toString().toLowerCase());
+            preparedStatement.setLong(4, item.getId());
 
             preparedStatement.execute();
         } catch (SQLException e) {
@@ -82,7 +78,7 @@ public class UserDAO extends BaseDAO<User> {
 
         try {
             PreparedStatement preparedStatement = (PreparedStatement) connection.prepareStatement(("DELETE FROM user WHERE ID =  ?"));
-            preparedStatement.setInt(1, item.getId());
+            preparedStatement.setLong(1, item.getId());
             preparedStatement.executeUpdate();
 
         } catch (SQLException e) {
@@ -97,15 +93,15 @@ public class UserDAO extends BaseDAO<User> {
     public User load(Long id) {
         Connection connection = connection();
         try {
-            PreparedStatement preparedStatement = (PreparedStatement) connection.prepareStatement(("SELECT FROM user WHERE ID =  ?"));
-            preparedStatement.setLong(1, id);
+            PreparedStatement preparedStatement = (PreparedStatement) connection.prepareStatement(("SELECT * FROM user WHERE ID =  ?;"));
+             preparedStatement.setLong(1,id);
             ResultSet resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
-                User user = new User(resultSet.getInt("ID"), resultSet.getString("LDAPLOGIN"), resultSet.getString("USERNAME"), resultSet.getString("ROLE"));
+                 User user = new User(resultSet.getInt("ID"), resultSet.getString("LDAPLOGIN"), resultSet.getString("USERNAME"),Role.valueOf(resultSet.getString("ROLE").toUpperCase()));
                 return user;
             }
         } catch (SQLException e) {
-            logger.error("Error in the function load", e);
+            e.printStackTrace();
         }
         return null;
     }
@@ -117,7 +113,7 @@ public class UserDAO extends BaseDAO<User> {
             PreparedStatement preparedStatement = (PreparedStatement) connection.prepareStatement(("SELECT * FROM user"));
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
-                User user = new User(resultSet.getInt("ID"), resultSet.getString("LDAPLOGIN"), resultSet.getString("USERNAME"), resultSet.getString("ROLE"));
+                User user = new User(resultSet.getInt("ID"), resultSet.getString("LDAPLOGIN"), resultSet.getString("USERNAME"), Role.valueOf(resultSet.getString("ROLE").toUpperCase()));
                 users.add(user);
             }
             return users;

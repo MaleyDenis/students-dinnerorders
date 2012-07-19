@@ -6,13 +6,13 @@ package com.exadel.dinnerorders.entity;
  */
 public class User {
 
-    private int id;
+    private long id;
     private String ldapLogin;
     private String userName;
-    private String role;
+    private Role role;
 
 
-    public User(int id, String ldapLogin, String userName, String role) {
+    public User(long id, String ldapLogin, String userName, Role role) {
         this.id = id;
         this.userName = userName;
         this.ldapLogin = ldapLogin;
@@ -32,11 +32,11 @@ public class User {
     }
 
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
     }
 
@@ -56,11 +56,11 @@ public class User {
         this.userName = userName;
     }
 
-    public String getRole() {
+    public Role getRole() {
         return role;
     }
 
-    public void setRole(String role) {
+    public void setRole(Role role) {
         this.role = role;
     }
 
