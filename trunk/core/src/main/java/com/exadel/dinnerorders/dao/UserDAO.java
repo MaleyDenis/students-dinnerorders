@@ -20,7 +20,7 @@ public class UserDAO extends BaseDAO<User> {
 
     private Logger logger = Logger.getLogger(UserDAO.class);
 
-     public boolean create(User newItem) {
+    public boolean create(User newItem) {
         Connection connection = connection();
         try {
             PreparedStatement preparedStatement = (PreparedStatement) connection.prepareStatement("INSERT INTO user (LDAPLOGIN,USERNAME,ROLE) VALUES(?, ?, ?);");
@@ -28,9 +28,9 @@ public class UserDAO extends BaseDAO<User> {
             preparedStatement.setString(2, newItem.getUserName());
             if (newItem.getRole() != null)
 
-                preparedStatement.setString(3, newItem.getRole().toString().toLowerCase());
+                preparedStatement.setString(3, newItem.getRole().name());
             else
-                preparedStatement.setString(3, Role.ADMIN.toString().toLowerCase());
+                preparedStatement.setString(3, Role.ADMIN.name());
             preparedStatement.execute();
 
         } catch (SQLException e) {
@@ -47,16 +47,15 @@ public class UserDAO extends BaseDAO<User> {
     public boolean update(User item) {
 
         Connection connection = connection();
-        User temp = new User(item);
         PreparedStatement preparedStatement = null;
         try {
             preparedStatement = (PreparedStatement) connection.prepareStatement("UPDATE  user  SET  LDAPLOGIN = ? , USERNAME= ?, ROLE= ?  WHERE ID = ?");
             preparedStatement.setString(1, item.getLdapLogin());
             preparedStatement.setString(2, item.getUserName());
             if (item.getRole() != null)
-                preparedStatement.setString(3, item.getRole().toString().toLowerCase());
+                preparedStatement.setString(3, item.getRole().name());
             else
-                preparedStatement.setString(3,Role.USER.toString().toLowerCase());
+                preparedStatement.setString(3, Role.USER.name());
             preparedStatement.setLong(4, item.getId());
 
             preparedStatement.execute();
@@ -94,14 +93,14 @@ public class UserDAO extends BaseDAO<User> {
         Connection connection = connection();
         try {
             PreparedStatement preparedStatement = (PreparedStatement) connection.prepareStatement(("SELECT * FROM user WHERE ID =  ?;"));
-             preparedStatement.setLong(1,id);
+            preparedStatement.setLong(1, id);
             ResultSet resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
-                 User user = new User(resultSet.getInt("ID"), resultSet.getString("LDAPLOGIN"), resultSet.getString("USERNAME"),Role.valueOf(resultSet.getString("ROLE").toUpperCase()));
+                User user = new User(resultSet.getLong("ID"), resultSet.getString("LDAPLOGIN"), resultSet.getString("USERNAME"), Role.valueOf(resultSet.getString("ROLE")));
                 return user;
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            logger.error("Error (SQLException in load function!",e);
         }
         return null;
     }
@@ -113,7 +112,7 @@ public class UserDAO extends BaseDAO<User> {
             PreparedStatement preparedStatement = (PreparedStatement) connection.prepareStatement(("SELECT * FROM user"));
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
-                User user = new User(resultSet.getInt("ID"), resultSet.getString("LDAPLOGIN"), resultSet.getString("USERNAME"), Role.valueOf(resultSet.getString("ROLE").toUpperCase()));
+                User user = new User(resultSet.getLong("ID"), resultSet.getString("LDAPLOGIN"), resultSet.getString("USERNAME"), Role.valueOf(resultSet.getString("ROLE")));
                 users.add(user);
             }
             return users;

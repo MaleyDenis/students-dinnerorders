@@ -26,8 +26,6 @@ public class UserService {
     public static User findUserbyUserName(final String username) {
 
         ArrayList<User> users = getAllUsers();
-        StringUtils stringUtils = new StringUtils();
-
         Iterable<User> iterables = Iterables.filter(users, new Predicate<User>() {
             public boolean apply(User u) {
 
@@ -37,7 +35,7 @@ public class UserService {
 
 
         if (iterables.iterator().hasNext()) {
-            return (User) iterables.iterator().next();
+            return iterables.iterator().next();
         } else
             return null;
 
