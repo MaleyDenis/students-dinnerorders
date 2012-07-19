@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<metadata>
+  <groupId>com.morphia</groupId>
+  <artifactId>morphia</artifactId>
+  <versioning>
+    <versions>
+      <version>0.99.1-SNAPSHOT</version>
+    </versions>
+    <lastUpdated>20120719152714</lastUpdated>
+  </versioning>
+</metadata>
