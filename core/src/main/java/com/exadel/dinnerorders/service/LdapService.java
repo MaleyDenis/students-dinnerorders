@@ -4,7 +4,10 @@ import com.exadel.dinnerorders.entity.SystemResource;
 import com.exadel.dinnerorders.exception.IllegalUserLoginException;
 import org.apache.log4j.Logger;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Hashtable;
+import java.util.List;
 import javax.naming.Context;
 import javax.naming.NamingEnumeration;
 import javax.naming.NamingException;
@@ -17,7 +20,7 @@ public class LdapService {
     public LdapService() {
         String settings = "com.sun.jndi.ldap.LdapCtxFactory";
         environment.put(Context.INITIAL_CONTEXT_FACTORY, settings);
-        environment.put(Context.PROVIDER_URL, Configuration.getProperty(SystemResource.LDAP));
+        environment.put(Context.PROVIDER_URL, Configuration.getProperty(SystemResource.LDAP_HOST));
     }
 
     private NamingEnumeration<SearchResult> getAttributes() {
@@ -26,11 +29,11 @@ public class LdapService {
             DirContext dirContext = new InitialDirContext(environment);
 
             SearchControls controls = new SearchControls();
-            controls.setReturningAttributes(new String[] {"uid"});
+            controls.setReturningAttributes(new String[] {Configuration.getProperty(SystemResource.LDAP_SEARCHING_ATTRIBUTES)});
             controls.setSearchScope(SearchControls.SUBTREE_SCOPE);
 
-            String searchFilter = "(objectclass=person)";
-            String startSearchBase = "ou=addressbook";
+            String searchFilter = Configuration.getProperty(SystemResource.LDAP_SEARCHING_FILTER);
+            String startSearchBase = Configuration.getProperty(SystemResource.LDAP_SEARCHING_START_BASE);
             result = dirContext.search(startSearchBase, searchFilter, controls);
             dirContext.close();
         } catch (NamingException namingException) {
@@ -50,8 +53,9 @@ public class LdapService {
         }
 
         try {
-            environment.put(Context.SECURITY_AUTHENTICATION, "simple");
-            environment.put(Context.SECURITY_PRINCIPAL, "cn=" + userCN + ",ou=addressbook,dc=exadel,dc=com");
+            environment.put(Context.SECURITY_AUTHENTICATION, Configuration.getProperty(SystemResource.LDAP_AUTHENTICATION_TYPE));
+            environment.put(Context.SECURITY_PRINCIPAL, "cn=" + userCN + "," +
+                    Configuration.getProperty(SystemResource.LDAP_SEARCHING_START_BASE)+",dc=exadel,dc=com");
             environment.put(Context.SECURITY_CREDENTIALS, password);
             DirContext dirContext = new InitialDirContext(environment);
             dirContext.close();
@@ -80,7 +84,7 @@ public class LdapService {
 
     private boolean checkAllAttributes(Attributes resultUnitAttributes, String login) {
         try {
-            Attribute attribute = resultUnitAttributes.get("uid");
+            Attribute attribute = resultUnitAttributes.get(Configuration.getProperty(SystemResource.LDAP_SEARCHING_ATTRIBUTES));
             int amount = attribute.size();
             for (int i = 0; i < amount; i++) {
                 if (attribute.get(i).equals(login)) {
@@ -99,5 +103,20 @@ public class LdapService {
             throw new IllegalUserLoginException(login);
         } else
             return userName;
+    }
+
+    public Collection<String> loadAll() {
+        List<String> nameList = new ArrayList<String>();
+        try {
+            NamingEnumeration searchResult = getAttributes();
+            while (searchResult.hasMore()) {
+                SearchResult resultUnit = (SearchResult)searchResult.next();
+                String userName = resultUnit.getName().substring(("cn=").length());
+                nameList.add(userName);
+            }
+        } catch (NamingException namingException) {
+            logger.error("NamingException at " + getClass().getPackage().getName() + "loadAll()", namingException);
+        }
+        return nameList;
     }
 }
