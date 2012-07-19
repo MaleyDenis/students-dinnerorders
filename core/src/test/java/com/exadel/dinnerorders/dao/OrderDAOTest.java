@@ -14,7 +14,7 @@ import java.util.Date;
 import java.util.List;
 
 
- public class OrderTest extends TestCase {
+ public class OrderDAOTest extends TestCase {
     @Before
     public void setUp() throws Exception {
 
