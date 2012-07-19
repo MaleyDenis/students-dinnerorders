@@ -1,6 +1,5 @@
 package com.exadel.dinnerorders.service;
 
-import com.exadel.dinnerorders.dao.OrderTest;
 import com.exadel.dinnerorders.entity.Order;
 import junit.framework.TestCase;
 import org.junit.Test;
