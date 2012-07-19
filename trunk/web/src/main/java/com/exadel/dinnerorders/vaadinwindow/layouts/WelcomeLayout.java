@@ -9,7 +9,6 @@ public class WelcomeLayout extends GridLayout {
     public static final int DEFAULT_COLUMN_COUNT = 5;
     public static final int DEFAULT_ROW_COUNT = 5;
     private Label welcomeLabel;
-    private Panel welcomePanel;
     private Panel userInfoPanel;
 
     public WelcomeLayout() {
@@ -51,8 +50,6 @@ public class WelcomeLayout extends GridLayout {
     private void initComponents() {
         welcomeLabel = new Label("Welcome");
         welcomeLabel.setContentMode(Label.CONTENT_RAW);
-        welcomePanel = new Panel();
-        welcomePanel.addComponent(welcomeLabel);
         userInfoPanel = new UserInfoPanel();
     }
 }
