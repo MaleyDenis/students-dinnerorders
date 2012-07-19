@@ -17,8 +17,8 @@
             </activation>
             <id>development</id>
             <build>
-            <filters>
-                <filter>src/main/resources/development.properties</filter>
+                <filters>
+                    <filter>src/main/resources/development.properties</filter>
                 </filters>
                 <resources>
                     <resource>
@@ -34,25 +34,25 @@
 
         <profile>
 
-               <activation>
-                   <activeByDefault>false</activeByDefault>
-               </activation>
-               <id>production</id>
-               <build>
-               <filters>
-                   <filter>src/main/resources/production.properties</filter>
-                   </filters>
-                   <resources>
-                       <resource>
-                           <directory>src/main/resources</directory>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+            </activation>
+            <id>production</id>
+            <build>
+                <filters>
+                    <filter>src/main/resources/production.properties</filter>
+                </filters>
+                <resources>
+                    <resource>
+                        <directory>src/main/resources</directory>
 
 
-                           <filtering>true</filtering>
+                        <filtering>true</filtering>
 
-                       </resource>
-                   </resources>
-               </build>
-           </profile>
+                    </resource>
+                </resources>
+            </build>
+        </profile>
 
     </profiles>
     <parent>
@@ -101,10 +101,31 @@
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
         </dependency>
+
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+
+        </dependency>
+
+
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+        </dependency>
         <dependency>
             <groupId>com.google.collections</groupId>
             <artifactId>google-collections</artifactId>
+            <version>0.8</version>
         </dependency>
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>10.0.1</version>
+        </dependency>
+
+
+
     </dependencies>
 
 </project>
