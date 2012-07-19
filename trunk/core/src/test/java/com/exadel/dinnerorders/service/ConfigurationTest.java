@@ -1,5 +1,6 @@
 package com.exadel.dinnerorders.service;
 
+import com.exadel.dinnerorders.entity.SystemResource;
 import junit.framework.Assert;
 import org.junit.Test;
 
@@ -7,14 +8,13 @@ import org.junit.Test;
 public class ConfigurationTest {
     @Test
     public void testGetProperty() {
-        //   try {
 
-        //  Configuration.getProperty("host");
+        if (Configuration.getProperty(SystemResource.LOGIN).equals("dimashulgin2012@gmail.com")) {
+            Assert.assertTrue(true);
+        } else {
+            Assert.assertTrue(false);
+        }
 
-        Assert.assertTrue(true);
-        // }  catch (IOException e) {
-        //  Assert.assertTrue(false);
-        // }
     }
 
 
