@@ -88,8 +88,7 @@ public class MenuItemDAO extends BaseDAO<MenuItem> {
                     Weekday weekday = Weekday.valueOf(menuItemResultSet.getString(2));
                     String description = menuItemResultSet.getString(3);
                     Double cost = menuItemResultSet.getDouble(4);
-                    MenuItem newMenuItem = new MenuItem(id, weekday, description, cost);
-                    return newMenuItem;
+                    return new MenuItem(id, weekday, description, cost);
                 }
             } catch (SQLException e) {
                 logger.error("MenuItemDAO: load has failed.", e);

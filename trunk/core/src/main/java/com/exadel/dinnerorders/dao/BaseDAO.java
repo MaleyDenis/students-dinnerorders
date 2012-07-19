@@ -27,7 +27,6 @@ public abstract class BaseDAO<E> implements DAO<E>{
             String login = Configuration.getProperty(SystemResource.DATABASE_LOGIN);
             String password = Configuration.getProperty(SystemResource.DATABASE_PASSWORD);
             connection = (Connection)DriverManager.getConnection(url, login, password);
-
         }catch(ClassNotFoundException e){
             logger.error("BaseDAO: class has not been found.", e);
         }catch(SQLException e){

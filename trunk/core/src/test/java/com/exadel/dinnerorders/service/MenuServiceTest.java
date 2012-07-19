@@ -11,7 +11,6 @@ import junit.framework.TestCase;
 
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Test;
 
 import java.sql.Timestamp;
 import java.util.Collection;
@@ -23,6 +22,7 @@ import java.util.List;
  * User: Василий Силин
  * Date: 18.7.12
  */
+
 public class MenuServiceTest extends TestCase {
     private MenuDAO menuDAO;
     private MenuItemDAO menuItemDAO;
@@ -49,7 +49,6 @@ public class MenuServiceTest extends TestCase {
         Assert.assertTrue(menuItemDAO.create(new MenuItem((long)3, Weekday.TUESDAY, "C", (double)3)));
     }
 
-    @Test
     public void testFindMenuByDate() throws Exception {
         Timestamp date = new Timestamp((long)134262 * 10000000 + 2791664 + 2000);
         Collection<Menu> collection = MenuService.findMenuByDate(date);
@@ -63,7 +62,7 @@ public class MenuServiceTest extends TestCase {
         MenuItem menuItem = menu.getItems().get(Weekday.FRIDAY).get(0);
         Assert.assertTrue(menuItem.getDescription().equals(menuItem1.getDescription()));
         Assert.assertTrue(menuItem.getCost().equals(menuItem1.getCost()));
-        Assert.assertTrue(menuItem.getId() == menuItem1.getId());
+        Assert.assertTrue(menuItem.getId().equals(menuItem1.getId()));
         Assert.assertTrue(menuItem.getWeekday() == menuItem1.getWeekday());
     }
 

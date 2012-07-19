@@ -6,6 +6,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.sql.Timestamp;
 
+/**
+ * User: Василий Силин
+ * Date: 16.7.12
+ */
+
 public class Menu {
     private Long id;
     private String cafeName;
