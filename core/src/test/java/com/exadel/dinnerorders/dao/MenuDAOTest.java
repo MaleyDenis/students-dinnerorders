@@ -6,6 +6,7 @@ import com.exadel.dinnerorders.entity.Weekday;
 
 import junit.framework.Assert;
 import junit.framework.TestCase;
+import org.junit.After;
 import org.junit.Before;
 
 import java.sql.Timestamp;
@@ -25,7 +26,7 @@ public class MenuDAOTest extends TestCase {
     private Menu menu;
 
     @Before
-    protected void setUp(){
+    protected void setUp() throws Exception {
         menuDAO = new MenuDAO();
         HashMap<Weekday, List<MenuItem>> map = new HashMap<Weekday, List<MenuItem>>();
         ArrayList<MenuItem> list = new ArrayList<MenuItem>();
@@ -35,9 +36,6 @@ public class MenuDAOTest extends TestCase {
         list.add(new MenuItem((long)2, Weekday.WEDNESDAY, "B", (double)2));
         list.add(new MenuItem((long)3, Weekday.TUESDAY, "C", (double)3));
         menu = new Menu((long)1, "1", new Timestamp(new Date().getTime()), new Timestamp(new Date().getTime()), map);
-    }
-
-    public void testCreate() throws Exception {
         Assert.assertTrue(menuDAO.create(menu));
     }
 
@@ -54,7 +52,8 @@ public class MenuDAOTest extends TestCase {
         Assert.assertTrue(menuDAO.load((long)3252) == null);
     }
 
-    public void testDelete() throws Exception {
+    @After
+    public void tearDown() throws Exception {
         Assert.assertTrue(menuDAO.delete(menu));
         Assert.assertTrue(menuDAO.load(menu.getId()) == null);
     }
