@@ -33,6 +33,7 @@ public class UserService {
             if (user == null) {
                 user = new User();
                 user.setId(null);
+                user.setUserName(userName);
                 user.setRole(Role.USER);
             }
             users.add(user);
