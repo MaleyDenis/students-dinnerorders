@@ -46,6 +46,8 @@ public class OrderDAO extends BaseDAO<Order> {
             }
         } catch (SQLException e) {
             logger.error("Create error the method",e);
+        } finally {
+            disconnect(connection);
         }
         return false;
     }
@@ -66,11 +68,12 @@ public class OrderDAO extends BaseDAO<Order> {
                 preparedStatement.close();
                 disconnect(connection);
                 return true;
-
             }
         }
         catch (SQLException e) {
            logger.error("Update error the method",e);
+        } finally {
+            disconnect(connection);
         }
         return false;
     }
@@ -90,6 +93,8 @@ public class OrderDAO extends BaseDAO<Order> {
             }
         } catch (SQLException e) {
            logger.error("Delete error the method",e);
+        } finally {
+            disconnect(connection);
         }
         return false;
     }
@@ -103,9 +108,10 @@ public class OrderDAO extends BaseDAO<Order> {
             preparedStatement.setLong(1,item.getId());
             preparedStatement.executeUpdate();
             preparedStatement.close();
-            disconnect(connection);
         } catch (SQLException e) {
            logger.error("DeleteFromOrderItemsTable error the method",e);
+        } finally {
+            disconnect(connection);
         }
     }
 
@@ -124,12 +130,15 @@ public class OrderDAO extends BaseDAO<Order> {
                         resultSet.getDouble(3),
                         resultSet.getDate(4),
                         resultSet.getDate(5));
+
+                orders.add(order);
+                menuItems = getOrderMenuItem(order,connection);
+                order.setMenuItemList(menuItems);
             }
-            menuItems = getOrderMenuItem(order,connection);
-            order.setMenuItemList(menuItems);
-            orders.add(order);
         } catch (SQLException e) {
            logger.error("LoadAll error the method",e);
+        } finally {
+            disconnect(connection);
         }
         return orders;
     }
@@ -156,6 +165,8 @@ public class OrderDAO extends BaseDAO<Order> {
             }
         } catch (SQLException e) {
             logger.error("GetOrderMenuItem error the method",e);
+        } finally {
+            disconnect(connection);
         }
         return menuItems;
     }
@@ -175,6 +186,8 @@ public class OrderDAO extends BaseDAO<Order> {
             order.setMenuItemList(getOrderMenuItem(order, connection));
         } catch (SQLException e) {
            logger.error("Load error the method",e);
+        } finally {
+            disconnect(connection);
         }
         return  order;
     }
