@@ -1,5 +1,10 @@
 package com.exadel.dinnerorders.entity;
 
+/**
+ * User: Василий Силин
+ * Date: 16.7.12
+ */
+
 public class MenuItem {
     private Long id;
     private Weekday weekday;

@@ -6,12 +6,12 @@ import com.exadel.dinnerorders.entity.Weekday;
 import junit.framework.Assert;
 import junit.framework.TestCase;
 import org.junit.Before;
-import org.junit.Test;
 
 /**
  * User: Василий Силин
  * Date: 16.7.12
  */
+
 public class MenuItemDAOTest extends TestCase {
     private MenuItem menuItem1;
     private MenuItem menuItem2;
@@ -26,32 +26,27 @@ public class MenuItemDAOTest extends TestCase {
         menuItemDAO = new MenuItemDAO();
     }
 
-    @Test
     public void testCreate() throws Exception {
         Assert.assertTrue(menuItemDAO.create(menuItem1));
         Assert.assertTrue(menuItemDAO.create(menuItem2));
         Assert.assertTrue(menuItemDAO.create(menuItem3));
     }
 
-    @Test
     public void testUpdate() throws Exception {
         Assert.assertTrue(menuItemDAO.update(new MenuItem((long)7, Weekday.MONDAY, "1", (double)4)));
         Assert.assertTrue(menuItemDAO.update(new MenuItem((long)5, Weekday.TUESDAY, "2", (double)5)));
         Assert.assertTrue(menuItemDAO.update(new MenuItem((long)6, Weekday.WEDNESDAY, "3", (double)6)));
     }
 
-    @Test
     public void testLoad() throws Exception {
         Assert.assertTrue(menuItemDAO.load((long)7) != null);
         Assert.assertTrue(menuItemDAO.load((long)8) == null);
     }
 
-    @Test
     public void testLoadAll() throws Exception {
         Assert.assertTrue(menuItemDAO.loadAll() != null);
     }
 
-    @Test
     public void testDelete() throws Exception {
         Assert.assertTrue(menuItemDAO.delete(menuItem1));
         Assert.assertTrue(menuItemDAO.delete(menuItem2));

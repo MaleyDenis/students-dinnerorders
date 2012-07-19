@@ -9,7 +9,6 @@ import org.apache.log4j.Logger;
 
 import javax.annotation.Nullable;
 
-import java.sql.Timestamp;
 import java.util.Collection;
 import java.util.Date;
 
@@ -25,22 +24,20 @@ public class MenuService {
         final Date date = new Date();
         Predicate<Menu> predicate = new Predicate<Menu>() {
             public boolean apply(@Nullable Menu o) {
-                return o.getDateStart().before(new Timestamp(date.getTime())) && o.getDateEnd().after(new Timestamp(date.getTime()));
+                return o != null && o.getDateStart().before(date) && o.getDateEnd().after(date);
             }
         };
         MenuDAO menuDAO = new MenuDAO();
-        Collection<Menu> menus = Collections2.filter(menuDAO.loadAll(), predicate);
-        return menus;
+        return Collections2.filter(menuDAO.loadAll(), predicate);
     }
 
     public static Collection<Menu> findMenuByDate(final Date date){
         Predicate<Menu> predicate = new Predicate<Menu>() {
             public boolean apply(@Nullable Menu o) {
-                return o.getDateStart().before(date) && o.getDateEnd().after(date);
+                return o != null && o.getDateStart().before(date) && o.getDateEnd().after(date);
             }
         };
         MenuDAO menuDAO = new MenuDAO();
-        Collection<Menu> menus = Collections2.filter(menuDAO.loadAll(), predicate);
-        return menus;
+        return Collections2.filter(menuDAO.loadAll(), predicate);
     }
 }
