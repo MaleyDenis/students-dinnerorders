@@ -23,10 +23,6 @@
             <id>Java.net</id>
             <url>http://download.java.net/maven/2</url>
         </repository>
-            <repository>
-                <id>morphia</id>
-                <url>file://${basedir}</url>
-            </repository>
     </repositories>
 
     <dependencyManagement>
