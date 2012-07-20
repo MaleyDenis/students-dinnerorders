@@ -39,6 +39,20 @@ public class MenuDAOTest extends TestCase {
         Assert.assertTrue(menuDAO.create(menu));
     }
 
+    public void testCreateAndDelete() throws Exception {
+        HashMap<Weekday, List<MenuItem>> map = new HashMap<Weekday, List<MenuItem>>();
+        ArrayList<MenuItem> list = new ArrayList<MenuItem>();
+        list.add(new MenuItem((long)1, Weekday.FRIDAY, "A", (double)1));
+        map.put(Weekday.FRIDAY, list);
+        list = new ArrayList<MenuItem>();
+        list.add(new MenuItem((long)2, Weekday.WEDNESDAY, "B", (double)2));
+        list.add(new MenuItem((long)3, Weekday.TUESDAY, "C", (double)3));
+        Menu newMenu = new Menu((long)2, "1", new Timestamp(new Date().getTime()), new Timestamp(new Date().getTime()), map);
+        Assert.assertTrue(menuDAO.create(newMenu));
+        Assert.assertTrue(menuDAO.delete(newMenu));
+        Assert.assertTrue(menuDAO.load(newMenu.getId()) == null);
+    }
+
     public void testUpdate() throws Exception{
         Assert.assertTrue(menuDAO.update(new Menu((long)1, "2", new Timestamp(new Date().getTime()), new Timestamp(new Date().getTime()), menu.getItems())));
     }
@@ -55,6 +69,5 @@ public class MenuDAOTest extends TestCase {
     @After
     public void tearDown() throws Exception {
         Assert.assertTrue(menuDAO.delete(menu));
-        Assert.assertTrue(menuDAO.load(menu.getId()) == null);
     }
 }
