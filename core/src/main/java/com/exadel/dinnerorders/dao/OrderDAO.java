@@ -3,7 +3,9 @@ package com.exadel.dinnerorders.dao;
 import com.exadel.dinnerorders.entity.MenuItem;
 import com.exadel.dinnerorders.entity.Order;
 
+
 import com.exadel.dinnerorders.entity.Weekday;
+import com.exadel.dinnerorders.service.UniqueIDService;
 import com.mysql.jdbc.Connection;
 import com.mysql.jdbc.PreparedStatement;
 import com.mysql.jdbc.Statement;
@@ -36,12 +38,14 @@ public class OrderDAO extends BaseDAO<Order> {
                 pst.close();
                 for (MenuItem menuItem:list){
                     PreparedStatement preparedStatement = (PreparedStatement)connection.prepareStatement
-                            ("INSERT INTO dinnerorders.order_menuitem (order_id, menu_item_id) VALUE (?,?)");
-                    preparedStatement.setLong(1, orderItem.getId());
-                    preparedStatement.setLong(2, menuItem.getId());
+                            ("INSERT INTO dinnerorders.order_menuitem (id ,order_id, menu_item_id) VALUE (?,?,?)");
+                    preparedStatement.setLong(1, UniqueIDService.getID());
+                    preparedStatement.setLong(2, orderItem.getId());
+                    preparedStatement.setLong(3, menuItem.getId());
                     preparedStatement.executeUpdate();
                 }
                 disconnect(connection);
+
                 return true;
             }
         } catch (SQLException e) {
@@ -135,10 +139,14 @@ public class OrderDAO extends BaseDAO<Order> {
                 menuItems = getOrderMenuItem(order,connection);
                 order.setMenuItemList(menuItems);
             }
+            resultSet.close();
+            statement.close();
         } catch (SQLException e) {
            logger.error("LoadAll error the method",e);
         } finally {
+
             disconnect(connection);
+
         }
         return orders;
     }
@@ -165,8 +173,6 @@ public class OrderDAO extends BaseDAO<Order> {
             }
         } catch (SQLException e) {
             logger.error("GetOrderMenuItem error the method",e);
-        } finally {
-            disconnect(connection);
         }
         return menuItems;
     }
