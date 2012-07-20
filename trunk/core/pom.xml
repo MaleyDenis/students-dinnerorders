@@ -55,6 +55,7 @@
         </profile>
 
     </profiles>
+
     <parent>
         <groupId>com.exadel</groupId>
         <artifactId>students</artifactId>
@@ -63,7 +64,6 @@
     </parent>
 
     <build>
-
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
