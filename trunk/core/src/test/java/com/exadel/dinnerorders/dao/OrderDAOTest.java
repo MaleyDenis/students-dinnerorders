@@ -45,17 +45,16 @@ import java.util.List;
         MenuItem  menuItem2 = new MenuItem((long)3, Weekday.MONDAY, "4", (double)1);
         menuItemDAO.create(menuItem2);
         List<MenuItem> menuItems2 = new ArrayList<MenuItem>();
-        menuItems.add(menuItem2);
+        menuItems2.add(menuItem2);
         order1.setMenuItemList(menuItems2);
         orderDAO.create(order1);
-
 
     }
 
    public void testUpdate() throws Exception {
         OrderDAO orderDAO = new OrderDAO();
         Date date = new Date();
-        Order order2 = new Order((long)2,(long)3,23.5,date,date);
+        Order order2 = new Order((long)2,(long)2,23.5,date,date);
         order2.setCost(54645);
         order2.setDatePayment(date);
         orderDAO.update(order2);
