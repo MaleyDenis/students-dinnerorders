@@ -45,6 +45,7 @@ public class WebApplicationController extends com.vaadin.Application {
     @Subscribe
     public void authenticationPassed(AuthenticationEvent authenticationEvent) {
         getMainWindow().setContent(welcomeLayout);
+        replaceCentralPanel(tableOrderPanel);
     }
 
     @Subscribe
@@ -53,6 +54,7 @@ public class WebApplicationController extends com.vaadin.Application {
     }
 
     private void replaceCentralPanel(Component newComponent) {
-
+        ((GridLayout)getMainWindow().getContent()).removeComponent(1, 3);
+        ((GridLayout)getMainWindow().getContent()).addComponent(newComponent, 1, 3, 3, 4);
     }
 }
