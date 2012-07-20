@@ -9,9 +9,9 @@
     <version>1.0</version>
     <packaging>jar</packaging>
     <name>core</name>
+
     <profiles>
         <profile>
-
             <activation>
                 <activeByDefault>true</activeByDefault>
             </activation>
@@ -23,17 +23,12 @@
                 <resources>
                     <resource>
                         <directory>src/main/java</directory>
-
-
                         <filtering>true</filtering>
-
                     </resource>
                 </resources>
             </build>
         </profile>
-
         <profile>
-
             <activation>
                 <activeByDefault>false</activeByDefault>
             </activation>
@@ -45,15 +40,11 @@
                 <resources>
                     <resource>
                         <directory>src/main/resources</directory>
-
-
                         <filtering>true</filtering>
-
                     </resource>
                 </resources>
             </build>
         </profile>
-
     </profiles>
 
     <parent>
