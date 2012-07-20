@@ -53,7 +53,7 @@ public class UserDAOTest {
     @Test
     public void testDelete() throws Exception {
 
-        long id = 3;
+        long id = userDAO.getMaxIndex() + 1;
         User user = new User(id, "testLogin3", "testName3", Role.USER);
         userDAO.dropTable();
         userDAO.create(user);
