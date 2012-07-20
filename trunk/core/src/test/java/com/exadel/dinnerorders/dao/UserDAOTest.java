@@ -62,6 +62,7 @@ public class UserDAOTest {
         int quantity = collection.size();
         collection = userDAO.loadAll();
         userDAO.delete(user);
+        userDAO.create(user);
         if (quantity == collection.size()) {
             Assert.assertTrue(true);
         } else {
@@ -73,14 +74,17 @@ public class UserDAOTest {
 
     @Test
     public void testLoad() throws Exception {
+
         long id = userDAO.getMaxIndex() + 1;
         User user = new User(id, "testLogin4", "testName4", Role.USER);
+
         userDAO.dropTable();
         userDAO.create(user);
         User user1 = userDAO.load(id);
         if (user1.getUserName().equals(user.getUserName())) {
 
             Assert.assertTrue(true);
+
         } else {
             Assert.assertTrue(false);
         }
