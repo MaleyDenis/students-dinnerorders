@@ -41,7 +41,7 @@ public class LdapService {
 
     private String[] loadSearchingAttributes() {
         Scanner scanner = new Scanner(Configuration.getProperty(SystemResource.LDAP_SEARCHING_ATTRIBUTES));
-        List attributes = new ArrayList<String>();
+        List<String> attributes = new ArrayList<String>();
         while (scanner.hasNext()) {
             attributes.add(scanner.next());
         }
