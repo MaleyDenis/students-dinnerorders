@@ -4,7 +4,7 @@
     <appender name="CONSOLE-DEBUG" class="org.apache.log4j.ConsoleAppender">
         <param name="target" value="System.out"/>
         <layout class="org.apache.log4j.PatternLayout">
-            <param name="ConversionPattern" value="%d{yyyy.MMMMM.dd  hh:mm a}  [%p] %m at %l%n"/>
+            <param name="ConversionPattern" value="%d{yyyy.MMMMM.dd  hh:mm a} %l%n [%p] %m"/>
         </layout>
         <filter class="org.apache.log4j.varia.LevelRangeFilter">
             <param name="LevelMin" value="DEBUG"/>
@@ -14,7 +14,7 @@
     <appender name="CONSOLE-ERROR" class="org.apache.log4j.ConsoleAppender">
         <param name="target" value="System.err"/>
         <layout class="org.apache.log4j.PatternLayout">
-            <param name="ConversionPattern" value="%d{yyyy.MMMMM.dd  hh:mm a}  [%5p] %m at %l%n"/>
+            <param name="ConversionPattern" value="%d{yyyy.MMMMM.dd  hh:mm a} %l%n [%5p] %m"/>
         </layout>
         <filter class="org.apache.log4j.varia.LevelRangeFilter">
             <param name="LevelMin" value="ERROR"/>
@@ -24,7 +24,7 @@
     <appender name="CONSOLE-INFO" class="org.apache.log4j.ConsoleAppender">
         <param name="target" value="System.out"/>
         <layout class="org.apache.log4j.PatternLayout">
-            <param name="ConversionPattern" value="%d{yyyy.MMMMM.dd  hh:mm a}  [%5p] %m at %l%n"/>
+            <param name="ConversionPattern" value="%d{yyyy.MMMMM.dd  hh:mm a} %l%n [%5p] %m at "/>
         </layout>
         <filter class="org.apache.log4j.varia.LevelRangeFilter">
             <param name="LevelMin" value="INFO"/>
@@ -37,6 +37,5 @@
         <appender-ref ref="CONSOLE-ERROR"/>
         <appender-ref ref="CONSOLE-DEBUG"/>
         <appender-ref ref="CONSOLE-INFO"/>
-
     </root>
 </log4j:configuration>
