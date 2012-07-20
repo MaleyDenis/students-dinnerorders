@@ -4,10 +4,7 @@ import com.exadel.dinnerorders.entity.SystemResource;
 import com.exadel.dinnerorders.exception.IllegalUserLoginException;
 import org.apache.log4j.Logger;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Hashtable;
-import java.util.List;
+import java.util.*;
 import javax.naming.Context;
 import javax.naming.NamingEnumeration;
 import javax.naming.NamingException;
@@ -29,7 +26,7 @@ public class LdapService {
             DirContext dirContext = new InitialDirContext(environment);
 
             SearchControls controls = new SearchControls();
-            controls.setReturningAttributes(new String[] {Configuration.getProperty(SystemResource.LDAP_SEARCHING_ATTRIBUTES)});
+            controls.setReturningAttributes(loadSearchingAttributes());
             controls.setSearchScope(SearchControls.SUBTREE_SCOPE);
 
             String searchFilter = Configuration.getProperty(SystemResource.LDAP_SEARCHING_FILTER);
@@ -40,6 +37,15 @@ public class LdapService {
             logger.error("Naming exception " + getClass().getPackage().getName() + " getAttributes", namingException);
         }
         return result;
+    }
+
+    private String[] loadSearchingAttributes() {
+        Scanner scanner = new Scanner(Configuration.getProperty(SystemResource.LDAP_SEARCHING_ATTRIBUTES));
+        List attributes = new ArrayList<String>();
+        while (scanner.hasNext()) {
+            attributes.add(scanner.next());
+        }
+        return (String[])attributes.toArray(new String[attributes.size()]);
     }
 
     public boolean checkUser(String login, String password) {
