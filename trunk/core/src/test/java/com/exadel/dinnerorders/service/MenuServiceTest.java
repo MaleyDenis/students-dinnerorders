@@ -30,7 +30,7 @@ public class MenuServiceTest extends TestCase {
     private Menu menu2;
 
     @Before
-    protected void setUp(){
+    protected void setUp() throws Exception {
         menuItemDAO = new MenuItemDAO();
         menuDAO = new MenuDAO();
         HashMap<Weekday, List<MenuItem>> map = new HashMap<Weekday, List<MenuItem>>();
@@ -43,13 +43,13 @@ public class MenuServiceTest extends TestCase {
         menu1 = new Menu((long)1, "1", new Timestamp((long)134262 * 10000000 + 2791664), new Timestamp((long)134262 * 10000000 + 2791664 + 3000), map);
         Assert.assertTrue(menuDAO.create(menu1));
         menu2 = new Menu((long)2, "1", new Timestamp((long)134262 * 10000000 + 2791664), new Timestamp((long)134262 * 10000000 + 2791664 + 1000), map);
+    }
+
+    public void testFindMenuByDate() throws Exception {
         Assert.assertTrue(menuDAO.create(menu2));
         Assert.assertTrue(menuItemDAO.create(new MenuItem((long)1, Weekday.FRIDAY, "A", (double)1)));
         Assert.assertTrue(menuItemDAO.create(new MenuItem((long)2, Weekday.WEDNESDAY, "B", (double)2)));
         Assert.assertTrue(menuItemDAO.create(new MenuItem((long)3, Weekday.TUESDAY, "C", (double)3)));
-    }
-
-    public void testFindMenuByDate() throws Exception {
         Timestamp date = new Timestamp((long)134262 * 10000000 + 2791664 + 2000);
         Collection<Menu> collection = MenuService.findMenuByDate(date);
         Assert.assertTrue(collection.size() == 1);
@@ -64,10 +64,6 @@ public class MenuServiceTest extends TestCase {
         Assert.assertTrue(menuItem.getCost().equals(menuItem1.getCost()));
         Assert.assertTrue(menuItem.getId().equals(menuItem1.getId()));
         Assert.assertTrue(menuItem.getWeekday() == menuItem1.getWeekday());
-    }
-
-    @After
-    public void tearDown() throws Exception {
         Assert.assertTrue(menuDAO.delete(menu1));
         Assert.assertTrue(menuDAO.delete(menu2));
         Assert.assertTrue(menuDAO.load(menu1.getId()) == null);

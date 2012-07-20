@@ -30,6 +30,13 @@ public class MenuItemDAOTest extends TestCase {
         Assert.assertTrue(menuItemDAO.create(menuItem3));
     }
 
+    public void testCreateAndDelete() throws Exception {
+        MenuItem menuItem = new MenuItem((long)8, Weekday.MONDAY, "4", (double)1);
+        Assert.assertTrue(menuItemDAO.create(menuItem));
+        Assert.assertTrue(menuItemDAO.delete(menuItem));
+        Assert.assertTrue(menuItemDAO.load(menuItem.getId()) == null);
+    }
+
     public void testUpdate() throws Exception {
         Assert.assertTrue(menuItemDAO.update(new MenuItem((long)7, Weekday.MONDAY, "1", (double)4)));
         Assert.assertTrue(menuItemDAO.update(new MenuItem((long)5, Weekday.TUESDAY, "2", (double)5)));
