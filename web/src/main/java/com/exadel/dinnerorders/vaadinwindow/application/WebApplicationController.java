@@ -7,6 +7,8 @@ import com.exadel.dinnerorders.vaadinwindow.layouts.WelcomeLayout;
 import com.exadel.dinnerorders.vaadinwindow.layouts.panels.TableOrderPanel;
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
+import com.vaadin.terminal.Sizeable;
+import com.vaadin.ui.Component;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.Layout;
 import com.vaadin.ui.Window;
@@ -23,6 +25,7 @@ public class WebApplicationController extends com.vaadin.Application {
         createLayouts();
         createMainWindow();
         eventBus.register(this);
+
     }
 
     private void createMainWindow() {
@@ -35,18 +38,21 @@ public class WebApplicationController extends com.vaadin.Application {
         loginLayout = new LoginLayout();
         welcomeLayout = new WelcomeLayout();
         tableOrderPanel = new TableOrderPanel();
+        tableOrderPanel.setHeight(100, Sizeable.UNITS_PERCENTAGE);
         eventBus.register(welcomeLayout);
     }
 
     @Subscribe
     public void authenticationPassed(AuthenticationEvent authenticationEvent) {
         getMainWindow().setContent(welcomeLayout);
-        ((GridLayout)getMainWindow().getContent()).removeComponent(2, 2);
-        ((GridLayout)getMainWindow().getContent()).addComponent(tableOrderPanel, 2, 2);
     }
 
     @Subscribe
     public void userSignedOut(SignOutEvent signOutEvent) {
         getMainWindow().setContent(loginLayout);
+    }
+
+    private void replaceCentralPanel(Component newComponent) {
+
     }
 }
