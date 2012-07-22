@@ -4,6 +4,7 @@ import com.mysql.jdbc.Connection;
 import com.mysql.jdbc.PreparedStatement;
 import org.apache.log4j.Logger;
 
+import java.sql.CallableStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Collection;
@@ -18,47 +19,53 @@ public class IdDAO extends BaseDAO<Long> {
 
 
     public Long getID() {
-
-        Long maxIndex;
-        Connection connection = connection();
         try {
-            PreparedStatement preparedStatement = (PreparedStatement) connection.prepareStatement(("SELECT MAX(ID) FROM (identifier)"));
-            ResultSet resultSet = preparedStatement.executeQuery();
+            CallableStatement callableStatement = connection().prepareCall("{call getID()}");
+            ResultSet resultSet = callableStatement.executeQuery();
             if (resultSet.next()) {
-                maxIndex = new Long(resultSet.getInt("MAX(ID)"));
-                return maxIndex;
+                return resultSet.getLong("MAX(ID)");
             }
-
-
         } catch (SQLException e) {
-            logger.error("Error! Don't get max value of index", e);
-            return null;
-        } finally {
-            disconnect(connection);
+            logger.error("Error , value hasn't been returned");
         }
+
 
         return null;
     }
 
-    public boolean setID(Long newID) {
-        Connection connection = connection();
+    public boolean dropTable() {
+        com.mysql.jdbc.Connection connection = connection();
+
         try {
-            PreparedStatement preparedStatement = (PreparedStatement) connection.prepareStatement(("INSERT into identifier (ID) VALUE (?);"));
-            preparedStatement.setLong(1, newID);
+            com.mysql.jdbc.PreparedStatement preparedStatement = (com.mysql.jdbc.PreparedStatement) connection.prepareStatement(("DELETE FROM identifier WHERE id>0"));
             preparedStatement.execute();
 
         } catch (SQLException e) {
-            logger.error("Error! Don't set  value of id", e);
+            logger.error("Error in the  drop  function", e);
             return false;
+        } finally {
+            disconnect(connection);
+        }
+        return true;
+    }
+
+
+    public boolean create(Long newItem) {
+        Connection connection = connection();
+        try {
+            PreparedStatement preparedStatement =
+                    preparedStatement = (PreparedStatement) connection.prepareStatement("INSERT into identifier SET  ID = newItem");
+
+            preparedStatement.executeUpdate();
+
+        } catch (SQLException e) {
+            logger.error("Error in the function create", e);
+
         } finally {
             disconnect(connection);
         }
 
         return true;
-    }
-
-    public boolean create(Long newItem) {
-        return false;  //not used
     }
 
     public boolean update(Long item) {

@@ -2,6 +2,7 @@ package com.exadel.dinnerorders.dao;
 
 import com.exadel.dinnerorders.entity.Role;
 import com.exadel.dinnerorders.entity.User;
+import com.exadel.dinnerorders.service.IdService;
 import com.mysql.jdbc.Connection;
 import com.mysql.jdbc.PreparedStatement;
 import org.apache.log4j.Logger;
@@ -20,19 +21,26 @@ public class UserDAO extends BaseDAO<User> {
 
     private Logger logger = Logger.getLogger(UserDAO.class);
 
+
     public boolean create(User newItem) {
         Connection connection = connection();
         try {
+
+
+            newItem.setId(IdService.getUniqueID());
+
             PreparedStatement preparedStatement =
-                    preparedStatement = (PreparedStatement) connection.prepareStatement("INSERT INTO user (LDAPLOGIN,USERNAME,ROLE) VALUES(?, ?, ?);");
+                    preparedStatement = (PreparedStatement) connection.prepareStatement("INSERT INTO user (ID,LDAPLOGIN,USERNAME,ROLE) VALUES(?, ?, ?, ?);");
 
-            preparedStatement.setString(1, newItem.getLdapLogin());
-            preparedStatement.setString(2, newItem.getUserName());
+
+            preparedStatement.setLong(1, newItem.getId());
+            preparedStatement.setString(2, newItem.getLdapLogin());
+            preparedStatement.setString(3, newItem.getUserName());
+
             if (newItem.getRole() != null)
-
-                preparedStatement.setString(3, newItem.getRole().name());
+                preparedStatement.setString(4, newItem.getRole().name());
             else
-                preparedStatement.setString(3, Role.ADMIN.name());
+                preparedStatement.setString(4, Role.ADMIN.name());
             preparedStatement.execute();
 
         } catch (SQLException e) {
@@ -148,14 +156,14 @@ public class UserDAO extends BaseDAO<User> {
     }
 
     public Long getMaxIndex() {
-        Long maxIndex ;
+        Long maxIndex;
         Connection connection = connection();
 
         try {
             PreparedStatement preparedStatement = (PreparedStatement) connection.prepareStatement(("SELECT MAX(ID) FROM (user)"));
             ResultSet resultSet = preparedStatement.executeQuery();
-            if(resultSet.next()){
-            maxIndex=new Long(resultSet.getInt("MAX(ID)") );
+            if (resultSet.next()) {
+                maxIndex = new Long(resultSet.getInt("MAX(ID)"));
                 return maxIndex;
             }
 
@@ -167,7 +175,7 @@ public class UserDAO extends BaseDAO<User> {
             disconnect(connection);
         }
 
-     return  null;
+        return null;
     }
 
 }
