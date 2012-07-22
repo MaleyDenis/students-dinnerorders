@@ -8,26 +8,15 @@ import com.exadel.dinnerorders.dao.IdDAO;
  */
 public class IdService {
 
-    private static Long ID=new Long(92);
+    private static Long ID;
 
     synchronized public static Long getUniqueID() {
-        if (ID == null) {
-            loadLastUsedID();
-        }
-        Long retID = ID;
-        ++ID;
-        saveNewID();
-        return retID;
-    }
 
-    private static void saveNewID() {
-        IdDAO idDAO = new IdDAO();
-        idDAO.setID(ID);
-    }
-
-    private static void loadLastUsedID() {
         IdDAO idDAO = new IdDAO();
         ID = idDAO.getID();
+        ++ID;
+        return ID;
     }
+
 
 }

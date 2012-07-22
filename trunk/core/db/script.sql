@@ -52,3 +52,13 @@ ROLE  VARCHAR(45) NOT NULL,
 PRIMARY KEY (ID) )
 ENGINE=InnoDB;
 
+
+DELIMITER $$
+CREATE  PROCEDURE getID()
+BEGIN
+DECLARE i INT  ;
+SET i = ( SELECT MAX(ID) FROM identifier ) ;
+SELECT MAX(ID) FROM identifier;
+INSERT into dinnerorders.identifier set ID = i+1;
+END
+ENGINE=InnoDB;

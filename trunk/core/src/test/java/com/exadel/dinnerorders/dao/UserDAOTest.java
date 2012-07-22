@@ -35,6 +35,8 @@ public class UserDAOTest {
         long id = userDAO.getMaxIndex() + 1;
         User user = new User(id, "testLogin2", "testName2", Role.USER);
         userDAO.dropTable();
+
+
         userDAO.create(user);
         user.setLdapLogin("updateLogin");
         user.setUserName("updateName");
@@ -94,12 +96,14 @@ public class UserDAOTest {
 
     @Test
     public void testLoadAll() throws Exception {
-        long id = userDAO.getMaxIndex() + 1;
-        User user = new User(id, "testLogin5", "testName5", Role.USER);
+        IdDAO idDAO = new IdDAO();
+
+        User user = new User(null, "testLogin5", "testName5", Role.USER);
         userDAO.dropTable();
+
         int quantity1 = 45;
         while (quantity1 != 0) {
-            id = id + 1;
+
             userDAO.create(user);
             --quantity1;
         }
