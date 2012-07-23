@@ -31,7 +31,7 @@ public abstract class BaseDAO<E> implements DAO<E> {
 
             logger.debug("URL: " + url + "; Login: " + login + "; Password: " + password + ";");
 
-            connection = (Connection) DriverManager.getConnection(url, login, password);
+            connection = DriverManager.getConnection(url, login, password);
         } catch (ClassNotFoundException e) {
             logger.error("BaseDAO: class has not been found.", e);
         } catch (SQLException e) {

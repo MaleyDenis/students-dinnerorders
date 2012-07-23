@@ -1,2 +1,2 @@
-INSERT INTO identifier VALUES(1);
+INSERT INTO dinnerorders.identifier VALUES(1);
 
