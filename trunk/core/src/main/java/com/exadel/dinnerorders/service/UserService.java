@@ -27,7 +27,7 @@ public class UserService {
         Collection<String> userNames = new LdapService().loadAll();
         Collection<User> users = new ArrayList<User>();
         for (String userName : userNames) {
-            User user = findUserbyUserName(userName);
+            User user = findUserByUserName(userName);
             if (user == null) {
                 user = new User();
                 user.setId(null);
@@ -39,7 +39,7 @@ public class UserService {
         return users;
     }
 
-    public static User findUserbyUserName(final String username) {
+    public static User findUserByUserName(final String username) {
 
         Collection<User> users = getAllUsers();
         Iterable<User> iterables = Iterables.filter(users, new Predicate<User>() {
@@ -52,6 +52,14 @@ public class UserService {
             return iterables.iterator().next();
         } else
             return null;
+
+    }
+
+
+    public static User findUserByID(final Long id) {
+        UserDAO userDAO = new UserDAO();
+        User user = userDAO.load(id);
+        return user;
 
     }
 }
