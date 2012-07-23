@@ -27,7 +27,7 @@ public class UserDAOTest {
         long id = 1;
         User user = new User(id, "testLogin1", "testName1", Role.USER);
         userDAO.create(user);
-        User user1 = UserService.findUserbyUserName(user.getUserName());
+        User user1 = UserService.findUserByUserName(user.getUserName());
         if (user1.getLdapLogin().equals(user.getLdapLogin())) {
             Assert.assertTrue(true);
         } else {
@@ -49,7 +49,7 @@ public class UserDAOTest {
         user.setLdapLogin("updateLogin");
         user.setUserName("updateName");
         userDAO.update(user);
-        User user1 = UserService.findUserbyUserName("updateName");
+        User user1 = UserService.findUserByUserName("updateName");
 
         if (user.getUserName().equals(user1.getUserName())) {
             Assert.assertTrue(true);

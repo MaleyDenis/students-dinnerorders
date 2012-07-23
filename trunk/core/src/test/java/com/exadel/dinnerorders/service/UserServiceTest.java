@@ -20,7 +20,7 @@ public class UserServiceTest {
         long id = 345;
         User user = new User(id,"userLogin","userName", Role.ADMIN);
         userDAO.create(user);
-        User user2 = UserService.findUserbyUserName("userName");
+        User user2 = UserService.findUserByUserName("userName");
         if (user2 != null) {
             if (user2.getUserName().equals("userName")) {
                 Assert.assertTrue(true);
