@@ -1,6 +1,7 @@
 package com.exadel.dinnerorders.service;
 
 import com.exadel.dinnerorders.exception.IllegalUserLoginException;
+import junit.framework.Assert;
 import org.junit.Test;
 
 public class LdapServiceTest {
@@ -15,5 +16,11 @@ public class LdapServiceTest {
     public void testCheckUserForIllegalUserLoginException() {
         LdapService ldapService = new LdapService();
         ldapService.checkUser("badLogin", "somePassword");
+    }
+
+    @Test
+    public void testLoadAllForNotNull(){
+        LdapService ldapService = new LdapService();
+        Assert.assertNotNull(ldapService.loadAll());
     }
 }
