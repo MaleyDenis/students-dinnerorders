@@ -2,21 +2,17 @@ package com.exadel.dinnerorders.dao;
 
 import com.exadel.dinnerorders.entity.MenuItem;
 import com.exadel.dinnerorders.entity.Order;
-
-
 import com.exadel.dinnerorders.entity.Weekday;
-import com.exadel.dinnerorders.service.UniqueIDService;
-import com.mysql.jdbc.Connection;
-import com.mysql.jdbc.PreparedStatement;
-import com.mysql.jdbc.Statement;
-import org.apache.log4j.Logger;
-
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
+import org.apache.log4j.Logger;
 
 
 public class OrderDAO extends BaseDAO<Order> {
@@ -26,7 +22,7 @@ public class OrderDAO extends BaseDAO<Order> {
         Connection connection = connection();
         try {
             if (connection != null){
-                PreparedStatement pst = (PreparedStatement)connection.prepareStatement
+                PreparedStatement pst = connection.prepareStatement
                         ("INSERT INTO dinnerorders.order VALUES(?,?,?,?,?)");
                 pst.setLong(1, orderItem.getId());
                 pst.setLong(2, orderItem.getUserID());
@@ -37,9 +33,9 @@ public class OrderDAO extends BaseDAO<Order> {
                 List<MenuItem> list = orderItem.getMenuItemList();
                 pst.close();
                 for (MenuItem menuItem:list){
-                    PreparedStatement preparedStatement = (PreparedStatement)connection.prepareStatement
+                    PreparedStatement preparedStatement = connection.prepareStatement
                             ("INSERT INTO dinnerorders.order_menuitem (id ,order_id, menu_item_id) VALUE (?,?,?)");
-                    preparedStatement.setLong(1, UniqueIDService.getID());
+                    preparedStatement.setLong(1, getID());
                     preparedStatement.setLong(2, orderItem.getId());
                     preparedStatement.setLong(3, menuItem.getId());
                     preparedStatement.executeUpdate();
@@ -64,7 +60,7 @@ public class OrderDAO extends BaseDAO<Order> {
             if (connection != null){
                 cost = item.getCost();
                 datePayment = item.getDatePayment();
-                PreparedStatement preparedStatement = (PreparedStatement)connection.prepareStatement
+                PreparedStatement preparedStatement = connection.prepareStatement
                         ("UPDATE dinnerorders.order SET" +" cost = ?,date_payment = ? ");
                 preparedStatement.setDouble(1, cost);
                 preparedStatement.setTimestamp(2, new java.sql.Timestamp(datePayment.getTime()));
@@ -86,7 +82,7 @@ public class OrderDAO extends BaseDAO<Order> {
         Connection connection = connection();
         try {
             if (connection != null){
-                PreparedStatement preparedStatement = (PreparedStatement)connection.prepareStatement
+                PreparedStatement preparedStatement = connection.prepareStatement
                         ("DELETE FROM dinnerorders.order WHERE order_id=?");
                 preparedStatement.setLong(1,item.getId());
                 preparedStatement.executeUpdate();
@@ -107,7 +103,7 @@ public class OrderDAO extends BaseDAO<Order> {
         Connection connection = connection();
         PreparedStatement preparedStatement;
         try {
-            preparedStatement = (PreparedStatement)connection.prepareStatement
+            preparedStatement = connection.prepareStatement
                     ("DELETE FROM dinnerorders.order_menuitem WHERE order_id=?");
             preparedStatement.setLong(1,item.getId());
             preparedStatement.executeUpdate();
@@ -125,7 +121,7 @@ public class OrderDAO extends BaseDAO<Order> {
         List<MenuItem> menuItems;
         Connection connection = connection();
         try {
-            Statement statement = (Statement)connection.createStatement();
+            Statement statement = connection.createStatement();
             ResultSet resultSet = statement.executeQuery("SELECT * FROM dinnerorders.order");
             while (resultSet.next()){
                 order = new Order(
@@ -155,13 +151,13 @@ public class OrderDAO extends BaseDAO<Order> {
         List<MenuItem> menuItems = new ArrayList<MenuItem>();
         List <Long> menuItemID = new ArrayList<Long>();
         try {
-            Statement statement = (Statement)connection.createStatement();
+            Statement statement = connection.createStatement();
             ResultSet resultSet = statement.executeQuery
                     ("SELECT * FROM dinnerorders.order_menuitem WHERE order_id = " + order.getId());
             while (resultSet.next()){
                 menuItemID.add(resultSet.getLong(2));
             }
-            PreparedStatement preparedStatement = (PreparedStatement)connection.prepareStatement
+            PreparedStatement preparedStatement = connection.prepareStatement
                     ("SELECT * FROM dinnerorders.menuitem");
             ResultSet resultSet1 = preparedStatement.executeQuery();
             while (resultSet1.next()){
@@ -181,7 +177,7 @@ public class OrderDAO extends BaseDAO<Order> {
         Connection connection = connection();
         Order order = null;
         try {
-            PreparedStatement preparedStatement = (PreparedStatement)connection.prepareStatement
+            PreparedStatement preparedStatement = connection.prepareStatement
                     ("SELECT * FROM dinnerorders.order WHERE order_id = ?");
             preparedStatement.setLong(1,id);
             ResultSet resultSet = preparedStatement.executeQuery();

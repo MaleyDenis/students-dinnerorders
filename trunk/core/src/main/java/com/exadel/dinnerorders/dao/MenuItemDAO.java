@@ -2,15 +2,13 @@ package com.exadel.dinnerorders.dao;
 
 import com.exadel.dinnerorders.entity.MenuItem;
 import com.exadel.dinnerorders.entity.Weekday;
-import com.mysql.jdbc.Connection;
-import com.mysql.jdbc.PreparedStatement;
-
-import org.apache.log4j.Logger;
-
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Collection;
 import java.util.ArrayList;
+import java.util.Collection;
+import org.apache.log4j.Logger;
 
 /**
  * User: Василий Силин
@@ -24,7 +22,7 @@ public class MenuItemDAO extends BaseDAO<MenuItem> {
         Connection connection = connection();
         if (connection != null) {
             try {
-                PreparedStatement preparedStatement = (PreparedStatement) connection.prepareStatement("INSERT INTO menuitem VALUE(?, ?, ?, ?);");
+                PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO menuitem VALUE(?, ?, ?, ?);");
                 preparedStatement.setLong(1, newItem.getId());
                 preparedStatement.setString(2, newItem.getWeekday().name());
                 preparedStatement.setString(3, newItem.getDescription());
@@ -44,7 +42,7 @@ public class MenuItemDAO extends BaseDAO<MenuItem> {
         Connection connection = connection();
         if (connection != null) {
             try {
-                PreparedStatement preparedStatement = (PreparedStatement) connection.prepareStatement("UPDATE menuitem SET weekday = ?, description = ?, cost = ? WHERE menuitem_id = ?;");
+                PreparedStatement preparedStatement = connection.prepareStatement("UPDATE menuitem SET weekday = ?, description = ?, cost = ? WHERE menuitem_id = ?;");
                 preparedStatement.setString(1, item.getWeekday().name());
                 preparedStatement.setString(2, item.getDescription());
                 preparedStatement.setDouble(3, item.getCost());
@@ -64,7 +62,7 @@ public class MenuItemDAO extends BaseDAO<MenuItem> {
         Connection connection = connection();
         if (connection != null) {
             try {
-                PreparedStatement preparedStatement = (PreparedStatement) connection.prepareStatement("DELETE FROM menuitem WHERE menuitem_id = ?;");
+                PreparedStatement preparedStatement =  connection.prepareStatement("DELETE FROM menuitem WHERE menuitem_id = ?;");
                 preparedStatement.setLong(1, item.getId());
                 preparedStatement.executeUpdate();
                 return true;
@@ -81,7 +79,7 @@ public class MenuItemDAO extends BaseDAO<MenuItem> {
         Connection connection = connection();
         if (connection != null) {
             try {
-                PreparedStatement menuStatement = (PreparedStatement) connection.prepareStatement("SELECT * FROM menuitem WHERE menuitem_id = ?;");
+                PreparedStatement menuStatement =  connection.prepareStatement("SELECT * FROM menuitem WHERE menuitem_id = ?;");
                 menuStatement.setLong(1, id);
                 ResultSet menuItemResultSet = menuStatement.executeQuery();
                 if(menuItemResultSet.next()){
@@ -104,7 +102,7 @@ public class MenuItemDAO extends BaseDAO<MenuItem> {
         Connection connection = connection();
         if (connection != null) {
             try {
-                PreparedStatement menuStatement = (PreparedStatement) connection.prepareStatement("SELECT * FROM menuitem;");
+                PreparedStatement menuStatement =  connection.prepareStatement("SELECT * FROM menuitem;");
                 ResultSet menuItemResultSet = menuStatement.executeQuery();
                 while(menuItemResultSet.next()){
                     Long id = menuItemResultSet.getLong(1);
