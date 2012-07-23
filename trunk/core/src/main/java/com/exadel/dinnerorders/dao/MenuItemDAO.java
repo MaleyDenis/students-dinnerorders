@@ -20,9 +20,10 @@ public class MenuItemDAO extends BaseDAO<MenuItem> {
 
     public boolean create(MenuItem newItem) {
         Connection connection = connection();
-        if (connection != null) {
+        if (connection != null && newItem.getId() == null) {
             try {
                 PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO menuitem VALUE(?, ?, ?, ?);");
+                newItem.setId(getID());
                 preparedStatement.setLong(1, newItem.getId());
                 preparedStatement.setString(2, newItem.getWeekday().name());
                 preparedStatement.setString(3, newItem.getDescription());
