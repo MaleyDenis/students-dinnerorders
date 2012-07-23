@@ -1,11 +1,11 @@
 package com.exadel.dinnerorders.dao;
 
 import com.exadel.dinnerorders.entity.SystemResource;
+import com.exadel.dinnerorders.exception.WorkflowException;
 import com.exadel.dinnerorders.service.Configuration;
 import org.apache.log4j.Logger;
 
 import java.sql.*;
-import java.util.Random;
 
 /**
  * User: Василий Силин
@@ -59,14 +59,14 @@ public abstract class BaseDAO<E> implements DAO<E> {
                 return callableStatement.getLong(1);
 
 
-        } catch (SQLException e) {
-            logger.error("Error , value hasn't been returned");
-        } finally {
-            disconnect(connection);
-        }
+        }   catch (SQLException e) {
+                    logger.error("Error , value hasn't been returned");
+                } finally {
+                    disconnect(connection);
+                }
 
-        logger.error("Something wrong with id generator.");
-        return Math.abs(new Random().nextLong());
+               throw new WorkflowException();
+            }
     }
 
-}
+
