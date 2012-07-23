@@ -5,11 +5,15 @@ import com.exadel.dinnerorders.vaadinwindow.events.AuthenticationEvent;
 import com.exadel.dinnerorders.vaadinwindow.events.SignOutEvent;
 import com.google.common.eventbus.Subscribe;
 import com.vaadin.terminal.ExternalResource;
-import com.vaadin.ui.*;
-
+import com.vaadin.terminal.Sizeable;
+import com.vaadin.ui.Label;
+import com.vaadin.ui.Button;
+import com.vaadin.ui.GridLayout;
+import com.vaadin.ui.Embedded;
+import com.vaadin.ui.Panel;
 import java.util.Scanner;
 
-public class UserInfoPanel extends Panel {
+public class UserInfoPanel extends Panel{
     public static final int DEFAULT_LAYOUT_COLUMN_COUNT = 3;
     public static final int DEFAULT_LAYOUT_ROW_COUNT = 3;
     private Label nameLabel;
@@ -27,13 +31,14 @@ public class UserInfoPanel extends Panel {
         initComponents();
         initLayout();
         locateComponents();
+        setComponentsSize();
     }
 
     private void setDefaultUserInfo() {
         userPhoto = new Embedded("", new ExternalResource("/VAADIN/themes/runo/icons/64/user.png"));
     }
 
-    private void locateComponents() {
+    public void locateComponents() {
         layout.addComponent(userPhoto, 0, 0, 0, 2);
         layout.addComponent(nameCaption,  1, 0);
         layout.addComponent(lastNameCaption,  1, 1);
@@ -44,7 +49,7 @@ public class UserInfoPanel extends Panel {
 
     private void initLayout() {
         layout = new GridLayout(DEFAULT_LAYOUT_COLUMN_COUNT, DEFAULT_LAYOUT_ROW_COUNT);
-        layout.setWidth(100, UNITS_PERCENTAGE);
+        layout.setWidth(100, Sizeable.UNITS_PERCENTAGE);
         layout.setColumnExpandRatio(0, 0.15f);
         layout.setColumnExpandRatio(1, 0.35f);
         layout.setColumnExpandRatio(2, 0.4f);
@@ -56,9 +61,13 @@ public class UserInfoPanel extends Panel {
         initLabels();
     }
 
+    private void setComponentsSize() {
+        signOutButton.setWidth(100, UNITS_PERCENTAGE);
+    }
+
     private void initLabels() {
         nameCaption = new Label("Name");
-        lastNameCaption = new Label("LastName");
+        lastNameCaption = new Label("Last name");
         nameLabel = new Label("Name");
         lastNameLabel = new Label("Last name");
     }
@@ -80,6 +89,5 @@ public class UserInfoPanel extends Panel {
         Scanner scanner = new Scanner(Application.getInstance().getUserName());
         lastNameLabel.setValue(scanner.next());
         nameLabel.setValue(scanner.next());
-        //TODO:load user photo
     }
 }
