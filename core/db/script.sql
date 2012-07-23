@@ -10,7 +10,7 @@ PRIMARY KEY (order_id)
 )
 ENGINE=InnoDB;
 
-CREATE TABLE IF NOT EXISTS  dinnerorders.order_menuitem (
+CREATE TABLE IF NOT EXISTS dinnerorders.order_menuitem (
 id bigint(20) NOT  NULL,
 order_id bigint(20) NOT  NULL,
 menu_item_id bigint(20) NOT NULL,
@@ -57,9 +57,10 @@ ID  INT ,
 PRIMARY KEY (ID) )
 ENGINE=InnoDB;
 
+delimiter $$
 CREATE PROCEDURE dinnerorders.getID(OUT idOut INT)
 BEGIN
-SELECT ID INTO idOut FROM identifier ;
+SELECT id INTO idOut FROM dinnerorders.identifier;
 TRUNCATE TABLE identifier;
 INSERT into dinnerorders.identifier set ID = idOut + 1;
-END;
+END$$
