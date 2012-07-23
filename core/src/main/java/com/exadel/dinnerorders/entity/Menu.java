@@ -49,6 +49,10 @@ public class Menu {
         return items;
     }
 
+    public void setId(Long id) {
+        this.id = id;
+    }
+
     public void addItem(MenuItem newItem){
         List<MenuItem> menuForDay = items.get(newItem.getWeekday());
         if(menuForDay == null){

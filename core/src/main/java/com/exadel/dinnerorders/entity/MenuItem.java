@@ -33,4 +33,8 @@ public class MenuItem {
     public Double getCost() {
         return cost;
     }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 }

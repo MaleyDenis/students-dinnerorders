@@ -24,9 +24,10 @@ public class MenuDAO extends BaseDAO<Menu> {
 
     public boolean create(Menu newItem) {
         Connection connection = connection();
-        if (connection != null) {
+        if (connection != null && newItem.getId() == null) {
             try {
                 PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO menu VALUES(?, ?, ?, ?);");
+                newItem.setId(getID());
                 preparedStatement.setLong(1, newItem.getId());
                 preparedStatement.setString(2, newItem.getCafeName());
                 preparedStatement.setTimestamp(3, newItem.getDateStart());
@@ -34,9 +35,10 @@ public class MenuDAO extends BaseDAO<Menu> {
                 preparedStatement.executeUpdate();
                 for (List<MenuItem> items : newItem.getItems().values()) {
                     for (MenuItem item : items) {
-                        preparedStatement =  connection.prepareStatement("INSERT INTO menu_menuitem(menu_id, menuitem_id)  VALUES(?, ?);");
-                        preparedStatement.setLong(1, newItem.getId());
-                        preparedStatement.setLong(2, item.getId());
+                        preparedStatement =  connection.prepareStatement("INSERT INTO menu_menuitem VALUES(?, ?, ?);");
+                        preparedStatement.setLong(1, getID());
+                        preparedStatement.setLong(2, newItem.getId());
+                        preparedStatement.setLong(3, item.getId());
                         preparedStatement.executeUpdate();
                     }
                 }

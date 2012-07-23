@@ -1,7 +1,9 @@
 package com.exadel.dinnerorders.service;
 
 import com.exadel.dinnerorders.dao.MenuDAO;
+import com.exadel.dinnerorders.dao.MenuItemDAO;
 import com.exadel.dinnerorders.entity.Menu;
+import com.exadel.dinnerorders.entity.MenuItem;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Collections2;
 
@@ -11,6 +13,7 @@ import javax.annotation.Nullable;
 
 import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 
 /**
  * User: Василий Силин
@@ -39,5 +42,17 @@ public class MenuService {
         };
         MenuDAO menuDAO = new MenuDAO();
         return Collections2.filter(menuDAO.loadAll(), predicate);
+    }
+
+    public static boolean save(Menu newMenu){
+        MenuDAO menuDAO = new MenuDAO();
+        menuDAO.create(newMenu);
+        MenuItemDAO menuItemDAO = new MenuItemDAO();
+        for(List<MenuItem> items : newMenu.getItems().values()){
+            for(MenuItem item : items){
+                menuItemDAO.create(item);
+            }
+        }
+        return true;
     }
 }
