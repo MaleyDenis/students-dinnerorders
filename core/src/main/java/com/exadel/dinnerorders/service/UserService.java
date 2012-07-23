@@ -62,4 +62,9 @@ public class UserService {
         return user;
 
     }
+
+    public static Collection<User> loadAllUsersFromDB() {
+        UserDAO userDAO = new UserDAO();
+        return userDAO.loadAll();
+    }
 }

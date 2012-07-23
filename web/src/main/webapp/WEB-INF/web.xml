@@ -6,16 +6,29 @@
     <display-name>Web Application</display-name>
 
     <servlet>
-        <servlet-name>dinnerOrders</servlet-name>
+        <servlet-name>adminPage</servlet-name>
         <servlet-class>com.vaadin.terminal.gwt.server.ApplicationServlet</servlet-class>
         <init-param>
             <param-name>application</param-name>
-            <param-value>com.exadel.dinnerorders.vaadinwindow.application.WebApplicationController</param-value>
+            <param-value>com.exadel.dinnerorders.vaadinwindow.application.AdminPage</param-value>
         </init-param>
     </servlet>
+    <servlet>
+           <servlet-name>dinnerOrders</servlet-name>
+           <servlet-class>com.vaadin.terminal.gwt.server.ApplicationServlet</servlet-class>
+           <init-param>
+               <param-name>application</param-name>
+               <param-value>com.exadel.dinnerorders.vaadinwindow.application.AdminPage</param-value>
+           </init-param>
+       </servlet>
+
+    <servlet-mapping>
+        <servlet-name>adminPage</servlet-name>
+        <url-pattern>/*</url-pattern>
+    </servlet-mapping>
 
     <servlet-mapping>
         <servlet-name>dinnerOrders</servlet-name>
-        <url-pattern>/*</url-pattern>
+        <url-pattern>/lolPage</url-pattern>
     </servlet-mapping>
 </web-app>

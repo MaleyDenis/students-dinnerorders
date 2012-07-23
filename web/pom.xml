@@ -52,11 +52,17 @@
         <dependency>
             <groupId>com.vaadin</groupId>
             <artifactId>vaadin</artifactId>
-         </dependency>
+        </dependency>
 
         <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.vaadin.addons</groupId>
+            <artifactId>pagedtable</artifactId>
+
         </dependency>
 
     </dependencies>
