@@ -57,9 +57,10 @@ ID  INT ,
 PRIMARY KEY (ID) )
 ENGINE=InnoDB;
 
+DELIMITER $$
 CREATE PROCEDURE dinnerorders.getID(OUT idOUT INT)
 BEGIN
 SELECT ID INTO idOut FROM identifier ;
 TRUNCATE TABLE identifier;
 INSERT into dinnerorders.identifier set ID = idOut + 1;
-END;
+END$$
