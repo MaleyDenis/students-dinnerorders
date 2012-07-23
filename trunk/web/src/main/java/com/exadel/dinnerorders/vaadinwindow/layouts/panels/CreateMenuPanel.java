@@ -1,4 +1,4 @@
-package com.exadel.dinnerorders.vaadinwindow;
+package com.exadel.dinnerorders.vaadinwindow.layouts.panels;
 
 import com.exadel.dinnerorders.entity.Weekday;
 import com.exadel.dinnerorders.vaadinwindow.application.Application;
