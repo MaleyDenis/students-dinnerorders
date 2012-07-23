@@ -19,10 +19,9 @@ import java.util.Collection;
 public class UserService {
     private static Logger logger = Logger.getLogger(UserService.class);
 
-
-    private static ArrayList<User> getAllUsers() {
+    private static Collection<User> getAllUsers() {
         UserDAO userDAO = new UserDAO();
-        return (ArrayList<User>) userDAO.loadAll();
+        return userDAO.loadAll();
     }
 
     public static Collection<User> loadAllUsersFromLdap() {
@@ -43,10 +42,9 @@ public class UserService {
 
     public static User findUserbyUserName(final String username) {
 
-        ArrayList<User> users = getAllUsers();
+        Collection<User> users = getAllUsers();
         Iterable<User> iterables = Iterables.filter(users, new Predicate<User>() {
             public boolean apply(User u) {
-
                 return StringUtils.equals(u.getUserName(), username);
             }
         });

@@ -1,16 +1,11 @@
 package com.exadel.dinnerorders.service;
 
-import com.exadel.dinnerorders.dao.UserDAO;
-import com.exadel.dinnerorders.entity.Role;
-import com.exadel.dinnerorders.entity.User;
-import junit.framework.Assert;
-import org.junit.Test;
-
 /**
  * User: Dima Shulgin
  * Date: 19.07.12
  */
 public class UserServiceTest {
+/*
     @Test
     public void testFindUserbyUserName() throws Exception {
 
@@ -28,4 +23,5 @@ public class UserServiceTest {
             }
         }
     }
+*/
 }

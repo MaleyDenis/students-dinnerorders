@@ -2,15 +2,13 @@ package com.exadel.dinnerorders.dao;
 
 import com.exadel.dinnerorders.entity.Role;
 import com.exadel.dinnerorders.entity.User;
-import com.exadel.dinnerorders.service.IdService;
-import com.mysql.jdbc.Connection;
-import com.mysql.jdbc.PreparedStatement;
-import org.apache.log4j.Logger;
-
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
+import org.apache.log4j.Logger;
 
 
 /**
@@ -26,21 +24,16 @@ public class UserDAO extends BaseDAO<User> {
         Connection connection = connection();
         try {
 
+            PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO user (ID,LDAPLOGIN,USERNAME,ROLE) VALUES(?, ?, ?, ?);");
 
-            newItem.setId(IdService.getUniqueID());
-
-            PreparedStatement preparedStatement =
-                    preparedStatement = (PreparedStatement) connection.prepareStatement("INSERT INTO user (ID,LDAPLOGIN,USERNAME,ROLE) VALUES(?, ?, ?, ?);");
-
-
-            preparedStatement.setLong(1, newItem.getId());
+            preparedStatement.setLong(1, getID());
             preparedStatement.setString(2, newItem.getLdapLogin());
             preparedStatement.setString(3, newItem.getUserName());
 
             if (newItem.getRole() != null)
                 preparedStatement.setString(4, newItem.getRole().name());
             else
-                preparedStatement.setString(4, Role.ADMIN.name());
+                preparedStatement.setString(4, Role.USER.name());
             preparedStatement.execute();
 
         } catch (SQLException e) {
@@ -59,7 +52,7 @@ public class UserDAO extends BaseDAO<User> {
         Connection connection = connection();
         PreparedStatement preparedStatement = null;
         try {
-            preparedStatement = (PreparedStatement) connection.prepareStatement("UPDATE  user  SET  LDAPLOGIN = ? , USERNAME= ?, ROLE= ?  WHERE ID = ?");
+            preparedStatement = connection.prepareStatement("UPDATE  user  SET  LDAPLOGIN = ? , USERNAME= ?, ROLE= ?  WHERE ID = ?");
             preparedStatement.setString(1, item.getLdapLogin());
             preparedStatement.setString(2, item.getUserName());
             if (item.getRole() != null)
@@ -83,32 +76,27 @@ public class UserDAO extends BaseDAO<User> {
 
     public boolean delete(User item) {
 
-
         Connection connection = connection();
-
         try {
-            PreparedStatement preparedStatement = (PreparedStatement) connection.prepareStatement(("DELETE FROM user WHERE ID =  ?"));
+            PreparedStatement preparedStatement = connection.prepareStatement(("DELETE FROM user WHERE ID =  ?"));
             preparedStatement.setLong(1, item.getId());
             preparedStatement.executeUpdate();
-
         } catch (SQLException e) {
             logger.error("Error in the function delete", e);
         } finally {
             disconnect(connection);
         }
-
         return false;
     }
 
     public User load(Long id) {
         Connection connection = connection();
         try {
-            PreparedStatement preparedStatement = (PreparedStatement) connection.prepareStatement(("SELECT * FROM user WHERE ID =  ?;"));
+            PreparedStatement preparedStatement = connection.prepareStatement(("SELECT * FROM user WHERE ID =  ?;"));
             preparedStatement.setLong(1, id);
             ResultSet resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
-                User user = new User(resultSet.getLong("ID"), resultSet.getString("LDAPLOGIN"), resultSet.getString("USERNAME"), Role.valueOf(resultSet.getString("ROLE")));
-                return user;
+                return new User(resultSet.getLong("ID"), resultSet.getString("LDAPLOGIN"), resultSet.getString("USERNAME"), Role.valueOf(resultSet.getString("ROLE")));
             }
         } catch (SQLException e) {
             logger.error("Error (SQLException in load function!", e);
@@ -121,9 +109,9 @@ public class UserDAO extends BaseDAO<User> {
 
     public Collection<User> loadAll() {
         Connection connection = connection();
-        ArrayList<User> users = new ArrayList<User>();
+        Collection<User> users = new ArrayList<User>();
         try {
-            PreparedStatement preparedStatement = (PreparedStatement) connection.prepareStatement(("SELECT * FROM user"));
+            PreparedStatement preparedStatement = connection.prepareStatement(("SELECT * FROM user"));
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
                 User user = new User(resultSet.getLong("ID"), resultSet.getString("LDAPLOGIN"), resultSet.getString("USERNAME"), Role.valueOf(resultSet.getString("ROLE")));
@@ -132,45 +120,6 @@ public class UserDAO extends BaseDAO<User> {
             return users;
         } catch (SQLException e) {
             logger.error("Error in the function loadAll", e);
-        } finally {
-            disconnect(connection);
-        }
-
-        return null;
-    }
-
-    public boolean dropTable() {
-        Connection connection = connection();
-
-        try {
-            PreparedStatement preparedStatement = (PreparedStatement) connection.prepareStatement(("DELETE FROM user WHERE id>0"));
-            preparedStatement.execute();
-
-        } catch (SQLException e) {
-            logger.error("Error in the  drop  function", e);
-            return false;
-        } finally {
-            disconnect(connection);
-        }
-        return true;
-    }
-
-    public Long getMaxIndex() {
-        Long maxIndex;
-        Connection connection = connection();
-
-        try {
-            PreparedStatement preparedStatement = (PreparedStatement) connection.prepareStatement(("SELECT MAX(ID) FROM (user)"));
-            ResultSet resultSet = preparedStatement.executeQuery();
-            if (resultSet.next()) {
-                maxIndex = new Long(resultSet.getInt("MAX(ID)"));
-                return maxIndex;
-            }
-
-
-        } catch (SQLException e) {
-            logger.error("Error! Don't get max value of index", e);
-            return null;
         } finally {
             disconnect(connection);
         }

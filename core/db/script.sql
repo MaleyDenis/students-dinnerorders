@@ -44,7 +44,7 @@ PRIMARY KEY (id)
 )
 ENGINE=InnoDB;
 
-CREATE  TABLE IF NOT EXISTS dinnerorders.user (
+CREATE TABLE IF NOT EXISTS dinnerorders.user (
 ID  INT NOT NULL AUTO_INCREMENT ,
 LDAPLOGIN  VARCHAR(45) NOT NULL ,
 USERNAME  VARCHAR(45) NOT NULL ,
@@ -52,13 +52,14 @@ ROLE  VARCHAR(45) NOT NULL,
 PRIMARY KEY (ID) )
 ENGINE=InnoDB;
 
-
-DELIMITER $$
-CREATE  PROCEDURE getID()
-BEGIN
-DECLARE i INT  ;
-SET i = ( SELECT MAX(ID) FROM identifier ) ;
-SELECT MAX(ID) FROM identifier;
-INSERT into dinnerorders.identifier set ID = i+1;
-END
+CREATE TABLE IF NOT EXISTS dinnerorders.identifier (
+ID  INT ,
+PRIMARY KEY (ID) )
 ENGINE=InnoDB;
+
+CREATE PROCEDURE dinnerorders.getID(OUT idOut INT)
+BEGIN
+SELECT ID INTO idOut FROM identifier ;
+TRUNCATE TABLE identifier;
+INSERT into dinnerorders.identifier set ID = idOut + 1;
+END;
