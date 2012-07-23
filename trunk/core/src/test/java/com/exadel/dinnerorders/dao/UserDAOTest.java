@@ -6,12 +6,21 @@ import com.exadel.dinnerorders.service.UserService;
 import junit.framework.Assert;
 import org.junit.Test;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.util.Collection;
+
+import static org.apache.log4j.helpers.LogLog.error;
+
 /**
  * User: Dima Shulgin
  * Date: 17.07.12
  */
 public class UserDAOTest {
-    UserDAO userDAO = new UserDAO();
+    UserDAO userDAO = new UserDAO()  ;
+
+
 
     @Test
     public void testCreate() throws Exception {
@@ -27,13 +36,13 @@ public class UserDAOTest {
 
     }
 
-/*
+
     @Test
     public void testUpdate() throws Exception {
 
-        long id = userDAO.getMaxIndex() + 1;
+
+        long id = 0;
         User user = new User(id, "testLogin2", "testName2", Role.USER);
-        userDAO.dropTable();
 
 
         userDAO.create(user);
@@ -50,15 +59,14 @@ public class UserDAOTest {
 
 
     }
-*/
 
-/*
+
     @Test
     public void testDelete() throws Exception {
+        long id = 0;
 
-        long id = userDAO.getMaxIndex() + 1;
         User user = new User(id, "testLogin3", "testName3", Role.USER);
-        userDAO.dropTable();
+
         userDAO.create(user);
 
         Collection collection = userDAO.loadAll();
@@ -74,18 +82,17 @@ public class UserDAOTest {
 
 
     }
-*/
 
-/*
+
     @Test
     public void testLoad() throws Exception {
 
-        long id = userDAO.getMaxIndex() + 1;
+        long id = 0;
         User user = new User(id, "testLogin4", "testName4", Role.USER);
 
-        userDAO.dropTable();
+
         userDAO.create(user);
-        User user1 = userDAO.load(id);
+        User user1 = userDAO.load(user.getId());
         if (user1.getUserName().equals(user.getUserName())) {
 
             Assert.assertTrue(true);
@@ -96,16 +103,27 @@ public class UserDAOTest {
 
 
     }
-*/
 
-/*
+
     @Test
     public void testLoadAll() throws Exception {
-        IdDAO idDAO = new IdDAO();
 
         User user = new User(null, "testLogin5", "testName5", Role.USER);
-        userDAO.dropTable();
+        new UserDAO(){
+              public void deleteRows() {
+                    Connection connection = connection();
 
+                    PreparedStatement preparedStatement = null;
+                    try {
+                        preparedStatement = connection.prepareStatement(("DELETE  FROM user WHERE ID > 0;"));
+                        preparedStatement.execute();
+
+                    } catch (SQLException e) {
+                        error("Error in the function deleteRows", e);
+
+                    }
+                }
+          } .deleteRows();
         int quantity1 = 45;
         while (quantity1 != 0) {
 
@@ -124,5 +142,7 @@ public class UserDAOTest {
         }
 
     }
-*/
+
+
+
 }

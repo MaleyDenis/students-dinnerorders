@@ -2,13 +2,10 @@ package com.exadel.dinnerorders.dao;
 
 import com.exadel.dinnerorders.entity.SystemResource;
 import com.exadel.dinnerorders.service.Configuration;
-import java.sql.CallableStatement;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.Random;
 import org.apache.log4j.Logger;
+
+import java.sql.*;
+import java.util.Random;
 
 /**
  * User: Василий Силин
@@ -52,12 +49,16 @@ public abstract class BaseDAO<E> implements DAO<E> {
 
     public Long getID() {
         Connection connection = connection();
+
         try {
-            CallableStatement callableStatement = connection.prepareCall("{call getID()}");
-            ResultSet resultSet = callableStatement.executeQuery();
-            if (resultSet.next()) {
-                return resultSet.getLong("MAX(ID)");
-            }
+
+            CallableStatement callableStatement = connection.prepareCall("{call getID(?)}");
+            callableStatement.registerOutParameter("idOUT", Types.INTEGER);
+            boolean hadResults = callableStatement.execute();
+            if (!hadResults)
+                return callableStatement.getLong(1);
+
+
         } catch (SQLException e) {
             logger.error("Error , value hasn't been returned");
         } finally {

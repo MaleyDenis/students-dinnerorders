@@ -2,13 +2,14 @@ package com.exadel.dinnerorders.dao;
 
 import com.exadel.dinnerorders.entity.Role;
 import com.exadel.dinnerorders.entity.User;
+import org.apache.log4j.Logger;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
-import org.apache.log4j.Logger;
 
 
 /**
@@ -25,8 +26,8 @@ public class UserDAO extends BaseDAO<User> {
         try {
 
             PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO user (ID,LDAPLOGIN,USERNAME,ROLE) VALUES(?, ?, ?, ?);");
-
-            preparedStatement.setLong(1, getID());
+            newItem.setId(getID());
+            preparedStatement.setLong(1,newItem.getId());
             preparedStatement.setString(2, newItem.getLdapLogin());
             preparedStatement.setString(3, newItem.getUserName());
 

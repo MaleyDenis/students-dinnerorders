@@ -6,7 +6,6 @@ import com.exadel.dinnerorders.entity.User;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.Logger;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -17,7 +16,7 @@ import java.util.Collection;
  */
 
 public class UserService {
-    private static Logger logger = Logger.getLogger(UserService.class);
+
 
     private static Collection<User> getAllUsers() {
         UserDAO userDAO = new UserDAO();

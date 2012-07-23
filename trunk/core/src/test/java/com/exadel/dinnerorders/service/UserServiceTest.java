@@ -13,8 +13,7 @@ import java.util.Collection;
  * Date: 19.07.12
  */
 public class UserServiceTest {
-/*
-    @Test
+     @Test
     public void testFindUserbyUserName() throws Exception {
 
         UserDAO userDAO = new UserDAO();
@@ -25,13 +24,13 @@ public class UserServiceTest {
         if (user2 != null) {
             if (user2.getUserName().equals("userName")) {
                 Assert.assertTrue(true);
-                userDAO.dropTable();
+
             } else {
                 Assert.assertTrue(false);
             }
         }
     }
-      */
+
     @Test
     public void testLoadAllUsersFromLdapForNotNull(){
         Collection<User> loadedUsers = UserService.loadAllUsersFromLdap();
