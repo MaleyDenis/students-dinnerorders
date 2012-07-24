@@ -46,7 +46,7 @@ public class WelcomeLayout extends GridLayout {
     @Subscribe
     public void addEventsHandler(AuthenticationEvent authenticationEvent) {
         welcomeLabel.setValue("<h1>Welcome!</h1>");
-        welcomeLabel.setWidth(20, UNITS_PERCENTAGE);
+        welcomeLabel.setWidth(115, UNITS_PIXELS);
     }
 
     private void initComponents() {

@@ -1,6 +1,6 @@
 package com.exadel.dinnerorders.vaadinwindow.layouts;
 
-import com.exadel.dinnerorders.vaadinwindow.listener.LoginFormListener;
+import com.exadel.dinnerorders.vaadinwindow.listeners.LoginFormListener;
 import com.vaadin.terminal.ExternalResource;
 import com.vaadin.terminal.ThemeResource;
 import com.vaadin.ui.*;
@@ -42,5 +42,4 @@ public class LoginLayout extends GridLayout {
         loginForm.setIcon(new ThemeResource("icons/user.png"));
         loginForm.addListener(new LoginFormListener());
     }
-
 }
