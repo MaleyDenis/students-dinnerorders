@@ -1,4 +1,4 @@
-package com.exadel.dinnerorders.vaadinwindow.listener;
+package com.exadel.dinnerorders.vaadinwindow.listeners;
 
 import com.exadel.dinnerorders.exception.IllegalUserLoginException;
 import com.exadel.dinnerorders.service.LdapService;

@@ -4,6 +4,7 @@ import com.exadel.dinnerorders.vaadinwindow.events.AuthenticationEvent;
 import com.exadel.dinnerorders.vaadinwindow.events.SignOutEvent;
 import com.exadel.dinnerorders.vaadinwindow.layouts.LoginLayout;
 import com.exadel.dinnerorders.vaadinwindow.layouts.WelcomeLayout;
+import com.exadel.dinnerorders.vaadinwindow.layouts.panels.MenuCreationPanel;
 import com.exadel.dinnerorders.vaadinwindow.layouts.panels.TableOrderPanel;
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
@@ -12,20 +13,19 @@ import com.vaadin.ui.Component;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.Layout;
 import com.vaadin.ui.Window;
+import com.vaadin.ui.Alignment;
 
 public class WebApplicationController extends com.vaadin.Application {
-
     private EventBus eventBus = Application.getInstance().getEventBus();
     private Layout welcomeLayout;
     private Layout loginLayout;
     private TableOrderPanel tableOrderPanel;
-
+    private MenuCreationPanel menuCreationPanel;
     @Override
     public void init() {
         createLayouts();
         createMainWindow();
         eventBus.register(this);
-
     }
 
     private void createMainWindow() {
@@ -39,13 +39,14 @@ public class WebApplicationController extends com.vaadin.Application {
         welcomeLayout = new WelcomeLayout();
         tableOrderPanel = new TableOrderPanel();
         tableOrderPanel.setHeight(100, Sizeable.UNITS_PERCENTAGE);
+        menuCreationPanel = new MenuCreationPanel();
         eventBus.register(welcomeLayout);
     }
 
     @Subscribe
     public void authenticationPassed(AuthenticationEvent authenticationEvent) {
         getMainWindow().setContent(welcomeLayout);
-        replaceCentralPanel(tableOrderPanel);
+        replaceCentralPanel(menuCreationPanel);
     }
 
     @Subscribe
@@ -55,6 +56,7 @@ public class WebApplicationController extends com.vaadin.Application {
 
     private void replaceCentralPanel(Component newComponent) {
         ((GridLayout)getMainWindow().getContent()).removeComponent(1, 3);
-        ((GridLayout)getMainWindow().getContent()).addComponent(newComponent, 1, 3, 3, 4);
+        ((GridLayout)getMainWindow().getContent()).addComponent(newComponent, 2, 3, 2, 4);
+        ((GridLayout)getMainWindow().getContent()).setComponentAlignment(newComponent, Alignment.MIDDLE_CENTER);
     }
 }
