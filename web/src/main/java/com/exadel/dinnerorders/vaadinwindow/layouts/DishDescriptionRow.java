@@ -8,28 +8,38 @@ import com.vaadin.ui.*;
 
 public class DishDescriptionRow extends GridLayout {
     public static final int DEFAULT_ROWS = 1;
-    public static final int DEFAULT_COLUMNS = 5;
-    private TextField dishName;
+    public static final int DEFAULT_COLUMNS = 6;
+    private TextArea dishName;
     private TextField cost;
     private Embedded add;
     private Embedded remove;
-    private Embedded status;
+    private Embedded nameStatus;
+    private Embedded costStatus;
 
     public DishDescriptionRow() {
         super(DEFAULT_COLUMNS, DEFAULT_ROWS);
         setExpandRatios();
         setWidth(100, UNITS_PERCENTAGE);
-        setHeight(40, UNITS_PIXELS);
+        setHeight(80, UNITS_PERCENTAGE);
         initComponents();
         locateComponents();
+        alignComponents();
+    }
+
+    private void alignComponents() {
+        setComponentAlignment(nameStatus, Alignment.MIDDLE_RIGHT);
+        setComponentAlignment(costStatus, Alignment.MIDDLE_RIGHT);
+        setComponentAlignment(add, Alignment.TOP_CENTER);
+        setComponentAlignment(remove, Alignment.TOP_LEFT);
     }
 
     private void setExpandRatios() {
         setColumnExpandRatio(0, 0.1f);
         setColumnExpandRatio(1, 3f);
-        setColumnExpandRatio(2, 1f);
-        setColumnExpandRatio(3, 0.2f);
+        setColumnExpandRatio(2, 0.1f);
+        setColumnExpandRatio(3, 1f);
         setColumnExpandRatio(4, 0.2f);
+        setColumnExpandRatio(5, 0.2f);
     }
 
     private void initComponents() {
@@ -38,18 +48,25 @@ public class DishDescriptionRow extends GridLayout {
     }
 
     private void initTextFields() {
-        dishName = new TextField("Name of dish");
+        dishName = new TextArea("Name of dish");
         dishName.setWidth(100, UNITS_PERCENTAGE);
+        dishName.setHeight(50, UNITS_PIXELS);
         dishName.setDescription("Input here name of dish");
+
         cost = new TextField("Cost", "0");
         cost.setDescription("Enter cost of the dish here");
         cost.setWidth(100, UNITS_PERCENTAGE);
+        cost.setMaxLength(20);
         cost.addListener(new CostChangedListener());
         cost.setTextChangeEventMode(AbstractTextField.TextChangeEventMode.EAGER);
 
-        status = new Embedded();
-        status.setWidth(16, UNITS_PIXELS);
-        status.setHeight(16, UNITS_PIXELS);
+        nameStatus = new Embedded();
+        nameStatus.setWidth(16, UNITS_PIXELS);
+        nameStatus.setHeight(16, UNITS_PIXELS);
+
+        costStatus = new Embedded();
+        costStatus.setWidth(16, UNITS_PIXELS);
+        costStatus.setHeight(16, UNITS_PIXELS);
     }
 
     private void initButtons() {
@@ -69,23 +86,24 @@ public class DishDescriptionRow extends GridLayout {
     private void locateComponents() {
         FormLayout dishNameLayout = new FormLayout();
         dishNameLayout.setWidth(90, UNITS_PERCENTAGE);
+        dishNameLayout.addComponent(dishName);
+
         FormLayout costLayout = new FormLayout();
         costLayout.setWidth(80, UNITS_PERCENTAGE);
-        dishNameLayout.addComponent(dishName);
         costLayout.addComponent(cost);
-        addComponent(status, 0, 0);
-        setComponentAlignment(status, Alignment.MIDDLE_RIGHT);
-        addComponent(dishNameLayout, 1, 0);
+
+        addComponent(nameStatus);
+        addComponent(dishNameLayout);
+        addComponent(costStatus);
+        addComponent(costLayout);
+        addComponent(add);
+        addComponent(remove);
+
         setComponentAlignment(dishNameLayout, Alignment.MIDDLE_CENTER);
-        addComponent(costLayout, 2, 0);
         setComponentAlignment(costLayout, Alignment.MIDDLE_LEFT);
-        addComponent(add, 3, 0);
-        setComponentAlignment(add, Alignment.TOP_CENTER);
-        addComponent(remove, 4, 0);
-        setComponentAlignment(remove, Alignment.TOP_LEFT);
     }
 
-    public TextField getDishName() {
+    public TextArea getDishName() {
         return dishName;
     }
 
@@ -101,17 +119,42 @@ public class DishDescriptionRow extends GridLayout {
         return remove;
     }
 
-    public Embedded getStatus() {
-        return status;
+    public boolean checkData() {
+        return checkDishName() == checkCost();
     }
 
-    public boolean checkData() {
-        if (dishName.getValue().equals("") || Integer.parseInt((String)cost.getValue()) == 0) {
-            status.setSource(new ExternalResource("/VAADIN/themes/runo/icons/16/error.png"));
+    private boolean checkDishName() {
+        if (dishName.getValue().equals("")) {
+            nameStatus.setSource(new ExternalResource("/VAADIN/themes/runo/icons/16/error.png"));
             return false;
         } else {
-            status.setSource(new ExternalResource("/VAADIN/themes/runo/icons/16/ok.png"));
+            nameStatus.setSource(new ExternalResource("/VAADIN/themes/runo/icons/16/ok.png"));
             return true;
         }
+    }
+
+    private boolean checkCost() {
+        if (cost.getValue().equals("0")) {
+            costStatus.setSource(new ExternalResource("/VAADIN/themes/runo/icons/16/error.png"));
+            return false;
+        } else {
+            costStatus.setSource(new ExternalResource("/VAADIN/themes/runo/icons/16/ok.png"));
+            return true;
+        }
+    }
+
+    public Embedded getCostStatus() {
+        return costStatus;
+    }
+
+    public Embedded getDishNameStatus() {
+        return nameStatus;
+    }
+
+    public void flushValues() {
+        cost.setValue("0");
+        costStatus.setSource(new ExternalResource(""));
+        dishName.setValue("");
+        nameStatus.setSource(new ExternalResource(""));
     }
 }

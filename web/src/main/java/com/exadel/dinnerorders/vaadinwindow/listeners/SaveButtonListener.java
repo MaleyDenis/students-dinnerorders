@@ -3,13 +3,11 @@ package com.exadel.dinnerorders.vaadinwindow.listeners;
 import com.exadel.dinnerorders.vaadinwindow.application.Application;
 import com.exadel.dinnerorders.vaadinwindow.events.SaveMenuEvent;
 import com.exadel.dinnerorders.vaadinwindow.layouts.panels.DayMenuPanel;
+import com.exadel.dinnerorders.vaadinwindow.layouts.panels.MenuCreationPanel;
 import com.vaadin.terminal.ExternalResource;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Component;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.TextField;
-
-import java.util.Iterator;
 
 public class SaveButtonListener implements Button.ClickListener {
     @Override
@@ -23,14 +21,13 @@ public class SaveButtonListener implements Button.ClickListener {
             mainPanel.getComponent(0, 0).setIcon(new ExternalResource("/VAADIN/themes/runo/icons/16/ok.png"));
             actual++;
         }
-        Iterator<Component> iterator = mainPanel.getComponentIterator();
 
-        while (iterator.hasNext()) {
-            Object object = iterator.next();
-            if (object instanceof DayMenuPanel) {
-                expected++;
-                actual += ((DayMenuPanel)object).isDataValid() ? 1 : 0;
-            }
+        int startFromRow = 1;
+        for (int i = 0; i < MenuCreationPanel.NUMBER_OF_SERVICE_DAYS; i++) {
+            DayMenuPanel dayPanel = (DayMenuPanel)mainPanel.getComponent(0, startFromRow);
+            expected++;
+            actual += dayPanel.isDataValid() ? 1 : 0;
+            startFromRow += 2;
         }
 
         if (actual == expected) {

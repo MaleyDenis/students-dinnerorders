@@ -1,14 +1,16 @@
 package com.exadel.dinnerorders.vaadinwindow.layouts;
 
-import com.exadel.dinnerorders.vaadinwindow.events.AuthenticationEvent;
+import com.exadel.dinnerorders.vaadinwindow.layouts.panels.NavigationPanel;
 import com.exadel.dinnerorders.vaadinwindow.layouts.panels.UserInfoPanel;
-import com.google.common.eventbus.Subscribe;
-import com.vaadin.ui.*;
+import com.vaadin.ui.Alignment;
+import com.vaadin.ui.GridLayout;
+import com.vaadin.ui.Label;
+import com.vaadin.ui.Panel;
 
 public class WelcomeLayout extends GridLayout {
     public static final int DEFAULT_COLUMN_COUNT = 5;
     public static final int DEFAULT_ROW_COUNT = 6;
-    private Label welcomeLabel;
+    private NavigationPanel navigationPanel;
     private Panel userInfoPanel;
 
     public WelcomeLayout() {
@@ -38,20 +40,13 @@ public class WelcomeLayout extends GridLayout {
         addComponent(new Label("<br>", Label.CONTENT_RAW));
         addComponent(userInfoPanel, 3, 1, 3, 1);
         addComponent(new Label("<br>", Label.CONTENT_RAW), 0, 2);
-        addComponent(welcomeLabel, 2, 1);
-        setComponentAlignment(welcomeLabel, Alignment.MIDDLE_CENTER);
+        addComponent(navigationPanel, 2, 1);
+        setComponentAlignment(navigationPanel, Alignment.MIDDLE_CENTER);
         setComponentAlignment(userInfoPanel, Alignment.MIDDLE_CENTER);
     }
 
-    @Subscribe
-    public void addEventsHandler(AuthenticationEvent authenticationEvent) {
-        welcomeLabel.setValue("<h1>Welcome!</h1>");
-        welcomeLabel.setWidth(115, UNITS_PIXELS);
-    }
-
     private void initComponents() {
-        welcomeLabel = new Label("Welcome");
-        welcomeLabel.setContentMode(Label.CONTENT_RAW);
+        navigationPanel = new NavigationPanel();
         userInfoPanel = new UserInfoPanel();
     }
 }

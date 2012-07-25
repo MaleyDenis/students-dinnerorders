@@ -7,7 +7,6 @@ import com.exadel.dinnerorders.vaadinwindow.events.AddDishEvent;
 import com.exadel.dinnerorders.vaadinwindow.events.RemoveDishEvent;
 import com.exadel.dinnerorders.vaadinwindow.layouts.DishDescriptionRow;
 import com.google.common.eventbus.Subscribe;
-import com.vaadin.terminal.ExternalResource;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.GridLayout;
@@ -104,25 +103,25 @@ public class DayMenuPanel extends GridLayout {
         return weekday;
     }
 
-    /*
-        I don't know if i need to set MenuItem's ID == null or using BaseDAO.getID();
-     */
     public List<MenuItem> getMenuItems() {
         List<MenuItem> list = new ArrayList<MenuItem>();
+        int startRow = 1;
 
-        Iterator<Component> iterator = getComponentIterator();
-        while (iterator.hasNext()) {
-            Object object = iterator.next();
-            if (object instanceof DishDescriptionRow) {
-                DishDescriptionRow row = (DishDescriptionRow)object;
-                String dishName = (String)row.getDishName().getValue();
-                Double cost = Double.parseDouble((String)row.getCost().getValue());
-                list.add(new MenuItem(null, weekday, dishName, cost));
-                row.getStatus().setSource(new ExternalResource(""));
-                row.getCost().setValue("0");
-                row.getDishName().setValue("");
-            }
+        for (int i = startRow; i < getComponentCount(); i++) {
+            DishDescriptionRow row = (DishDescriptionRow)getComponent(0, i);
+            String dishName = (String)row.getDishName().getValue();
+            Double cost = Double.parseDouble((String)row.getCost().getValue());
+            list.add(new MenuItem(1L, weekday, dishName, cost));
         }
+        flush();
         return list;
+    }
+
+    public void flush() {
+        int startRow = 1;
+        for (int i = startRow; i < getComponentCount(); i++) {
+            DishDescriptionRow row = (DishDescriptionRow)getComponent(0, i);
+            row.flushValues();
+        }
     }
 }

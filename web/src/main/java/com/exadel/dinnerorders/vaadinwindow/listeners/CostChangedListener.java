@@ -9,9 +9,12 @@ public class CostChangedListener implements FieldEvents.TextChangeListener {
         String currentValue = (String)((TextField)textChangeEvent.getComponent()).getValue();
         StringBuilder newValue = new StringBuilder(textChangeEvent.getText());
         try {
-            Integer.parseInt(newValue.toString());
+            Long.parseLong(newValue.toString());
             if (newValue.lastIndexOf("0") != newValue.length() - 1) {
                 newValue.append("0");
+            }
+            if (newValue.charAt(0) == '0') {
+                newValue.deleteCharAt(0);
             }
             ((TextField)textChangeEvent.getComponent()).setValue(newValue.toString());
             ((TextField)textChangeEvent.getComponent()).setCursorPosition(newValue.lastIndexOf("0"));
