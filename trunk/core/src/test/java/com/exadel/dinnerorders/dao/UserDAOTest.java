@@ -93,9 +93,11 @@ public class UserDAOTest {
     public void testLoadAll() throws Exception {
 
         User user = new User(null, "testLogin5", "testName5", Role.USER);
+
         new UserDAO(){
               public void deleteRows() {
-                    Connection connection = connection(this.getClass());
+
+                    Connection connection = connection(this);
 
                     PreparedStatement preparedStatement = null;
                     try {
