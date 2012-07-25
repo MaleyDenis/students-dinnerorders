@@ -13,64 +13,57 @@ public class DateUtils {
     public static final long SECONDS_IN_HOUR = MINUTES_IN_HOUR * SECONDS_IN_MINUTE;
     public static final long MILLISECONDS_IN_HOUR = MILLISECONDS_IN_SECOND * SECONDS_IN_HOUR;
     public static final long MILLISECONDS_IN_DAY = SECONDS_IN_DAY * MILLISECONDS_IN_SECOND;
-    public static final long DEFAULT_TIME_SHIFT = 9 * MILLISECONDS_IN_HOUR;
     public static final int DEFAULT_WORK_DAYS = 5;
-    private static final long MILLISECONDS_IN_WEEK = 7 * MILLISECONDS_IN_DAY;
+    public static final int DAYS_IN_WEEK = 7;
+    private static final long MILLISECONDS_IN_WEEK = DAYS_IN_WEEK * MILLISECONDS_IN_DAY;
 
-    private static Calendar calendar;
-
-    static {
-        calendar = Calendar.getInstance();
-        calendar.setTimeInMillis(System.currentTimeMillis() - DEFAULT_TIME_SHIFT);
-    }
-
-    public static int getDateOfFirstDayOfWeek() {
-        int firstDayOfWeek = calendar.getFirstDayOfWeek();
-        int elapsedDays = calendar.get(Calendar.DAY_OF_WEEK) - firstDayOfWeek;
-        return calendar.get(Calendar.DATE) - elapsedDays;
+    public static int getDateOfThisMonday() {
+        Calendar calendar = Calendar.getInstance();
+        long mondayTime = getCurrentMondayDate().getTime();
+        calendar.setTimeInMillis(mondayTime);
+        return calendar.get(Calendar.DATE);
     }
 
     public static int getMonth() {
+        Calendar calendar = Calendar.getInstance();
         return calendar.get(Calendar.MONTH) + 1;
     }
 
     public static int getYear() {
+        Calendar calendar = Calendar.getInstance();
         return calendar.get(Calendar.YEAR);
     }
 
-    public static int getDateOfLastDayOfWeek() {
-        int firstDayOfWeek = calendar.getFirstDayOfWeek();
-        int leftDays = calendar.get(Calendar.DAY_OF_WEEK) - firstDayOfWeek + DEFAULT_WORK_DAYS - 2;
-        return calendar.get(Calendar.DATE) + leftDays;
+    public static int getDateOfThisFriday() {
+        Calendar calendar = Calendar.getInstance();
+        long mondayTime = getCurrentMondayDate().getTime();
+        long fridayTime = mondayTime + MILLISECONDS_IN_DAY * (DEFAULT_WORK_DAYS - 1);
+        calendar.setTimeInMillis(fridayTime);
+        return calendar.get(Calendar.DATE);
     }
 
-    public static Timestamp getCurrentWeekFirstDate() {
+    public static Timestamp getCurrentMondayDate() {
+        Calendar calendar = Calendar.getInstance();
         int firstDayOfWeek = calendar.getFirstDayOfWeek();
         int elapsedDays = calendar.get(Calendar.DAY_OF_WEEK) - firstDayOfWeek;
-        return new Timestamp(System.currentTimeMillis() - DEFAULT_TIME_SHIFT - elapsedDays * MILLISECONDS_IN_DAY);
+        return new Timestamp(System.currentTimeMillis() - elapsedDays * MILLISECONDS_IN_DAY);
     }
 
-    public static Timestamp getCurrentWeekLastDate() {
-        int firstDayOfWeek = calendar.getFirstDayOfWeek();
-        int leftDays = calendar.get(Calendar.DAY_OF_WEEK) - firstDayOfWeek + DEFAULT_WORK_DAYS - 2;
-        return new Timestamp(System.currentTimeMillis() - DEFAULT_TIME_SHIFT + MILLISECONDS_IN_DAY * leftDays);
+    public static Timestamp getCurrentFridayDate() {
+        return new Timestamp(getCurrentMondayDate().getTime() + MILLISECONDS_IN_DAY * (DEFAULT_WORK_DAYS - 1));
     }
 
     public static Timestamp getCurrentTime() {
-        return new Timestamp(System.currentTimeMillis() - DEFAULT_TIME_SHIFT);
+        return new Timestamp(System.currentTimeMillis());
     }
 
-    public static Timestamp getNextWeekFirstDate() {
-        int firstDayOfWeek = calendar.getFirstDayOfWeek();
-        int elapsedDays = calendar.get(Calendar.DAY_OF_WEEK) - firstDayOfWeek;
-        return new Timestamp(System.currentTimeMillis() -
-                DEFAULT_TIME_SHIFT - elapsedDays * MILLISECONDS_IN_DAY + MILLISECONDS_IN_WEEK);
+    public static Timestamp getNextMondayDate() {
+        Timestamp thisMonday = getCurrentMondayDate();
+        return new Timestamp(thisMonday.getTime() + MILLISECONDS_IN_WEEK);
     }
 
-    public static Timestamp getNextWeekLastDate() {
-        int firstDayOfWeek = calendar.getFirstDayOfWeek();
-        int leftDays = calendar.get(Calendar.DAY_OF_WEEK) - firstDayOfWeek + DEFAULT_WORK_DAYS - 2;
-        return new Timestamp(System.currentTimeMillis() -
-                DEFAULT_TIME_SHIFT + MILLISECONDS_IN_DAY * leftDays + MILLISECONDS_IN_WEEK);
+    public static Timestamp getNextFridayDate() {
+        Timestamp thisFriday = getCurrentFridayDate();
+        return new Timestamp(thisFriday.getTime() + MILLISECONDS_IN_WEEK);
     }
 }
