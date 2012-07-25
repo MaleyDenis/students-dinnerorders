@@ -1,25 +1,27 @@
 package com.exadel.dinnerorders.dao;
 
+import com.exadel.dinnerorders.entity.DefaultConnection;
 import com.exadel.dinnerorders.entity.MenuItem;
 import com.exadel.dinnerorders.entity.Weekday;
+import org.apache.log4j.Logger;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
-import org.apache.log4j.Logger;
 
 /**
  * User: Василий Силин
  * Date: 16.7.12
  */
-
+@DefaultConnection
 public class MenuItemDAO extends BaseDAO<MenuItem> {
     private Logger logger = Logger.getLogger(MenuItemDAO.class);
 
     public boolean create(MenuItem newItem) {
-        Connection connection = connection();
+        Connection connection = connection(this.getClass());
         if (connection != null && newItem.getId() == null) {
             try {
                 PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO menuitem VALUE(?, ?, ?, ?);");
@@ -40,7 +42,7 @@ public class MenuItemDAO extends BaseDAO<MenuItem> {
     }
 
     public boolean update(MenuItem item) {
-        Connection connection = connection();
+        Connection connection = connection(this.getClass());
         if (connection != null) {
             try {
                 PreparedStatement preparedStatement = connection.prepareStatement("UPDATE menuitem SET weekday = ?, description = ?, cost = ? WHERE menuitem_id = ?;");
@@ -60,7 +62,7 @@ public class MenuItemDAO extends BaseDAO<MenuItem> {
     }
 
     public boolean delete(MenuItem item) {
-        Connection connection = connection();
+        Connection connection = connection(this.getClass());
         if (connection != null) {
             try {
                 PreparedStatement preparedStatement =  connection.prepareStatement("DELETE FROM menuitem WHERE menuitem_id = ?;");
@@ -77,7 +79,7 @@ public class MenuItemDAO extends BaseDAO<MenuItem> {
     }
 
     public MenuItem load(Long id) {
-        Connection connection = connection();
+        Connection connection = connection(this.getClass());
         if (connection != null) {
             try {
                 PreparedStatement menuStatement =  connection.prepareStatement("SELECT * FROM menuitem WHERE menuitem_id = ?;");
@@ -100,7 +102,7 @@ public class MenuItemDAO extends BaseDAO<MenuItem> {
 
     public Collection<MenuItem> loadAll(){
         Collection<MenuItem> items = new ArrayList<MenuItem>();
-        Connection connection = connection();
+        Connection connection = connection(this.getClass());
         if (connection != null) {
             try {
                 PreparedStatement menuStatement =  connection.prepareStatement("SELECT * FROM menuitem;");

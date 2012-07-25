@@ -95,7 +95,7 @@ public class UserDAOTest {
         User user = new User(null, "testLogin5", "testName5", Role.USER);
         new UserDAO(){
               public void deleteRows() {
-                    Connection connection = connection();
+                    Connection connection = connection(this.getClass());
 
                     PreparedStatement preparedStatement = null;
                     try {

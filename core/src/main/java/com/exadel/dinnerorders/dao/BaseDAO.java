@@ -1,10 +1,13 @@
 package com.exadel.dinnerorders.dao;
 
+import com.exadel.dinnerorders.entity.DefaultConnection;
 import com.exadel.dinnerorders.entity.SystemResource;
 import com.exadel.dinnerorders.exception.WorkflowException;
 import com.exadel.dinnerorders.service.Configuration;
+import com.exadel.dinnerorders.service.DefaultConnectionProvider;
 import org.apache.log4j.Logger;
 
+import java.lang.annotation.Annotation;
 import java.sql.*;
 
 /**
@@ -15,7 +18,16 @@ import java.sql.*;
 public abstract class BaseDAO<E> implements DAO<E> {
     private Logger logger = Logger.getLogger(BaseDAO.class);
 
-    protected Connection connection() {
+    protected Connection connection(Class clazz) {
+
+        Annotation[] annotations = clazz.getAnnotations();
+        int size = annotations.length;
+        for (int i = 0; i < size; ++i) {
+            if (annotations[i].annotationType().equals(DefaultConnection.class)) {
+                return DefaultConnectionProvider.connection();
+            }
+        }
+
         Connection connection = null;
         try {
             Class.forName("com.mysql.jdbc.Driver");
@@ -48,14 +60,17 @@ public abstract class BaseDAO<E> implements DAO<E> {
     }
 
     public Long getID() {
-        Connection connection = connection();
+        Connection connection = connection(this.getClass());
 
         try {
+
             CallableStatement callableStatement = connection.prepareCall("{call getID(?)}");
             callableStatement.registerOutParameter("idOUT", Types.INTEGER);
             boolean hadResults = callableStatement.execute();
             if (!hadResults)
                 return callableStatement.getLong(1);
+
+
         } catch (SQLException e) {
             logger.error("Error , value hasn't been returned");
         } finally {
