@@ -150,14 +150,14 @@ public class OrderDAO extends BaseDAO<Order> {
             ResultSet resultSet = statement.executeQuery
                     ("SELECT * FROM dinnerorders.order_menuitem WHERE order_id = " + order.getId());
             while (resultSet.next()){
-                menuItemID.add(resultSet.getLong(2));
+                menuItemID.add(resultSet.getLong(3));
             }
             PreparedStatement preparedStatement = connection.prepareStatement
                     ("SELECT * FROM dinnerorders.menuitem");
             ResultSet resultSet1 = preparedStatement.executeQuery();
             while (resultSet1.next()){
                 if (menuItemID.contains(resultSet1.getLong(1))){
-                    MenuItem menuItem = new MenuItem(resultSet.getLong(1),
+                    MenuItem menuItem = new MenuItem(resultSet1.getLong(1),
                             Weekday.valueOf(resultSet1.getString(2)), resultSet1.getString(3),resultSet1.getDouble(4));
                     menuItems.add(menuItem);
                 }

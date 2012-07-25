@@ -1,23 +1,38 @@
 package com.exadel.dinnerorders.vaadinwindow.layouts.panels;
-import com.exadel.dinnerorders.entity.User;
+
+import com.exadel.dinnerorders.entity.MenuItem;
+import com.exadel.dinnerorders.entity.Order;
+import com.exadel.dinnerorders.service.OrderService;
 import com.exadel.dinnerorders.service.UserService;
+import com.exadel.dinnerorders.vaadinwindow.application.Application;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Panel;
-import com.vaadin.ui.Table;
+import com.vaadin.ui.*;
 
+import java.awt.*;
+import java.util.ArrayList;
 import java.util.Collection;
-
+import java.util.Date;
 
 public class TableOrderPanel extends Panel {
-    Table tableOrder;
-    Label user;
-    Label cost;
-    Label dateOrder;
-    Label datePayment;
+    private Table tableOrder;
+    private Label user;
+    private Label cost;
+    private Label dateOrder;
+    private Label datePayment;
+    private Label menu;
+    private VerticalLayout verticalLayout;
+    private PopupView popupView;
+    private Table menuItemOrderTable;
+    private Label dish;
+    private Label costMenuItem;
     public TableOrderPanel(){
         super();
+        Application.getInstance().getEventBus().register(this);
         initLabels();
-        initTable();
+        initTableOrder();
+        setSizeFull();
+
     }
 
     public void initLabels(){
@@ -25,33 +40,66 @@ public class TableOrderPanel extends Panel {
         cost = new Label("Cost");
         dateOrder = new Label("Date order");
         datePayment = new Label("Date payment");
+        menu = new Label("Menu");
+        dish = new Label("Dish");
+        costMenuItem = new Label("Cost");
+
+
+    }
+    public void initMenuItemOrderTable(){
+        menuItemOrderTable = new Table("Menu");
+        menuItemOrderTable.addContainerProperty(dish,String.class,null);
+        menuItemOrderTable.addContainerProperty(costMenuItem,String.class,null);
+
     }
 
-    public void initTable(){
+    public void initTableOrder(){
         tableOrder = new Table("Order");
         tableOrder.addContainerProperty(user,String.class,null);
         tableOrder.addContainerProperty(cost,Double.class,null);
-        tableOrder.addContainerProperty(dateOrder, String.class,null);
-        tableOrder.addContainerProperty(datePayment,String.class,null);
-        tableOrder.addItem(new Object[]{
-                "Denis Maley", 445.54, "19-07-2012", "28-12-2009"}, 1);
-        tableOrder.addItem(new Object[] {
-                "Vasya Silin", 445.54,"28-12-1990","28-12-2009"}, 2);
-        tableOrder.addItem(new Object[] {
-                "Dima Shulgin", 445.54,"28-12-1990","28-12-2009"}, 3);
-        tableOrder.addItem(new Object[] {
-                "Yan Cacuk", 445.54,"28-12-1990","28-12-2009"}, 4);
-        tableOrder.addItem(new Object[] {
-                "Alexei Okunevich", 445.54,"28-12-1990","28-12-2009"}, 5);
-       Collection<User> users = UserService.loadAllUsersFromLdap();
-        int i = 6;
-       for (User user:users){
-            tableOrder.addItem(new Object[] {
-                    user.getUserName(), 445.54,"28-12-1990","28-12-2009"}, i);
+        tableOrder.addContainerProperty(dateOrder, Date.class,null);
+        tableOrder.addContainerProperty(datePayment,Date.class,null);
+        tableOrder.addContainerProperty(menu,PopupView.class,null);
+        tableOrder.setSizeFull();
+        createTable();
+        addComponent(tableOrder);
+    }
+
+    public void createTable(){
+        Collection<Order> orderCollection = OrderService.sortedAll();
+        ArrayList<String> menuItemOrder;
+        int i=1;
+        int k=1;
+        for (Order order : orderCollection){
+            initMenuItemOrderTable();
+            menuItemOrder = new ArrayList<String>();
+            for(MenuItem menuItem:order.getMenuItemList()) {
+                menuItemOrder.add(menuItem.getWeekday() +"\n"+ menuItem.getDescription()+" - price: "+menuItem.getCost());
+                menuItemOrderTable.addItem(new Object[]{menuItem.getWeekday(),menuItem.getDescription()},k);
+                k++;
+            }
+            tableOrder.addItem(new Object[]{UserService.findUserByID(order.getUserID()).getUserName(),order.getCost(),order.getDateOrder(),
+                    order.getDatePayment(),initPopupView(menuItemOrderTable)},i);
             i++;
         }
-        tableOrder.setWidth("100%");
-        addComponent(tableOrder);
+    }
+
+    public void initVerticalLayout(){
+        int width = Toolkit.getDefaultToolkit().getScreenSize().width;
+        int height = Toolkit.getDefaultToolkit().getScreenSize().height;
+        verticalLayout = new VerticalLayout();
+        verticalLayout.setWidth(width * 0.5f, UNITS_PIXELS);
+        verticalLayout.setHeight(height*0.3f,UNITS_PIXELS);
+
+    }
+
+    public PopupView initPopupView(Table menuItemOrderTable){
+        initVerticalLayout();
+        menuItemOrderTable.setSizeFull();
+        verticalLayout.addComponent(menuItemOrderTable);
+        popupView = new PopupView("Show details",verticalLayout);
+        popupView.setHideOnMouseOut(false);
+        return popupView;
     }
 
 }
