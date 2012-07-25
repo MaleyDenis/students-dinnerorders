@@ -1,5 +1,6 @@
 package com.exadel.dinnerorders.dao;
 
+import com.exadel.dinnerorders.entity.DbConnection;
 import com.exadel.dinnerorders.entity.DefaultConnection;
 import com.exadel.dinnerorders.entity.MenuItem;
 import com.exadel.dinnerorders.entity.Weekday;
@@ -16,12 +17,12 @@ import java.util.Collection;
  * User: Василий Силин
  * Date: 16.7.12
  */
-@DefaultConnection
+@DbConnection(connectionType=DefaultConnection.class)
 public class MenuItemDAO extends BaseDAO<MenuItem> {
     private Logger logger = Logger.getLogger(MenuItemDAO.class);
 
     public boolean create(MenuItem newItem) {
-        Connection connection = connection(this.getClass());
+        Connection connection = connection(this);
         if (connection != null && newItem.getId() == null) {
             try {
                 PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO menuitem VALUE(?, ?, ?, ?);");
@@ -42,7 +43,7 @@ public class MenuItemDAO extends BaseDAO<MenuItem> {
     }
 
     public boolean update(MenuItem item) {
-        Connection connection = connection(this.getClass());
+        Connection connection = connection(this);
         if (connection != null) {
             try {
                 PreparedStatement preparedStatement = connection.prepareStatement("UPDATE menuitem SET weekday = ?, description = ?, cost = ? WHERE menuitem_id = ?;");
@@ -62,7 +63,7 @@ public class MenuItemDAO extends BaseDAO<MenuItem> {
     }
 
     public boolean delete(MenuItem item) {
-        Connection connection = connection(this.getClass());
+        Connection connection = connection(this);
         if (connection != null) {
             try {
                 PreparedStatement preparedStatement =  connection.prepareStatement("DELETE FROM menuitem WHERE menuitem_id = ?;");
@@ -79,7 +80,7 @@ public class MenuItemDAO extends BaseDAO<MenuItem> {
     }
 
     public MenuItem load(Long id) {
-        Connection connection = connection(this.getClass());
+        Connection connection = connection(this);
         if (connection != null) {
             try {
                 PreparedStatement menuStatement =  connection.prepareStatement("SELECT * FROM menuitem WHERE menuitem_id = ?;");

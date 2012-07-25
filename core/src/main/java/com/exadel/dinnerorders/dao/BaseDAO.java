@@ -1,14 +1,15 @@
 package com.exadel.dinnerorders.dao;
 
-import com.exadel.dinnerorders.entity.DefaultConnection;
-import com.exadel.dinnerorders.entity.SystemResource;
+import com.exadel.dinnerorders.entity.DbConnection;
 import com.exadel.dinnerorders.exception.WorkflowException;
-import com.exadel.dinnerorders.service.Configuration;
 import com.exadel.dinnerorders.service.DefaultConnectionProvider;
 import org.apache.log4j.Logger;
 
 import java.lang.annotation.Annotation;
-import java.sql.*;
+import java.sql.CallableStatement;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.sql.Types;
 
 /**
  * User: Василий Силин
@@ -18,36 +19,19 @@ import java.sql.*;
 public abstract class BaseDAO<E> implements DAO<E> {
     private Logger logger = Logger.getLogger(BaseDAO.class);
 
-    protected Connection connection(Class clazz) {
+    protected Connection connection(Object obj) {
 
-        Annotation[] annotations = clazz.getAnnotations();
-        int size = annotations.length;
-        for (int i = 0; i < size; ++i) {
-            if (annotations[i].annotationType().equals(DefaultConnection.class)) {
-                return DefaultConnectionProvider.connection();
-            }
+
+        Annotation annotation = obj.getClass().getAnnotation(DbConnection.class);
+        DbConnection dbConnection = (DbConnection) annotation;
+        if(dbConnection!=null){
+
+        if (dbConnection.connectionType().getSimpleName().equals("DefaultConnection"))
+            return DefaultConnectionProvider.connection();
         }
-
-        Connection connection = null;
-        try {
-            Class.forName("com.mysql.jdbc.Driver");
-            String url = "jdbc:mysql://" + Configuration.getProperty(SystemResource.DATABASE_HOST)
-                    + ":" + Configuration.getProperty(SystemResource.DATABASE_PORT)
-                    + "/" + Configuration.getProperty(SystemResource.DATABASE_NAME);
-
-            String login = Configuration.getProperty(SystemResource.DATABASE_LOGIN);
-            String password = Configuration.getProperty(SystemResource.DATABASE_PASSWORD);
-
-            logger.debug("URL: " + url + "; Login: " + login + "; Password: " + password + ";");
-
-            connection = DriverManager.getConnection(url, login, password);
-        } catch (ClassNotFoundException e) {
-            logger.error("BaseDAO: class has not been found.", e);
-        } catch (SQLException e) {
-            logger.error("BaseDAO: connection has failed.", e);
-        }
-        return connection;
+        return  DefaultConnectionProvider.connection();
     }
+
 
     protected void disconnect(Connection connection) {
         try {
@@ -60,7 +44,7 @@ public abstract class BaseDAO<E> implements DAO<E> {
     }
 
     public Long getID() {
-        Connection connection = connection(this.getClass());
+        Connection connection = connection(this);
 
         try {
 
