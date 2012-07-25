@@ -20,8 +20,6 @@ import static org.apache.log4j.helpers.LogLog.error;
 public class UserDAOTest {
     UserDAO userDAO = new UserDAO()  ;
 
-
-
     @Test
     public void testCreate() throws Exception {
         long id = 1;
@@ -33,17 +31,13 @@ public class UserDAOTest {
         } else {
             Assert.assertTrue(false);
         }
-
     }
-
 
     @Test
     public void testUpdate() throws Exception {
 
-
         long id = 0;
         User user = new User(id, "testLogin2", "testName2", Role.USER);
-
 
         userDAO.create(user);
         user.setLdapLogin("updateLogin");
@@ -56,10 +50,7 @@ public class UserDAOTest {
         } else {
             Assert.assertTrue(false);
         }
-
-
     }
-
 
     @Test
     public void testDelete() throws Exception {
@@ -79,17 +70,13 @@ public class UserDAOTest {
         } else {
             Assert.assertTrue(false);
         }
-
-
     }
-
 
     @Test
     public void testLoad() throws Exception {
 
         long id = 0;
         User user = new User(id, "testLogin4", "testName4", Role.USER);
-
 
         userDAO.create(user);
         User user1 = userDAO.load(user.getId());
@@ -100,10 +87,7 @@ public class UserDAOTest {
         } else {
             Assert.assertTrue(false);
         }
-
-
     }
-
 
     @Test
     public void testLoadAll() throws Exception {
@@ -124,25 +108,20 @@ public class UserDAOTest {
                     }
                 }
           } .deleteRows();
-        int quantity1 = 45;
-        while (quantity1 != 0) {
 
+        int quantity1 = 45;
+
+        while (quantity1 != 0) {
             userDAO.create(user);
             --quantity1;
         }
 
-
         int quantity2 = userDAO.loadAll().size();
 
         if (quantity2 == 45) {
-
             Assert.assertTrue(true);
         } else {
             Assert.assertTrue(false);
         }
-
     }
-
-
-
 }
