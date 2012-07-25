@@ -1,7 +1,9 @@
 package com.exadel.dinnerorders.vaadinwindow.listeners;
 
+import com.exadel.dinnerorders.entity.User;
 import com.exadel.dinnerorders.exception.IllegalUserLoginException;
 import com.exadel.dinnerorders.service.LdapService;
+import com.exadel.dinnerorders.service.UserService;
 import com.exadel.dinnerorders.vaadinwindow.application.Application;
 import com.exadel.dinnerorders.vaadinwindow.events.AuthenticationEvent;
 import com.vaadin.ui.LoginForm;
@@ -11,7 +13,7 @@ public class LoginFormListener implements LoginForm.LoginListener {
 
     @Override
     public void onLogin(LoginForm.LoginEvent loginEvent) {
-        if (isInformationValid(loginEvent)) {
+       if (isInformationValid(loginEvent)) {
             showWelcomePage(loginEvent);
        } else {
             clearForm(loginEvent);
@@ -28,7 +30,8 @@ public class LoginFormListener implements LoginForm.LoginListener {
     private void showWelcomePage(LoginForm.LoginEvent loginEvent) {
         LdapService ldap = new LdapService();
         String login = loginEvent.getLoginParameter("username");
-        Application.getInstance().setUserName(ldap.getUserName(login));
+        User user = UserService.findUserByUserName(ldap.getUserName(login));
+        Application.getInstance().setUser(user);
         Application.getInstance().getEventBus().post(new AuthenticationEvent());
     }
 

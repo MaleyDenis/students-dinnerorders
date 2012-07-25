@@ -48,8 +48,8 @@ public class MenuCreationPanel extends Panel {
 
     private void initLabels() {
         int lastIndex = ("DD-MM-YYYY").length();
-        String mondayDate = DateUtils.getCurrentWeekFirstDate().toString().substring(0, lastIndex);
-        String fridayDate = DateUtils.getCurrentWeekLastDate().toString().substring(0, lastIndex);
+        String mondayDate = DateUtils.getCurrentMondayDate().toString().substring(0, lastIndex);
+        String fridayDate = DateUtils.getCurrentFridayDate().toString().substring(0, lastIndex);
 
         serviceDays = new Label("Monday - " + mondayDate + "<br>Friday - " + fridayDate, Label.CONTENT_RAW);
         serviceDays.setWidth(145, UNITS_PIXELS);
@@ -117,9 +117,22 @@ public class MenuCreationPanel extends Panel {
             startFromRow += 2;
         }
 
-        Menu menu = new Menu(null, nameOfCafe, DateUtils.getCurrentWeekFirstDate(),
-                DateUtils.getCurrentWeekLastDate(), items);
-        MenuService.save(menu);
+        Menu menu = new Menu(null, nameOfCafe, DateUtils.getCurrentMondayDate(),
+                DateUtils.getCurrentFridayDate(), items);
+        boolean result = MenuService.save(menu);
+        showInformationMessage(result);
+
+    }
+
+    private void showInformationMessage(boolean result) {
+        int displayedTime = 2000;
+        String messageText = result ? "Saved OK" : "Error while saving";
+        int type = result ? Window.Notification.TYPE_HUMANIZED_MESSAGE : Window.Notification.TYPE_ERROR_MESSAGE;
+        Window.Notification message = new Window.Notification(messageText, type);
+        message.setStyleName("mynotification.css");
+        message.setDelayMsec(displayedTime);
+        getApplication().getMainWindow().showNotification(message);
+        flush();
     }
 
     public void flush() {

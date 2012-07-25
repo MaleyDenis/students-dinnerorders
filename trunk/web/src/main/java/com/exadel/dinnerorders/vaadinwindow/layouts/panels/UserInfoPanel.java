@@ -79,14 +79,14 @@ public class UserInfoPanel extends Panel{
             @Override
             public void buttonClick(Button.ClickEvent clickEvent) {
                 Application.getInstance().getEventBus().post(new SignOutEvent());
-                Application.getInstance().setUserName(null);
+                Application.getInstance().setUser(null);
             }
         });
     }
 
     @Subscribe
     public void authenticationPassed(AuthenticationEvent aEvent) {
-        Scanner scanner = new Scanner(Application.getInstance().getUserName());
+        Scanner scanner = new Scanner(Application.getInstance().getUser().getUserName());
         lastNameLabel.setValue(scanner.next());
         nameLabel.setValue(scanner.next());
     }

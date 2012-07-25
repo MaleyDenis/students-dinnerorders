@@ -111,7 +111,7 @@ public class DayMenuPanel extends GridLayout {
             DishDescriptionRow row = (DishDescriptionRow)getComponent(0, i);
             String dishName = (String)row.getDishName().getValue();
             Double cost = Double.parseDouble((String)row.getCost().getValue());
-            list.add(new MenuItem(1L, weekday, dishName, cost));
+            list.add(new MenuItem(null, weekday, dishName, cost));
         }
         flush();
         return list;

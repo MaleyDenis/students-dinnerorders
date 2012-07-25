@@ -1,12 +1,13 @@
 package com.exadel.dinnerorders.vaadinwindow.application;
 
 
+import com.exadel.dinnerorders.entity.User;
 import com.google.common.eventbus.EventBus;
 
 public class Application {
     private EventBus eventBus = new EventBus();
-    private String userName;
     private static Application INSTANCE = new Application();
+    private User user;
 
     private Application() {
     }
@@ -15,15 +16,15 @@ public class Application {
         return INSTANCE;
     }
 
-    public void setUserName(String userName) {
-        this.userName = userName;
-    }
-
     public EventBus getEventBus() {
         return eventBus;
     }
 
-    public String getUserName() {
-        return userName;
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public User getUser() {
+        return user;
     }
 }

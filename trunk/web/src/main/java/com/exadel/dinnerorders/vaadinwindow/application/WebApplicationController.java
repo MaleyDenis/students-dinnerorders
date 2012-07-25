@@ -64,7 +64,6 @@ public class WebApplicationController extends com.vaadin.Application {
 
     @Subscribe
     public void showMenuEditor(ShowMenuCreationPanelEvent smcEvent) {
-        menuCreationPanel.flush();
         replaceCentralPanel(menuCreationPanel);
     }
 
