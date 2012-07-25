@@ -44,9 +44,14 @@ public class MenuService {
         MenuDAO menuDAO = new MenuDAO();
         Collection<Menu> result =  Collections2.filter(menuDAO.loadAll(), predicate);
 
-        if (result.isEmpty() || result.size() > 1) {
+        if (result.size() > 1) {
             throw new WorkflowException();
         }
+
+        if (result.isEmpty()) {
+            return null;
+        }
+
         return result.iterator().next();
     }
 
