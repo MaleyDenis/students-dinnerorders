@@ -3,6 +3,8 @@ package com.exadel.dinnerorders.vaadinwindow.layouts.panels;
 import com.exadel.dinnerorders.entity.Menu;
 import com.exadel.dinnerorders.entity.MenuItem;
 import com.exadel.dinnerorders.entity.Weekday;
+import com.exadel.dinnerorders.service.DateService;
+import com.exadel.dinnerorders.service.MenuService;
 import com.exadel.dinnerorders.vaadinwindow.application.Application;
 import com.exadel.dinnerorders.vaadinwindow.events.SaveMenuEvent;
 import com.exadel.dinnerorders.vaadinwindow.listeners.CancelButtonListener;
@@ -11,8 +13,9 @@ import com.google.common.eventbus.Subscribe;
 import com.vaadin.terminal.ExternalResource;
 import com.vaadin.ui.*;
 
-import java.sql.Timestamp;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class MenuCreationPanel extends Panel {
     public final static int MAX_CAFE_NAME_LENGTH = 25;
@@ -29,8 +32,8 @@ public class MenuCreationPanel extends Panel {
     public MenuCreationPanel() {
         super();
         Application.getInstance().getEventBus().register(this);
-        setWidth(80, UNITS_PERCENTAGE);
-        setHeight(80, UNITS_PERCENTAGE);
+        setWidth(90, UNITS_PERCENTAGE);
+        setHeight(90, UNITS_PERCENTAGE);
         initComponents();
         locateComponents();
         setContent(layout);
@@ -44,8 +47,9 @@ public class MenuCreationPanel extends Panel {
     }
 
     private void initLabels() {
-        Timestamp mondayDate = getMondayDate();
-        Timestamp fridayDate = getFridayDate();
+        int lastIndex = ("DD-MM-YYYY").length();
+        String mondayDate = DateService.getCurrentWeekFirstDate().toString().substring(0, lastIndex);
+        String fridayDate = DateService.getCurrentWeekLastDate().toString().substring(0, lastIndex);
 
         serviceDays = new Label("Monday - " + mondayDate + "<br>Friday - " + fridayDate, Label.CONTENT_RAW);
         serviceDays.setWidth(145, UNITS_PIXELS);
@@ -95,39 +99,6 @@ public class MenuCreationPanel extends Panel {
         layout.setComponentAlignment(cancelButton, Alignment.BOTTOM_CENTER);
     }
 
-    /*
-        Maybe it will be better to create special util class to work with data
-        There are some problems with Calendar class
-     */
-    public Timestamp getMondayDate() {
-        int timeZoneHours = 3;
-        long millSecondsInSecond = 1000;
-        long millSecondInMinute = 60 * millSecondsInSecond;
-        long millSecondInHour = 60 * millSecondInMinute;
-        Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("GMT"));
-        calendar.setFirstDayOfWeek(Calendar.MONDAY);
-        int fistWeekDay = calendar.getFirstDayOfWeek();
-        int day = calendar.get(Calendar.DAY_OF_WEEK) - fistWeekDay;
-        long mondayDate = day * 24 * millSecondInHour + (calendar.get(Calendar.HOUR) + timeZoneHours) * millSecondInHour
-                + calendar.get(Calendar.MINUTE) * millSecondInMinute + calendar.get(Calendar.SECOND) * millSecondsInSecond;
-        Timestamp timestamp = new Timestamp(System.currentTimeMillis() - mondayDate);
-        return timestamp;
-    }
-
-    public Timestamp getFridayDate() {
-        int timeZoneHours = 3;
-        long millSecondsInSecond = 1000;
-        long millSecondInMinute = 60 * millSecondsInSecond;
-        long millSecondInHour = 60 * millSecondInMinute;
-        Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("GMT"));
-        calendar.setFirstDayOfWeek(Calendar.MONDAY);
-        int day = NUMBER_OF_SERVICE_DAYS - calendar.get(Calendar.DAY_OF_WEEK);
-        long fridayDate = day * 24 * millSecondInHour + (calendar.get(Calendar.HOUR) + timeZoneHours) * millSecondInHour
-                + calendar.get(Calendar.MINUTE) * millSecondInMinute + calendar.get(Calendar.SECOND) * millSecondsInSecond;
-        Timestamp timestamp = new Timestamp(System.currentTimeMillis() + fridayDate);
-        return timestamp;
-    }
-
     @Subscribe
     public void menuWasConfirmedToSave(SaveMenuEvent saveMenuEvent) {
         GridLayout eventParent = saveMenuEvent.getParent();
@@ -138,17 +109,28 @@ public class MenuCreationPanel extends Panel {
         String nameOfCafe = (String)cafeName.getValue();
         Map<Weekday, List<MenuItem>> items = new HashMap<Weekday, List<MenuItem>>();
 
-        Iterator<Component> iterator = getComponentIterator();
-
-        while (iterator.hasNext()) {
-            Object object = iterator.next();
-            if (object instanceof DayMenuPanel) {
-                DayMenuPanel panel = (DayMenuPanel)object;
-                Weekday weekday = panel.getWeekday();
-                items.put(weekday, panel.getMenuItems());
-            }
+        int startFromRow = 1;
+        for (int i = 0; i < MenuCreationPanel.NUMBER_OF_SERVICE_DAYS; i++) {
+            DayMenuPanel dayPanel = (DayMenuPanel)layout.getComponent(0, startFromRow);
+            Weekday weekday = dayPanel.getWeekday();
+            items.put(weekday, dayPanel.getMenuItems());
+            startFromRow += 2;
         }
 
-        Menu menu = new Menu(null, nameOfCafe, getMondayDate(), getFridayDate(), items);
+        Menu menu = new Menu(null, nameOfCafe, DateService.getCurrentWeekFirstDate(),
+                DateService.getCurrentWeekLastDate(), items);
+        MenuService.save(menu);
+    }
+
+    public void flush() {
+        cafeName.setIcon(new ExternalResource(""));
+        cafeName.setValue("");
+
+        int startFromRow = 1;
+        for (int i = 0; i < MenuCreationPanel.NUMBER_OF_SERVICE_DAYS; i++) {
+            DayMenuPanel dayPanel = (DayMenuPanel)layout.getComponent(0, startFromRow);
+            dayPanel.flush();
+            startFromRow += 2;
+        }
     }
 }

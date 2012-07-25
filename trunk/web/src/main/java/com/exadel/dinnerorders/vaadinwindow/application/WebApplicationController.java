@@ -1,7 +1,6 @@
 package com.exadel.dinnerorders.vaadinwindow.application;
 
-import com.exadel.dinnerorders.vaadinwindow.events.AuthenticationEvent;
-import com.exadel.dinnerorders.vaadinwindow.events.SignOutEvent;
+import com.exadel.dinnerorders.vaadinwindow.events.*;
 import com.exadel.dinnerorders.vaadinwindow.layouts.LoginLayout;
 import com.exadel.dinnerorders.vaadinwindow.layouts.WelcomeLayout;
 import com.exadel.dinnerorders.vaadinwindow.layouts.panels.MenuCreationPanel;
@@ -9,11 +8,7 @@ import com.exadel.dinnerorders.vaadinwindow.layouts.panels.TableOrderPanel;
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
 import com.vaadin.terminal.Sizeable;
-import com.vaadin.ui.Component;
-import com.vaadin.ui.GridLayout;
-import com.vaadin.ui.Layout;
-import com.vaadin.ui.Window;
-import com.vaadin.ui.Alignment;
+import com.vaadin.ui.*;
 
 public class WebApplicationController extends com.vaadin.Application {
     private EventBus eventBus = Application.getInstance().getEventBus();
@@ -21,6 +16,7 @@ public class WebApplicationController extends com.vaadin.Application {
     private Layout loginLayout;
     private TableOrderPanel tableOrderPanel;
     private MenuCreationPanel menuCreationPanel;
+
     @Override
     public void init() {
         createLayouts();
@@ -38,10 +34,17 @@ public class WebApplicationController extends com.vaadin.Application {
         loginLayout = new LoginLayout();
         welcomeLayout = new WelcomeLayout();
         tableOrderPanel = new TableOrderPanel();
-        tableOrderPanel.setHeight(100, Sizeable.UNITS_PERCENTAGE);
         menuCreationPanel = new MenuCreationPanel();
-        eventBus.register(welcomeLayout);
     }
+
+    private void replaceCentralPanel(Component newComponent) {
+        newComponent.setWidth(90, Sizeable.UNITS_PERCENTAGE);
+        ((GridLayout)getMainWindow().getContent()).removeComponent(2, 3);
+        ((GridLayout)getMainWindow().getContent()).addComponent(newComponent, 2, 3, 2, 4);
+        ((GridLayout)getMainWindow().getContent()).setComponentAlignment(newComponent, Alignment.TOP_CENTER);
+    }
+
+    /////====================EventBus listeners===========================/////
 
     @Subscribe
     public void authenticationPassed(AuthenticationEvent authenticationEvent) {
@@ -54,9 +57,22 @@ public class WebApplicationController extends com.vaadin.Application {
         getMainWindow().setContent(loginLayout);
     }
 
-    private void replaceCentralPanel(Component newComponent) {
-        ((GridLayout)getMainWindow().getContent()).removeComponent(1, 3);
-        ((GridLayout)getMainWindow().getContent()).addComponent(newComponent, 2, 3, 2, 4);
-        ((GridLayout)getMainWindow().getContent()).setComponentAlignment(newComponent, Alignment.MIDDLE_CENTER);
+    @Subscribe
+    public void showUserOrders(ShowUserOrdersEvent showUserOrdersEvent) {
+        replaceCentralPanel(tableOrderPanel);
+    }
+
+    @Subscribe
+    public void showMenuEditor(ShowMenuCreationPanelEvent smcEvent) {
+        menuCreationPanel.flush();
+        replaceCentralPanel(menuCreationPanel);
+    }
+
+    @Subscribe
+    public void currentWeekMenuSelected(ShowCurrentWeekMenuEvent cwmEvent) {
+    }
+
+    @Subscribe
+    public void nextWeekMeuSelected(ShowNextWeekMenuEvent nwmEvent){
     }
 }
