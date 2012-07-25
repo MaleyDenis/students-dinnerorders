@@ -23,7 +23,7 @@ import java.util.List;
 public class MenuService {
     private Logger logger = Logger.getLogger(MenuService.class);
 
-    public static Collection<Menu> findMenuByDate(){
+    public static Collection<Menu> findMenuForCurrentWeek(){
         final Date date = new Date();
         Predicate<Menu> predicate = new Predicate<Menu>() {
             public boolean apply(@Nullable Menu o) {
