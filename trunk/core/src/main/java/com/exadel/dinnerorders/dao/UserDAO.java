@@ -21,6 +21,13 @@ public class UserDAO extends BaseDAO<User> {
     private Logger logger = Logger.getLogger(UserDAO.class);
 
 
+    /**
+     * Create new user.
+     * New ID will be generated and assigned into current object.
+     * Role by default: USER.
+     * @param newItem user data for user creation.
+     * @return true | false.
+     */
     public boolean create(User newItem) {
         Connection connection = connection();
         try {

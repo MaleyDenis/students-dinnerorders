@@ -3,7 +3,7 @@ package com.exadel.dinnerorders.vaadinwindow.layouts.panels;
 import com.exadel.dinnerorders.entity.Menu;
 import com.exadel.dinnerorders.entity.MenuItem;
 import com.exadel.dinnerorders.entity.Weekday;
-import com.exadel.dinnerorders.service.DateService;
+import com.exadel.dinnerorders.service.DateUtils;
 import com.exadel.dinnerorders.service.MenuService;
 import com.exadel.dinnerorders.vaadinwindow.application.Application;
 import com.exadel.dinnerorders.vaadinwindow.events.SaveMenuEvent;
@@ -48,8 +48,8 @@ public class MenuCreationPanel extends Panel {
 
     private void initLabels() {
         int lastIndex = ("DD-MM-YYYY").length();
-        String mondayDate = DateService.getCurrentWeekFirstDate().toString().substring(0, lastIndex);
-        String fridayDate = DateService.getCurrentWeekLastDate().toString().substring(0, lastIndex);
+        String mondayDate = DateUtils.getCurrentWeekFirstDate().toString().substring(0, lastIndex);
+        String fridayDate = DateUtils.getCurrentWeekLastDate().toString().substring(0, lastIndex);
 
         serviceDays = new Label("Monday - " + mondayDate + "<br>Friday - " + fridayDate, Label.CONTENT_RAW);
         serviceDays.setWidth(145, UNITS_PIXELS);
@@ -117,8 +117,8 @@ public class MenuCreationPanel extends Panel {
             startFromRow += 2;
         }
 
-        Menu menu = new Menu(null, nameOfCafe, DateService.getCurrentWeekFirstDate(),
-                DateService.getCurrentWeekLastDate(), items);
+        Menu menu = new Menu(null, nameOfCafe, DateUtils.getCurrentWeekFirstDate(),
+                DateUtils.getCurrentWeekLastDate(), items);
         MenuService.save(menu);
     }
 
