@@ -1,5 +1,6 @@
 package com.exadel.dinnerorders.dao;
 
+import com.exadel.dinnerorders.entity.DefaultConnection;
 import com.exadel.dinnerorders.entity.Role;
 import com.exadel.dinnerorders.entity.User;
 import org.apache.log4j.Logger;
@@ -16,6 +17,8 @@ import java.util.Collection;
  * User: Dima Shulgin
  * Date: 17.07.12
  */
+@DefaultConnection
+
 public class UserDAO extends BaseDAO<User> {
 
     private Logger logger = Logger.getLogger(UserDAO.class);
@@ -29,12 +32,12 @@ public class UserDAO extends BaseDAO<User> {
      * @return true | false.
      */
     public boolean create(User newItem) {
-        Connection connection = connection();
+        Connection connection = connection(this.getClass());
         try {
 
             PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO user (ID,LDAPLOGIN,USERNAME,ROLE) VALUES(?, ?, ?, ?);");
             newItem.setId(getID());
-            preparedStatement.setLong(1,newItem.getId());
+            preparedStatement.setLong(1, newItem.getId());
             preparedStatement.setString(2, newItem.getLdapLogin());
             preparedStatement.setString(3, newItem.getUserName());
 
@@ -57,7 +60,7 @@ public class UserDAO extends BaseDAO<User> {
 
     public boolean update(User item) {
 
-        Connection connection = connection();
+        Connection connection = connection(this.getClass());
         PreparedStatement preparedStatement = null;
         try {
             preparedStatement = connection.prepareStatement("UPDATE  user  SET  LDAPLOGIN = ? , USERNAME= ?, ROLE= ?  WHERE ID = ?");
@@ -84,7 +87,7 @@ public class UserDAO extends BaseDAO<User> {
 
     public boolean delete(User item) {
 
-        Connection connection = connection();
+        Connection connection = connection(this.getClass());
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(("DELETE FROM user WHERE ID =  ?"));
             preparedStatement.setLong(1, item.getId());
@@ -98,7 +101,7 @@ public class UserDAO extends BaseDAO<User> {
     }
 
     public User load(Long id) {
-        Connection connection = connection();
+        Connection connection = connection(this.getClass());
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(("SELECT * FROM user WHERE ID =  ?;"));
             preparedStatement.setLong(1, id);
@@ -116,7 +119,7 @@ public class UserDAO extends BaseDAO<User> {
     }
 
     public Collection<User> loadAll() {
-        Connection connection = connection();
+        Connection connection = connection(this.getClass());
         Collection<User> users = new ArrayList<User>();
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(("SELECT * FROM user"));
