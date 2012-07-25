@@ -3,7 +3,7 @@ package com.exadel.dinnerorders.service;
 import java.sql.Timestamp;
 import java.util.Calendar;
 
-public class DateService {
+public class DateUtils {
     public static final long MILLISECONDS_IN_SECOND = 1000;
     public static final long SECONDS_IN_MINUTE = 60;
     public static final long MINUTES_IN_HOUR = 60;

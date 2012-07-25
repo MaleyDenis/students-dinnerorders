@@ -51,22 +51,19 @@ public abstract class BaseDAO<E> implements DAO<E> {
         Connection connection = connection();
 
         try {
-
             CallableStatement callableStatement = connection.prepareCall("{call getID(?)}");
             callableStatement.registerOutParameter("idOUT", Types.INTEGER);
             boolean hadResults = callableStatement.execute();
             if (!hadResults)
                 return callableStatement.getLong(1);
+        } catch (SQLException e) {
+            logger.error("Error , value hasn't been returned");
+        } finally {
+            disconnect(connection);
+        }
 
-
-        }   catch (SQLException e) {
-                    logger.error("Error , value hasn't been returned");
-                } finally {
-                    disconnect(connection);
-                }
-
-               throw new WorkflowException();
-            }
+        throw new WorkflowException();
     }
+}
 
 
