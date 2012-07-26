@@ -12,7 +12,7 @@ public class DateUtilsTest {
     public void testGetDateOfThisMonday() {
         int actualDate = DateUtils.getDateOfThisMonday();
         Calendar calendar = Calendar.getInstance();
-        calendar.setTimeInMillis(DateUtils.getCurrentMondayDate().getTime());
+        calendar.setTimeInMillis(DateUtils.getCurrentMondayTime().getTime());
         int expectedDate = calendar.get(Calendar.DATE);
         Assert.assertEquals(expectedDate, actualDate);
     }
@@ -39,14 +39,14 @@ public class DateUtilsTest {
     public void getDateOfThisFriday() {
         int actualDate = DateUtils.getDateOfThisFriday();
         Calendar calendar = Calendar.getInstance();
-        calendar.setTimeInMillis(DateUtils.getCurrentFridayDate().getTime());
+        calendar.setTimeInMillis(DateUtils.getCurrentFridayTime().getTime());
         int expectedDate = calendar.get(Calendar.DATE);
         Assert.assertEquals(expectedDate, actualDate);
     }
 
     @Test
     public void testGetCurrentMondayDate() {
-        Timestamp mondayDate = DateUtils.getCurrentMondayDate();
+        Timestamp mondayDate = DateUtils.getCurrentMondayTime();
         Calendar actualCalendar = Calendar.getInstance();
         actualCalendar.setTimeInMillis(mondayDate.getTime());
         Calendar calendar = Calendar.getInstance();
@@ -61,7 +61,7 @@ public class DateUtilsTest {
 
     @Test
     public void testGetCurrentFridayDate() {
-        Timestamp fridayDate = DateUtils.getCurrentFridayDate();
+        Timestamp fridayDate = DateUtils.getCurrentFridayTime();
         Calendar actualCalendar = Calendar.getInstance();
         actualCalendar.setTimeInMillis(fridayDate.getTime());
         Calendar calendar = Calendar.getInstance();
@@ -76,7 +76,7 @@ public class DateUtilsTest {
 
     @Test
     public void testGetNextMondayDate() {
-        Timestamp mondayDate = DateUtils.getNextMondayDate();
+        Timestamp mondayDate = DateUtils.getNextMondayTime();
         Calendar actualCalendar = Calendar.getInstance();
         actualCalendar.setTimeInMillis(mondayDate.getTime());
         Calendar calendar = Calendar.getInstance();
@@ -92,7 +92,7 @@ public class DateUtilsTest {
 
     @Test
     public void testGetNextFridayDate() {
-        Timestamp fridayDate = DateUtils.getNextFridayDate();
+        Timestamp fridayDate = DateUtils.getNextFridayTime();
         Calendar actualCalendar = Calendar.getInstance();
         actualCalendar.setTimeInMillis(fridayDate.getTime());
         Calendar calendar = Calendar.getInstance();
