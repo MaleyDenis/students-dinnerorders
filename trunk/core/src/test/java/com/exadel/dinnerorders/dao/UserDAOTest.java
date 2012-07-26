@@ -2,6 +2,7 @@ package com.exadel.dinnerorders.dao;
 
 import com.exadel.dinnerorders.entity.Role;
 import com.exadel.dinnerorders.entity.User;
+import com.exadel.dinnerorders.service.DefaultConnectionProvider;
 import com.exadel.dinnerorders.service.UserService;
 import junit.framework.Assert;
 import org.junit.Test;
@@ -95,9 +96,9 @@ public class UserDAOTest {
         User user = new User(null, "testLogin5", "testName5", Role.USER);
 
         new UserDAO(){
-              public void deleteRows() {
+              public void deleteRows() throws InstantiationException, IllegalAccessException {
 
-                    Connection connection = connection(this);
+                    Connection connection = new DefaultConnectionProvider().connection();
 
                     PreparedStatement preparedStatement = null;
                     try {

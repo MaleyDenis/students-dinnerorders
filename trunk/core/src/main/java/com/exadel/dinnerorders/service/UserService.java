@@ -6,9 +6,10 @@ import com.exadel.dinnerorders.entity.User;
 import com.exadel.dinnerorders.exception.WorkflowException;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
+import org.apache.commons.lang3.StringUtils;
+
 import java.util.ArrayList;
 import java.util.Collection;
-import org.apache.commons.lang3.StringUtils;
 
 /**
  * User: Dima Shulgin
@@ -18,7 +19,7 @@ import org.apache.commons.lang3.StringUtils;
 public class UserService {
     private static UserDAO userDAO = new UserDAO();
 
-    public static User create(String ldapUsername) {
+    public static User create(String ldapUsername) throws InstantiationException, IllegalAccessException {
         User user = new User();
         user.setUserName(ldapUsername);
         user.setRole(Role.USER);
@@ -28,11 +29,11 @@ public class UserService {
         return user;
     }
 
-    private static Collection<User> getAllUsers() {
+    private static Collection<User> getAllUsers() throws InstantiationException, IllegalAccessException {
         return userDAO.loadAll();
     }
 
-    public static Collection<User> loadAllUsersFromLdap() {
+    public static Collection<User> loadAllUsersFromLdap() throws InstantiationException, IllegalAccessException {
         Collection<String> userNames = new LdapService().loadAll();
         Collection<User> users = new ArrayList<User>();
         for (String userName : userNames) {
@@ -42,7 +43,7 @@ public class UserService {
         return users;
     }
 
-    public static User findUserByUserName(final String ldapUsername) {
+    public static User findUserByUserName(final String ldapUsername) throws IllegalAccessException, InstantiationException {
 
         Collection<User> users = getAllUsers();
         Iterable<User> iterables = Iterables.filter(users, new Predicate<User>() {
@@ -62,12 +63,12 @@ public class UserService {
         }
     }
 
-    public static User findUserByID(final Long id) {
+    public static User findUserByID(final Long id) throws InstantiationException, IllegalAccessException {
         return userDAO.load(id);
 
     }
 
-    public static Collection<User> loadAllUsersFromDB() {
+    public static Collection<User> loadAllUsersFromDB() throws InstantiationException, IllegalAccessException {
         return userDAO.loadAll();
     }
 }

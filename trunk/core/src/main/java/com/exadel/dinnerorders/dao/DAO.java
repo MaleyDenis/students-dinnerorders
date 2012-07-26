@@ -4,9 +4,9 @@ import java.util.Collection;
 
 
 public interface DAO <E> {
-    public boolean create(E newItem);
-    public boolean update(E item);
-    public boolean delete(E item);
-    public E load(Long value);
-    public Collection<E> loadAll();
+    public boolean create(E newItem) throws IllegalAccessException, InstantiationException;
+    public boolean update(E item) throws IllegalAccessException, InstantiationException;
+    public boolean delete(E item) throws IllegalAccessException, InstantiationException;
+    public E load(Long value) throws IllegalAccessException, InstantiationException;
+    public Collection<E> loadAll() throws IllegalAccessException, InstantiationException;
 }

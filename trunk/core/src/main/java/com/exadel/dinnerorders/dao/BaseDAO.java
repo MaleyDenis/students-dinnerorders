@@ -1,8 +1,8 @@
 package com.exadel.dinnerorders.dao;
 
+import com.exadel.dinnerorders.entity.ConnectionProvider;
 import com.exadel.dinnerorders.entity.DbConnection;
 import com.exadel.dinnerorders.exception.WorkflowException;
-import com.exadel.dinnerorders.service.DefaultConnectionProvider;
 import org.apache.log4j.Logger;
 
 import java.lang.annotation.Annotation;
@@ -19,17 +19,22 @@ import java.sql.Types;
 public abstract class BaseDAO<E> implements DAO<E> {
     private Logger logger = Logger.getLogger(BaseDAO.class);
 
-    protected Connection connection(Object obj) {
+    protected Connection connection(Object obj)  {
 
 
         Annotation annotation = obj.getClass().getAnnotation(DbConnection.class);
         DbConnection dbConnection = (DbConnection) annotation;
-        if(dbConnection!=null){
+        try {
 
-        if (dbConnection.connectionType().getSimpleName().equals("DefaultConnection"))
-            return DefaultConnectionProvider.connection();
+            return ((ConnectionProvider) dbConnection.connectionType().newInstance()).connection();
+
+        } catch (InstantiationException e) {
+            logger.error("Error! Connection hasn't been returned",e);
+            return null;
+        } catch (IllegalAccessException e) {
+            logger.error("Error! Connection hasn't been returned",e);
+            return null;
         }
-        return  DefaultConnectionProvider.connection();
     }
 
 
@@ -43,7 +48,7 @@ public abstract class BaseDAO<E> implements DAO<E> {
         }
     }
 
-    public Long getID() {
+    public Long getID() throws InstantiationException, IllegalAccessException {
         Connection connection = connection(this);
 
         try {

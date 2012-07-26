@@ -1,6 +1,7 @@
 package com.exadel.dinnerorders.dao;
 
 import com.exadel.dinnerorders.entity.*;
+import com.exadel.dinnerorders.service.DefaultConnectionProvider;
 import org.apache.log4j.Logger;
 
 import java.sql.*;
@@ -9,7 +10,7 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
-@DbConnection(connectionType=DefaultConnection.class)
+@DbConnection(connectionType=DefaultConnectionProvider.class)
 public class OrderDAO extends BaseDAO<Order> {
     private final Logger logger = Logger.getLogger(OrderDAO.class);
 
@@ -40,6 +41,10 @@ public class OrderDAO extends BaseDAO<Order> {
                 return true;
             }
         } catch (SQLException e) {
+            logger.error("Create error the method",e);
+        } catch (InstantiationException e) {
+            logger.error("Create error the method",e);
+        } catch (IllegalAccessException e) {
             logger.error("Create error the method",e);
         } finally {
             disconnect(connection);
@@ -73,7 +78,7 @@ public class OrderDAO extends BaseDAO<Order> {
         return false;
     }
 
-    public boolean delete(Order item) {
+    public boolean delete(Order item)  {
         Connection connection = connection(this);
         try {
             if (connection != null){
@@ -88,13 +93,17 @@ public class OrderDAO extends BaseDAO<Order> {
             }
         } catch (SQLException e) {
            logger.error("Delete error the method",e);
+        } catch (InstantiationException e) {
+            logger.error("Delete error the method", e);
+        } catch (IllegalAccessException e) {
+            logger.error("Delete error the method", e);
         } finally {
             disconnect(connection);
         }
         return false;
     }
 
-    private void deleteFromOrderItemsTable(Order item) {
+    private void deleteFromOrderItemsTable(Order item) throws InstantiationException, IllegalAccessException {
         Connection connection = connection(this);
         PreparedStatement preparedStatement;
         try {
@@ -110,7 +119,7 @@ public class OrderDAO extends BaseDAO<Order> {
         }
     }
 
-    public Collection<Order> loadAll() {
+    public Collection<Order> loadAll()  {
         Order order;
         List<Order> orders = new ArrayList<Order>();
         List<MenuItem> menuItems;
@@ -168,7 +177,7 @@ public class OrderDAO extends BaseDAO<Order> {
         return menuItems;
     }
 
-    public Order load(Long id) {
+    public Order load(Long id)   {
         Connection connection = connection(this);
         Order order = null;
         try {
