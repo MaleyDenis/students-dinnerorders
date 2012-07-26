@@ -42,11 +42,7 @@ public class OrderDAO extends BaseDAO<Order> {
             }
         } catch (SQLException e) {
             logger.error("Create error the method",e);
-        } catch (InstantiationException e) {
-            logger.error("Create error the method",e);
-        } catch (IllegalAccessException e) {
-            logger.error("Create error the method",e);
-        } finally {
+        }  finally {
             disconnect(connection);
         }
         return false;

@@ -48,7 +48,7 @@ public abstract class BaseDAO<E> implements DAO<E> {
         }
     }
 
-    public Long getID() throws InstantiationException, IllegalAccessException {
+    public Long getID()  {
         Connection connection = connection(this);
 
         try {
