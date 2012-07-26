@@ -32,9 +32,6 @@ public class WebApplicationController extends com.vaadin.Application {
 
     private void createLayouts() {
         loginLayout = new LoginLayout();
-        welcomeLayout = new WelcomeLayout();
-        tableOrderPanel = new TableOrderPanel();
-        menuCreationPanel = new MenuCreationPanel();
     }
 
     private void replaceCentralPanel(Component newComponent) {
@@ -48,8 +45,8 @@ public class WebApplicationController extends com.vaadin.Application {
 
     @Subscribe
     public void authenticationPassed(AuthenticationEvent authenticationEvent) {
+        welcomeLayout = new WelcomeLayout();
         getMainWindow().setContent(welcomeLayout);
-        replaceCentralPanel(menuCreationPanel);
     }
 
     @Subscribe
@@ -58,20 +55,27 @@ public class WebApplicationController extends com.vaadin.Application {
     }
 
     @Subscribe
-    public void showUserOrders(ShowUserOrdersEvent showUserOrdersEvent) {
+    public void showUserOrders(ShowAllOrdersEvent showAllOrdersEvent) {
+        tableOrderPanel = new TableOrderPanel();
         replaceCentralPanel(tableOrderPanel);
     }
 
     @Subscribe
     public void showMenuEditor(ShowMenuCreationPanelEvent smcEvent) {
+        menuCreationPanel = new MenuCreationPanel();
         replaceCentralPanel(menuCreationPanel);
     }
 
     @Subscribe
     public void currentWeekMenuSelected(ShowCurrentWeekMenuEvent cwmEvent) {
+       //CurrentWeekMenuPanel currentWeekMenuPanel = new C
     }
 
     @Subscribe
     public void nextWeekMeuSelected(ShowNextWeekMenuEvent nwmEvent){
+    }
+
+    @Subscribe
+    public void showUserOrder(ShowUserOrdersEvent suoEvent) {
     }
 }

@@ -19,7 +19,7 @@ public class DateUtils {
 
     public static int getDateOfThisMonday() {
         Calendar calendar = Calendar.getInstance();
-        long mondayTime = getCurrentMondayDate().getTime();
+        long mondayTime = getCurrentMondayTime().getTime();
         calendar.setTimeInMillis(mondayTime);
         return calendar.get(Calendar.DATE);
     }
@@ -36,34 +36,34 @@ public class DateUtils {
 
     public static int getDateOfThisFriday() {
         Calendar calendar = Calendar.getInstance();
-        long mondayTime = getCurrentMondayDate().getTime();
+        long mondayTime = getCurrentMondayTime().getTime();
         long fridayTime = mondayTime + MILLISECONDS_IN_DAY * (DEFAULT_WORK_DAYS - 1);
         calendar.setTimeInMillis(fridayTime);
         return calendar.get(Calendar.DATE);
     }
 
-    public static Timestamp getCurrentMondayDate() {
+    public static Timestamp getCurrentMondayTime() {
         Calendar calendar = Calendar.getInstance();
         int firstDayOfWeek = calendar.getFirstDayOfWeek();
         int elapsedDays = calendar.get(Calendar.DAY_OF_WEEK) - firstDayOfWeek;
         return new Timestamp(System.currentTimeMillis() - elapsedDays * MILLISECONDS_IN_DAY);
     }
 
-    public static Timestamp getCurrentFridayDate() {
-        return new Timestamp(getCurrentMondayDate().getTime() + MILLISECONDS_IN_DAY * (DEFAULT_WORK_DAYS - 1));
+    public static Timestamp getCurrentFridayTime() {
+        return new Timestamp(getCurrentMondayTime().getTime() + MILLISECONDS_IN_DAY * (DEFAULT_WORK_DAYS - 1));
     }
 
     public static Timestamp getCurrentTime() {
         return new Timestamp(System.currentTimeMillis());
     }
 
-    public static Timestamp getNextMondayDate() {
-        Timestamp thisMonday = getCurrentMondayDate();
+    public static Timestamp getNextMondayTime() {
+        Timestamp thisMonday = getCurrentMondayTime();
         return new Timestamp(thisMonday.getTime() + MILLISECONDS_IN_WEEK);
     }
 
-    public static Timestamp getNextFridayDate() {
-        Timestamp thisFriday = getCurrentFridayDate();
+    public static Timestamp getNextFridayTime() {
+        Timestamp thisFriday = getCurrentFridayTime();
         return new Timestamp(thisFriday.getTime() + MILLISECONDS_IN_WEEK);
     }
 }

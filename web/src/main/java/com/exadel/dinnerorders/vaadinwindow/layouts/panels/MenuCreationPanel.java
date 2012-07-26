@@ -48,8 +48,8 @@ public class MenuCreationPanel extends Panel {
 
     private void initLabels() {
         int lastIndex = ("DD-MM-YYYY").length();
-        String mondayDate = DateUtils.getCurrentMondayDate().toString().substring(0, lastIndex);
-        String fridayDate = DateUtils.getCurrentFridayDate().toString().substring(0, lastIndex);
+        String mondayDate = DateUtils.getCurrentMondayTime().toString().substring(0, lastIndex);
+        String fridayDate = DateUtils.getCurrentFridayTime().toString().substring(0, lastIndex);
 
         serviceDays = new Label("Monday - " + mondayDate + "<br>Friday - " + fridayDate, Label.CONTENT_RAW);
         serviceDays.setWidth(145, UNITS_PIXELS);
@@ -117,8 +117,8 @@ public class MenuCreationPanel extends Panel {
             startFromRow += 2;
         }
 
-        Menu menu = new Menu(null, nameOfCafe, DateUtils.getCurrentMondayDate(),
-                DateUtils.getCurrentFridayDate(), items);
+        Menu menu = new Menu(null, nameOfCafe, DateUtils.getCurrentMondayTime(),
+                DateUtils.getCurrentFridayTime(), items);
         boolean result = MenuService.save(menu);
         showInformationMessage(result);
 

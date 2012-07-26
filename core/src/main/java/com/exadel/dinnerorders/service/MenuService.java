@@ -7,19 +7,13 @@ import com.exadel.dinnerorders.entity.MenuItem;
 import com.exadel.dinnerorders.exception.WorkflowException;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Collections2;
-
 import org.apache.log4j.Logger;
 
 import javax.annotation.Nullable;
-
+import java.sql.Timestamp;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
-
-/**
- * User: Василий Силин
- * Date: 18.7.12
- */
 
 public class MenuService {
     private Logger logger = Logger.getLogger(MenuService.class);
@@ -27,7 +21,8 @@ public class MenuService {
     private static MenuDAO menuDAO = new MenuDAO();
 
     public static Menu findMenuForNextWeek() {
-        return null;
+        final Timestamp nextMondayDate = DateUtils.getNextMondayTime();
+        return findMenuByDate(nextMondayDate);
     }
 
     public static Menu findMenuForCurrentWeek(){
@@ -41,7 +36,6 @@ public class MenuService {
                 return o != null && o.getDateStart().before(date) && o.getDateEnd().after(date);
             }
         };
-        MenuDAO menuDAO = new MenuDAO();
         Collection<Menu> result =  Collections2.filter(menuDAO.loadAll(), predicate);
 
         if (result.size() > 1) {
@@ -57,13 +51,13 @@ public class MenuService {
 
     public static boolean save(Menu newMenu){
         MenuDAO menuDAO = new MenuDAO();
-        menuDAO.create(newMenu);
         MenuItemDAO menuItemDAO = new MenuItemDAO();
         for(List<MenuItem> items : newMenu.getItems().values()){
             for(MenuItem item : items){
                 menuItemDAO.create(item);
             }
         }
+        menuDAO.create(newMenu);    //create after for-cycle
         return true;
     }
 }
