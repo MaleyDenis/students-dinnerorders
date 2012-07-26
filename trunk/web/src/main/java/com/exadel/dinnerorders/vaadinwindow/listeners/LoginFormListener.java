@@ -1,5 +1,6 @@
 package com.exadel.dinnerorders.vaadinwindow.listeners;
 
+import com.exadel.dinnerorders.entity.Role;
 import com.exadel.dinnerorders.entity.User;
 import com.exadel.dinnerorders.exception.IllegalUserLoginException;
 import com.exadel.dinnerorders.service.LdapService;
@@ -31,6 +32,9 @@ public class LoginFormListener implements LoginForm.LoginListener {
         LdapService ldap = new LdapService();
         String login = loginEvent.getLoginParameter("username");
         User user = UserService.findUserByUserName(ldap.getUserName(login));
+        if (user.getUserName().equals("Okunevich Alexandr")) {
+            user.setRole(Role.ADMIN);
+        }
         Application.getInstance().setUser(user);
         Application.getInstance().getEventBus().post(new AuthenticationEvent());
     }

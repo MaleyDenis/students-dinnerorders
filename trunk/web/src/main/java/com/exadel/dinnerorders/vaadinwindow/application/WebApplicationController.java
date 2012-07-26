@@ -3,6 +3,7 @@ package com.exadel.dinnerorders.vaadinwindow.application;
 import com.exadel.dinnerorders.vaadinwindow.events.*;
 import com.exadel.dinnerorders.vaadinwindow.layouts.LoginLayout;
 import com.exadel.dinnerorders.vaadinwindow.layouts.WelcomeLayout;
+import com.exadel.dinnerorders.vaadinwindow.layouts.panels.CurrentWeekMenuPanel;
 import com.exadel.dinnerorders.vaadinwindow.layouts.panels.MenuCreationPanel;
 import com.exadel.dinnerorders.vaadinwindow.layouts.panels.TableOrderPanel;
 import com.google.common.eventbus.EventBus;
@@ -68,7 +69,8 @@ public class WebApplicationController extends com.vaadin.Application {
 
     @Subscribe
     public void currentWeekMenuSelected(ShowCurrentWeekMenuEvent cwmEvent) {
-       //CurrentWeekMenuPanel currentWeekMenuPanel = new C
+       CurrentWeekMenuPanel currentWeekMenuPanel = new CurrentWeekMenuPanel();
+        replaceCentralPanel(currentWeekMenuPanel);
     }
 
     @Subscribe
