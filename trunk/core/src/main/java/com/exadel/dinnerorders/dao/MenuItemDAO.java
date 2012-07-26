@@ -21,7 +21,7 @@ import java.util.Collection;
 public class MenuItemDAO extends BaseDAO<MenuItem> {
     private Logger logger = Logger.getLogger(MenuItemDAO.class);
 
-    public boolean create(MenuItem newItem) throws IllegalAccessException, InstantiationException {
+    public boolean create(MenuItem newItem)  {
         Connection connection = connection(this);
         if (connection != null && newItem.getId() == null) {
             try {
@@ -62,7 +62,7 @@ public class MenuItemDAO extends BaseDAO<MenuItem> {
         return false;
     }
 
-    public boolean delete(MenuItem item) throws IllegalAccessException, InstantiationException {
+    public boolean delete(MenuItem item) {
         Connection connection = connection(this);
         if (connection != null) {
             try {

@@ -51,10 +51,6 @@ public class UserDAO extends BaseDAO<User> {
         } catch (SQLException e) {
             logger.error("Error in the function create", e);
 
-        } catch (InstantiationException e) {
-            logger.error("Error in the function create", e);
-        } catch (IllegalAccessException e) {
-            logger.error("Error in the function create", e);
         } finally {
             disconnect(connection);
         }
@@ -123,7 +119,7 @@ public class UserDAO extends BaseDAO<User> {
         return null;
     }
 
-    public Collection<User> loadAll()  {
+    public Collection<User> loadAll() {
         Connection connection = connection(this);
         Collection<User> users = new ArrayList<User>();
         try {
