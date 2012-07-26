@@ -1,9 +1,9 @@
 package com.exadel.dinnerorders.dao;
 
 import com.exadel.dinnerorders.entity.DbConnection;
-import com.exadel.dinnerorders.entity.DefaultConnection;
 import com.exadel.dinnerorders.entity.MenuItem;
 import com.exadel.dinnerorders.entity.Weekday;
+import com.exadel.dinnerorders.service.DefaultConnectionProvider;
 import org.apache.log4j.Logger;
 
 import java.sql.Connection;
@@ -17,11 +17,11 @@ import java.util.Collection;
  * User: Василий Силин
  * Date: 16.7.12
  */
-@DbConnection(connectionType=DefaultConnection.class)
+@DbConnection(connectionType=DefaultConnectionProvider.class)
 public class MenuItemDAO extends BaseDAO<MenuItem> {
     private Logger logger = Logger.getLogger(MenuItemDAO.class);
 
-    public boolean create(MenuItem newItem) {
+    public boolean create(MenuItem newItem) throws IllegalAccessException, InstantiationException {
         Connection connection = connection(this);
         if (connection != null && newItem.getId() == null) {
             try {
@@ -42,7 +42,7 @@ public class MenuItemDAO extends BaseDAO<MenuItem> {
         return false;
     }
 
-    public boolean update(MenuItem item) {
+    public boolean update(MenuItem item)  {
         Connection connection = connection(this);
         if (connection != null) {
             try {
@@ -62,7 +62,7 @@ public class MenuItemDAO extends BaseDAO<MenuItem> {
         return false;
     }
 
-    public boolean delete(MenuItem item) {
+    public boolean delete(MenuItem item) throws IllegalAccessException, InstantiationException {
         Connection connection = connection(this);
         if (connection != null) {
             try {
@@ -79,7 +79,7 @@ public class MenuItemDAO extends BaseDAO<MenuItem> {
         return false;
     }
 
-    public MenuItem load(Long id) {
+    public MenuItem load(Long id)  {
         Connection connection = connection(this);
         if (connection != null) {
             try {
@@ -101,7 +101,7 @@ public class MenuItemDAO extends BaseDAO<MenuItem> {
         return null;
     }
 
-    public Collection<MenuItem> loadAll(){
+    public Collection<MenuItem> loadAll()   {
         Collection<MenuItem> items = new ArrayList<MenuItem>();
         Connection connection = connection(this.getClass());
         if (connection != null) {

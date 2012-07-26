@@ -1,9 +1,9 @@
 package com.exadel.dinnerorders.dao;
 
 import com.exadel.dinnerorders.entity.DbConnection;
-import com.exadel.dinnerorders.entity.DefaultConnection;
 import com.exadel.dinnerorders.entity.Role;
 import com.exadel.dinnerorders.entity.User;
+import com.exadel.dinnerorders.service.DefaultConnectionProvider;
 import org.apache.log4j.Logger;
 
 import java.sql.Connection;
@@ -18,7 +18,7 @@ import java.util.Collection;
  * User: Dima Shulgin
  * Date: 17.07.12
  */
-@DbConnection(connectionType=DefaultConnection.class)
+@DbConnection(connectionType = DefaultConnectionProvider.class)
 public class UserDAO extends BaseDAO<User> {
 
     private Logger logger = Logger.getLogger(UserDAO.class);
@@ -28,6 +28,7 @@ public class UserDAO extends BaseDAO<User> {
      * Create new user.
      * New ID will be generated and assigned into current object.
      * Role by default: USER.
+     *
      * @param newItem user data for user creation.
      * @return true | false.
      */
@@ -50,6 +51,10 @@ public class UserDAO extends BaseDAO<User> {
         } catch (SQLException e) {
             logger.error("Error in the function create", e);
 
+        } catch (InstantiationException e) {
+            logger.error("Error in the function create", e);
+        } catch (IllegalAccessException e) {
+            logger.error("Error in the function create", e);
         } finally {
             disconnect(connection);
         }
@@ -118,7 +123,7 @@ public class UserDAO extends BaseDAO<User> {
         return null;
     }
 
-    public Collection<User> loadAll() {
+    public Collection<User> loadAll()  {
         Connection connection = connection(this);
         Collection<User> users = new ArrayList<User>();
         try {

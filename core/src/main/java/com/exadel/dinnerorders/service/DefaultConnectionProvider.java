@@ -1,5 +1,6 @@
 package com.exadel.dinnerorders.service;
 
+import com.exadel.dinnerorders.entity.ConnectionProvider;
 import com.exadel.dinnerorders.entity.SystemResource;
 import org.apache.log4j.Logger;
 
@@ -11,10 +12,10 @@ import java.sql.SQLException;
  * User: Dima Shulgin
  * Date: 25.07.12
  */
-public class DefaultConnectionProvider {
+public class DefaultConnectionProvider implements ConnectionProvider {
     private static Logger logger = Logger.getLogger(DefaultConnectionProvider.class);
 
-    public  static Connection connection() {
+    public   Connection connection() {
         Connection connection = null;
         try {
             Class.forName("com.mysql.jdbc.Driver");

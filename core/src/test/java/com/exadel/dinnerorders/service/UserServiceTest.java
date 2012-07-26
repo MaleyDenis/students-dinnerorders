@@ -32,13 +32,13 @@ public class UserServiceTest {
     }
 
     @Test
-    public void testLoadAllUsersFromLdapForNotNull(){
+    public void testLoadAllUsersFromLdapForNotNull() throws IllegalAccessException, InstantiationException {
         Collection<User> loadedUsers = UserService.loadAllUsersFromLdap();
         Assert.assertNotNull(loadedUsers);
     }
 
     @Test
-    public void testLoadAllUsersFromLdap() {
+    public void testLoadAllUsersFromLdap() throws IllegalAccessException, InstantiationException {
         Collection<String> userNames = new LdapService().loadAll();
         Collection<User> loadedUsers = UserService.loadAllUsersFromLdap();
         int matches = 0;

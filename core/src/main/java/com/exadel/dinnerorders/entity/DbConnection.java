@@ -10,6 +10,7 @@ import java.lang.annotation.Target;
  * Date: 25.07.12
  */
 @Target(ElementType.TYPE)
+
 @Retention(RetentionPolicy.RUNTIME)
 public @interface DbConnection {
     Class connectionType() ;
