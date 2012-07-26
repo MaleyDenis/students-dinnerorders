@@ -16,10 +16,10 @@ public class OrderDAO extends BaseDAO<Order> {
     public boolean create(Order orderItem)  {
         Connection connection = connection(this);
         try {
-            if (connection != null){
+            if (connection != null && orderItem.getId() == null){
                 PreparedStatement pst = connection.prepareStatement
                         ("INSERT INTO dinnerorders.order VALUES(?,?,?,?,?)");
-                pst.setLong(1, orderItem.getId());
+                pst.setLong(1, getID());
                 pst.setLong(2, orderItem.getUserID());
                 pst.setDouble(3, orderItem.getCost());
                 pst.setTimestamp(4, new java.sql.Timestamp(orderItem.getDateOrder().getTime()));

@@ -1,5 +1,7 @@
 package com.exadel.dinnerorders.entity;
 
+import com.exadel.dinnerorders.dao.OrderDAO;
+
 import java.util.Date;
 import java.util.List;
 
@@ -14,6 +16,15 @@ public class Order {
 
     public Order(Long id, Long userID, double cost, Date dateOrder, Date datePayment) {
         this.id = id;
+        this.userID = userID;
+        this.cost = cost;
+        this.dateOrder = dateOrder;
+        this.datePayment = datePayment;
+    }
+
+    public Order(Long userID, double cost, Date dateOrder, Date datePayment) {
+        OrderDAO orderDAO = new OrderDAO();
+        id = orderDAO.getID();
         this.userID = userID;
         this.cost = cost;
         this.dateOrder = dateOrder;
@@ -44,11 +55,11 @@ public class Order {
         this.dateOrder = dateOrder;
     }
 
-    public long getUserID() {
+    public Long getUserID() {
         return userID;
     }
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
