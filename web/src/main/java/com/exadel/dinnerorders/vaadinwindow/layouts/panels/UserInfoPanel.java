@@ -1,16 +1,11 @@
 package com.exadel.dinnerorders.vaadinwindow.layouts.panels;
 
 import com.exadel.dinnerorders.vaadinwindow.application.Application;
-import com.exadel.dinnerorders.vaadinwindow.events.AuthenticationEvent;
 import com.exadel.dinnerorders.vaadinwindow.events.SignOutEvent;
-import com.google.common.eventbus.Subscribe;
 import com.vaadin.terminal.ExternalResource;
 import com.vaadin.terminal.Sizeable;
-import com.vaadin.ui.Label;
-import com.vaadin.ui.Button;
-import com.vaadin.ui.GridLayout;
-import com.vaadin.ui.Embedded;
-import com.vaadin.ui.Panel;
+import com.vaadin.ui.*;
+
 import java.util.Scanner;
 
 public class UserInfoPanel extends Panel{
@@ -68,8 +63,7 @@ public class UserInfoPanel extends Panel{
     private void initLabels() {
         nameCaption = new Label("Name");
         lastNameCaption = new Label("Last name");
-        nameLabel = new Label("Name");
-        lastNameLabel = new Label("Last name");
+        initUserName();
     }
 
     private void initButton() {
@@ -84,10 +78,10 @@ public class UserInfoPanel extends Panel{
         });
     }
 
-    @Subscribe
-    public void authenticationPassed(AuthenticationEvent aEvent) {
+    public void initUserName() {
+
         Scanner scanner = new Scanner(Application.getInstance().getUser().getUserName());
-        lastNameLabel.setValue(scanner.next());
-        nameLabel.setValue(scanner.next());
+        lastNameLabel = new Label(scanner.next());
+        nameLabel = new Label(scanner.next());
     }
 }
