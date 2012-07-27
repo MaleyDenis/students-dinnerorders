@@ -60,8 +60,10 @@ public class ShowDayMenuPanel extends GridLayout {
             MenuItemDescriptionRow row = (MenuItemDescriptionRow) getComponent(0, i);
             if (row.isSelected()) {
                 list.add(listMap.get(weekday).get(i - 1));
+
             }
         }
         return list;
     }
+
 }

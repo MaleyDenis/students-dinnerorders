@@ -3,7 +3,7 @@ package com.exadel.dinnerorders.vaadinwindow.layouts.panels;
 import com.exadel.dinnerorders.entity.Menu;
 import com.exadel.dinnerorders.entity.Weekday;
 import com.exadel.dinnerorders.service.DateUtils;
-import com.exadel.dinnerorders.service.MenuService;
+import com.exadel.dinnerorders.vaadinwindow.listeners.SendOrderButtonListener;
 import com.vaadin.ui.*;
 
 
@@ -19,6 +19,7 @@ public class CurrentWeekMenuPanel extends Panel{
     public final static int MAX_CAFE_NAME_LENGTH = 25;
     private TextField cafeName;
     private Menu menu;
+    private Button sendOrderButton;
 
     private void initLabels() {
         int lastIndex = ("DD-MM-YYYY").length();
@@ -39,22 +40,30 @@ public class CurrentWeekMenuPanel extends Panel{
         cafeName.setWidth(190, UNITS_PIXELS);
         cafeName.setMaxLength(MAX_CAFE_NAME_LENGTH);
         cafeName.setTextChangeEventMode(AbstractTextField.TextChangeEventMode.EAGER);
+        sendOrderButton = new Button("Send order");
+        sendOrderButton.addListener(new SendOrderButtonListener());
+
 
     }
     private void setComponentsValues(){
-        cafeName.setValue("Name");
+        cafeName.setValue(menu.getCafeName());
 
     }
 
+    public void initButton(){
+        sendOrderButton = new Button("Send order");
+    }
 
-    public CurrentWeekMenuPanel(){
+
+    public CurrentWeekMenuPanel(Menu currentMenu){
         super();
-        menu = MenuService.findMenuForCurrentWeek();
+        menu = currentMenu;
         initLabels();
         initLayout();
         initTextFields();
         setComponentsValues();
         locateComponents();
+
 
     }
 
@@ -64,11 +73,14 @@ public class CurrentWeekMenuPanel extends Panel{
         layout.addComponent(serviceDays);
         layout.setComponentAlignment(serviceDays, Alignment.MIDDLE_CENTER);
 
+
         int insertRowNumber = 1;
         for (int i = 0; i < NUMBER_OF_SERVICE_DAYS; i++) {
             layout.addComponent(new ShowDayMenuPanel(Weekday.getWeekday(i + 1),menu.getItems()), 0, insertRowNumber, 1, insertRowNumber++);
             layout.addComponent(new Label("<br>", Label.CONTENT_RAW), 0, insertRowNumber, 1, insertRowNumber++);
         }
+        layout.addComponent(sendOrderButton);
+        layout.setComponentAlignment(sendOrderButton,Alignment.BOTTOM_CENTER);
         setContent(layout);
     }
 

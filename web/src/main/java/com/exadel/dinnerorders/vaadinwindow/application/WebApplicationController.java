@@ -7,6 +7,7 @@ import com.exadel.dinnerorders.vaadinwindow.layouts.LoginLayout;
 import com.exadel.dinnerorders.vaadinwindow.layouts.WelcomeLayout;
 import com.exadel.dinnerorders.vaadinwindow.layouts.panels.CurrentWeekMenuPanel;
 import com.exadel.dinnerorders.vaadinwindow.layouts.panels.MenuCreationPanel;
+import com.exadel.dinnerorders.vaadinwindow.layouts.panels.ShowMadeOrderPanel;
 import com.exadel.dinnerorders.vaadinwindow.layouts.panels.TableOrderPanel;
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
@@ -56,7 +57,7 @@ public class WebApplicationController extends com.vaadin.Application {
     }
 
     @Subscribe
-    public void showUserOrders(ShowAllOrdersEvent showAllOrdersEvent) {
+    public void showAllOrders(ShowAllOrdersEvent showAllOrdersEvent) {
         TableOrderPanel tableOrderPanel = new TableOrderPanel();
         replaceCentralPanel(tableOrderPanel);
     }
@@ -91,5 +92,11 @@ public class WebApplicationController extends com.vaadin.Application {
 
     @Subscribe
     public void showUserOrder(ShowUserOrdersEvent suoEvent) {
+    }
+
+    @Subscribe
+    public void showMadeOrderPanel(ShowMadeOrderEvent showMadeOrderEvent){
+        ShowMadeOrderPanel showMadeOrderPanel = new ShowMadeOrderPanel();
+        replaceCentralPanel(showMadeOrderPanel);
     }
 }
