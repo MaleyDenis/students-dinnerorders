@@ -129,13 +129,18 @@ public class MenuCreationPanel extends Panel {
     }
 
     private boolean saveMenu(Menu menu) {
-//        Menu loaded = MenuService.findMenuByDate(menu.getDateStart());
-//        if (loaded == null || !loaded.getCafeName().equals(menu)) {
+        Menu loaded = MenuService.findMenuByDate(menu.getDateStart());
+        if (loaded == null || !loaded.getCafeName().equals(menu.getCafeName())) {
             return MenuService.save(menu);
-//        } else {
-//            menu.getItems().putAll(loaded.getItems());
-//            return MenuService.update(menu);
-//        }
+        } else {
+            Map <Weekday, List<MenuItem>> alreadyExisted = loaded.getItems();
+            for ( int i = 0 ; i < alreadyExisted.size(); i++) {
+                List existedList = loaded.getItems().get(Weekday.getWeekday(i+1));
+                menu.getItems().get(Weekday.getWeekday(i+1)).addAll(existedList);
+            }
+            menu.setId(loaded.getId());
+            return MenuService.update(menu);
+        }
     }
 
     private void showInformationMessage(boolean result) {
