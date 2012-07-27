@@ -22,12 +22,14 @@ public class MenuService {
 
     public static Menu findMenuForNextWeek() {
         final Timestamp nextMondayDate = DateUtils.getNextMondayTime();
-        return findMenuByDate(nextMondayDate);
+        long availableTime = nextMondayDate.getTime() + DateUtils.MILLISECONDS_IN_SECOND;
+        return findMenuByDate(new Timestamp(availableTime));
     }
 
     public static Menu findMenuForCurrentWeek(){
-        final Date date = new Date();
-        return findMenuByDate(date);
+        final Timestamp currentMondayDate = DateUtils.getCurrentMondayTime();
+        long availableTime = currentMondayDate.getTime() + DateUtils.MILLISECONDS_IN_SECOND;
+        return findMenuByDate(new Timestamp(availableTime));
     }
 
     public static Menu findMenuByDate(final Date date){
