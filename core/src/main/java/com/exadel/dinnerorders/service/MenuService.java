@@ -60,4 +60,10 @@ public class MenuService {
         menuDAO.create(newMenu);
         return true;
     }
+
+    public static boolean update(Menu newMenu){
+        MenuDAO menuDAO = new MenuDAO();
+        menuDAO.update(newMenu);
+        return true;
+    }
 }

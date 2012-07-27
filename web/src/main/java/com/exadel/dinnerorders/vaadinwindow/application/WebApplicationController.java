@@ -1,5 +1,7 @@
 package com.exadel.dinnerorders.vaadinwindow.application;
 
+import com.exadel.dinnerorders.entity.Menu;
+import com.exadel.dinnerorders.service.MenuService;
 import com.exadel.dinnerorders.vaadinwindow.events.*;
 import com.exadel.dinnerorders.vaadinwindow.layouts.LoginLayout;
 import com.exadel.dinnerorders.vaadinwindow.layouts.WelcomeLayout;
@@ -67,12 +69,24 @@ public class WebApplicationController extends com.vaadin.Application {
 
     @Subscribe
     public void currentWeekMenuSelected(ShowCurrentWeekMenuEvent cwmEvent) {
-        CurrentWeekMenuPanel currentWeekMenuPanel = new CurrentWeekMenuPanel();
+        Menu currentWeek = MenuService.findMenuForCurrentWeek();
+        if (currentWeek == null) {
+            getMainWindow().showNotification("Sorry,", "no any meny for this week available", Window.Notification.TYPE_HUMANIZED_MESSAGE);
+            return;
+        }
+        CurrentWeekMenuPanel currentWeekMenuPanel = new CurrentWeekMenuPanel(currentWeek);
         replaceCentralPanel(currentWeekMenuPanel);
     }
 
     @Subscribe
-    public void nextWeekMeuSelected(ShowNextWeekMenuEvent nwmEvent){
+    public void nextWeekMenuSelected(ShowNextWeekMenuEvent nwmEvent){
+        Menu nextWeek = MenuService.findMenuForNextWeek();
+        if (nextWeek == null) {
+            getMainWindow().showNotification("Sorry,", "no any meny for next week available", Window.Notification.TYPE_HUMANIZED_MESSAGE);
+            return;
+        }
+        CurrentWeekMenuPanel currentWeekMenuPanel = new CurrentWeekMenuPanel(nextWeek);
+        replaceCentralPanel(currentWeekMenuPanel);
     }
 
     @Subscribe

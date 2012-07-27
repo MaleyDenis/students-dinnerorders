@@ -46,15 +46,21 @@ public class DateUtils {
         Calendar calendar = Calendar.getInstance();
         int firstDayOfWeek = calendar.getFirstDayOfWeek();
         int elapsedDays = calendar.get(Calendar.DAY_OF_WEEK) - firstDayOfWeek;
-        return new Timestamp(System.currentTimeMillis() - elapsedDays * MILLISECONDS_IN_DAY);
+        calendar.setTimeInMillis(System.currentTimeMillis() - elapsedDays * MILLISECONDS_IN_DAY);
+        calendar.set(Calendar.HOUR, 0);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 1);
+        return new Timestamp(calendar.getTimeInMillis());
     }
 
     public static Timestamp getCurrentFridayTime() {
         long mondayTime = getCurrentMondayTime().getTime();
-        int currentHours = Calendar.getInstance().get(Calendar.HOUR);
-        int am = Calendar.getInstance().get(Calendar.AM_PM);
-        long leftHours = HOURS_IN_DAY - currentHours - 1 - HOURS_IN_DAY / 2 * am;
-        return new Timestamp( mondayTime + MILLISECONDS_IN_DAY * (DEFAULT_WORK_DAYS - 1) + leftHours * MILLISECONDS_IN_HOUR);
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(mondayTime + MILLISECONDS_IN_DAY * (DEFAULT_WORK_DAYS - 1));
+        calendar.set(Calendar.HOUR, 23);
+        calendar.set(Calendar.MINUTE, 59);
+        calendar.set(Calendar.SECOND, 59);
+        return new Timestamp(calendar.getTimeInMillis());
     }
 
     public static Timestamp getCurrentTime() {

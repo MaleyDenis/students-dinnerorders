@@ -184,14 +184,19 @@ public class MenuDAO extends BaseDAO<Menu> {
 
 
     private void updateMenuItems(Connection connection, Menu menu) {
+        MenuItemDAO menuItemDAO = new MenuItemDAO();
         try {
             PreparedStatement preparedStatement;
             for (List<MenuItem> items : menu.getItems().values()) {
                 for (MenuItem menuItem : items) {
-                    preparedStatement = connection.prepareStatement("UPDATE menu_menuitem(menu_id, menuitem_id)  VALUES(?, ?);");
-                    preparedStatement.setLong(1, menu.getId());
-                    preparedStatement.setLong(2, menuItem.getId());
-                    preparedStatement.executeUpdate();
+                    if (menuItem.getId() == null) {
+                        menuItemDAO.create(menuItem);
+                        preparedStatement =  connection.prepareStatement("INSERT INTO menu_menuitem VALUES(?, ?, ?);");
+                        preparedStatement.setLong(1, getID());
+                        preparedStatement.setLong(2, menu.getId());
+                        preparedStatement.setLong(3, menuItem.getId());
+                        preparedStatement.executeUpdate();
+                    }
                 }
             }
         } catch (SQLException sqlException) {
