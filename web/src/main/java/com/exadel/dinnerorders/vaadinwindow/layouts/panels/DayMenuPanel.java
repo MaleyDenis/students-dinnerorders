@@ -8,12 +8,10 @@ import com.exadel.dinnerorders.vaadinwindow.events.RemoveDishEvent;
 import com.exadel.dinnerorders.vaadinwindow.layouts.DishDescriptionRow;
 import com.google.common.eventbus.Subscribe;
 import com.vaadin.ui.Alignment;
-import com.vaadin.ui.Component;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.Label;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 public class DayMenuPanel extends GridLayout {
@@ -33,10 +31,20 @@ public class DayMenuPanel extends GridLayout {
         setModifyingEnabled();
     }
 
-    private void setModifyingEnabled() {
+    public void setModifyingEnabled() {
         int amount = getComponentCount();
-        boolean state = (getComponentCount() - 1) != 1;
+        int skipped = 0;
         for (int i = 1; i < amount; i++) {
+            if ( ((DishDescriptionRow)getComponent(0, i)).getSkipBox().booleanValue() ) {
+                skipped++;
+            }
+        }
+
+        boolean state = (getComponentCount() - skipped - 1) > 1;
+        for (int i = 1; i < amount; i++) {
+            if ( ((DishDescriptionRow)getComponent(0, i)).getSkipBox().booleanValue() ) {
+                continue;
+            }
             ((DishDescriptionRow)getComponent(0, i)).getRemove().setEnabled(state);
         }
     }
@@ -67,6 +75,9 @@ public class DayMenuPanel extends GridLayout {
         insertRow(nextRow);
         addComponent(new DishDescriptionRow(), 0, nextRow);
         setModifyingEnabled();
+
+        MenuCreationPanel menuCreationPanel = (MenuCreationPanel)getParent().getParent();
+        menuCreationPanel.incrementMenuItemsCount();
     }
 
     @Subscribe
@@ -82,18 +93,18 @@ public class DayMenuPanel extends GridLayout {
         int currRow = area.getRow1();
         removeRow(currRow);
         setModifyingEnabled();
+        MenuCreationPanel menuCreationPanel = (MenuCreationPanel)getParent().getParent();
+        menuCreationPanel.decrementMenuItemsCount();
     }
 
     public boolean isDataValid() {
         int validRows = 0;
-        Iterator<Component> iterator = getComponentIterator();
+        int startRow = 1;
 
-        while (iterator.hasNext()) {
-            Object object = iterator.next();
-            if (object instanceof DishDescriptionRow) {
-                if (((DishDescriptionRow)object).checkData()) {
-                    validRows++;
-                }
+        for (int i = startRow; i < getComponentCount(); i++) {
+            DishDescriptionRow row = (DishDescriptionRow)getComponent(0, i);
+            if (row.checkData()) {
+                validRows++;
             }
         }
         return validRows == getComponentCount() - 1;
@@ -109,6 +120,10 @@ public class DayMenuPanel extends GridLayout {
 
         for (int i = startRow; i < getComponentCount(); i++) {
             DishDescriptionRow row = (DishDescriptionRow)getComponent(0, i);
+            if (row.getSkipBox().booleanValue()) {
+                row.flushValues();
+                continue;
+            }
             String dishName = (String)row.getDishName().getValue();
             Double cost = Double.parseDouble((String)row.getCost().getValue());
             list.add(new MenuItem(null, weekday, dishName, cost));
@@ -119,9 +134,14 @@ public class DayMenuPanel extends GridLayout {
 
     public void flush() {
         int startRow = 1;
-        for (int i = startRow; i < getComponentCount(); i++) {
-            DishDescriptionRow row = (DishDescriptionRow)getComponent(0, i);
-            row.flushValues();
+        int leftComponentsCount = 2;
+        int nComponents = getComponentCount();
+        for (int i = nComponents; i >= leftComponentsCount; i--) {
+            removeComponent(0, i);
         }
+
+        DishDescriptionRow row = (DishDescriptionRow) getComponent(0, startRow);
+        row.flushValues();
+
     }
 }

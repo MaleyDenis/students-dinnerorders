@@ -3,18 +3,20 @@ package com.exadel.dinnerorders.vaadinwindow.layouts;
 import com.exadel.dinnerorders.vaadinwindow.listeners.AddDishListener;
 import com.exadel.dinnerorders.vaadinwindow.listeners.CostChangedListener;
 import com.exadel.dinnerorders.vaadinwindow.listeners.RemoveDishListener;
+import com.exadel.dinnerorders.vaadinwindow.listeners.SkipBoxListener;
 import com.vaadin.terminal.ExternalResource;
 import com.vaadin.ui.*;
 
 public class DishDescriptionRow extends GridLayout {
     public static final int DEFAULT_ROWS = 1;
-    public static final int DEFAULT_COLUMNS = 6;
+    public static final int DEFAULT_COLUMNS = 7;
     private TextArea dishName;
     private TextField cost;
     private Embedded add;
     private Embedded remove;
     private Embedded nameStatus;
     private Embedded costStatus;
+    private CheckBox skipBox;
 
     public DishDescriptionRow() {
         super(DEFAULT_COLUMNS, DEFAULT_ROWS);
@@ -31,6 +33,7 @@ public class DishDescriptionRow extends GridLayout {
         setComponentAlignment(costStatus, Alignment.MIDDLE_RIGHT);
         setComponentAlignment(add, Alignment.TOP_CENTER);
         setComponentAlignment(remove, Alignment.TOP_LEFT);
+        setComponentAlignment(skipBox, Alignment.MIDDLE_LEFT);
     }
 
     private void setExpandRatios() {
@@ -40,6 +43,7 @@ public class DishDescriptionRow extends GridLayout {
         setColumnExpandRatio(3, 1f);
         setColumnExpandRatio(4, 0.2f);
         setColumnExpandRatio(5, 0.2f);
+        setColumnExpandRatio(6, 0.2f);
     }
 
     private void initComponents() {
@@ -81,6 +85,10 @@ public class DishDescriptionRow extends GridLayout {
         remove.setDescription("Remove dish from menu");
         add.addListener(new AddDishListener());
         remove.addListener(new RemoveDishListener());
+
+        skipBox = new CheckBox("Skip");
+        skipBox.setImmediate(true);
+        skipBox.addListener(new SkipBoxListener());
     }
 
     private void locateComponents() {
@@ -96,6 +104,7 @@ public class DishDescriptionRow extends GridLayout {
         addComponent(dishNameLayout);
         addComponent(costStatus);
         addComponent(costLayout);
+        addComponent(skipBox);
         addComponent(add);
         addComponent(remove);
 
@@ -120,7 +129,7 @@ public class DishDescriptionRow extends GridLayout {
     }
 
     public boolean checkData() {
-        return checkDishName() == checkCost();
+        return skipBox.booleanValue() || checkDishName() == checkCost();
     }
 
     private boolean checkDishName() {
@@ -153,8 +162,19 @@ public class DishDescriptionRow extends GridLayout {
 
     public void flushValues() {
         cost.setValue("0");
+        cost.setEnabled(true);
         costStatus.setSource(new ExternalResource(""));
+        costStatus.setEnabled(true);
         dishName.setValue("");
+        dishName.setEnabled(true);
         nameStatus.setSource(new ExternalResource(""));
+        nameStatus.setEnabled(true);
+        skipBox.setValue(false);
+        add.setEnabled(true);
+        remove.setEnabled(false);
+    }
+
+    public CheckBox getSkipBox() {
+        return skipBox;
     }
 }
