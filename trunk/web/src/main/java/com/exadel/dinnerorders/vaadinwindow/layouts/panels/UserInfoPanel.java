@@ -10,17 +10,20 @@ import java.util.Scanner;
 
 public class UserInfoPanel extends Panel{
     public static final int DEFAULT_LAYOUT_COLUMN_COUNT = 3;
-    public static final int DEFAULT_LAYOUT_ROW_COUNT = 3;
+    public static final int DEFAULT_LAYOUT_ROW_COUNT = 4;
     private Label nameLabel;
     private Label lastNameLabel;
     private Label nameCaption;
     private Label lastNameCaption;
+    private Label roleCaption;
+    private Label roleLabel;
     private Button signOutButton;
     private GridLayout layout;
     private Embedded userPhoto;
 
     public UserInfoPanel() {
         super();
+        setWidth(100, UNITS_PERCENTAGE);
         Application.getInstance().getEventBus().register(this);
         setDefaultUserInfo();
         initComponents();
@@ -37,9 +40,11 @@ public class UserInfoPanel extends Panel{
         layout.addComponent(userPhoto, 0, 0, 0, 2);
         layout.addComponent(nameCaption,  1, 0);
         layout.addComponent(lastNameCaption,  1, 1);
+        layout.addComponent(roleCaption, 1, 2);
         layout.addComponent(nameLabel,  2, 0);
         layout.addComponent(lastNameLabel, 2, 1);
-        layout.addComponent(signOutButton, 1, 2);
+        layout.addComponent(roleLabel, 2, 2);
+        layout.addComponent(signOutButton, 1, 3);
     }
 
     private void initLayout() {
@@ -63,6 +68,7 @@ public class UserInfoPanel extends Panel{
     private void initLabels() {
         nameCaption = new Label("Name");
         lastNameCaption = new Label("Last name");
+        roleCaption = new Label("Role");
         initUserName();
     }
 
@@ -79,9 +85,9 @@ public class UserInfoPanel extends Panel{
     }
 
     public void initUserName() {
-
         Scanner scanner = new Scanner(Application.getInstance().getUser().getUserName());
         lastNameLabel = new Label(scanner.next());
         nameLabel = new Label(scanner.next());
+        roleLabel = new Label(Application.getInstance().getUser().getRole().name());
     }
 }

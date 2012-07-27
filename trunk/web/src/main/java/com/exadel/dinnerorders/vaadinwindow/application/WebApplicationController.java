@@ -69,7 +69,7 @@ public class WebApplicationController extends com.vaadin.Application {
 
     @Subscribe
     public void currentWeekMenuSelected(ShowCurrentWeekMenuEvent cwmEvent) {
-       CurrentWeekMenuPanel currentWeekMenuPanel = new CurrentWeekMenuPanel();
+        CurrentWeekMenuPanel currentWeekMenuPanel = new CurrentWeekMenuPanel();
         replaceCentralPanel(currentWeekMenuPanel);
     }
 
