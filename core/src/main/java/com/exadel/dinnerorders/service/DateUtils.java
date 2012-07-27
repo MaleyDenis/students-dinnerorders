@@ -50,7 +50,11 @@ public class DateUtils {
     }
 
     public static Timestamp getCurrentFridayTime() {
-        return new Timestamp(getCurrentMondayTime().getTime() + MILLISECONDS_IN_DAY * (DEFAULT_WORK_DAYS - 1));
+        long mondayTime = getCurrentMondayTime().getTime();
+        int currentHours = Calendar.getInstance().get(Calendar.HOUR);
+        int am = Calendar.getInstance().get(Calendar.AM_PM);
+        long leftHours = HOURS_IN_DAY - currentHours - 1 - HOURS_IN_DAY / 2 * am;
+        return new Timestamp( mondayTime + MILLISECONDS_IN_DAY * (DEFAULT_WORK_DAYS - 1) + leftHours * MILLISECONDS_IN_HOUR);
     }
 
     public static Timestamp getCurrentTime() {

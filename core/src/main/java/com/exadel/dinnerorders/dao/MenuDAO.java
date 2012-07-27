@@ -1,6 +1,7 @@
 package com.exadel.dinnerorders.dao;
 
 import com.exadel.dinnerorders.entity.*;
+import com.exadel.dinnerorders.service.DefaultConnectionProvider;
 import org.apache.log4j.Logger;
 
 import java.sql.*;
@@ -9,7 +10,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 
-@DbConnection(connectionType=DefaultConnection.class)
+@DbConnection(connectionType=DefaultConnectionProvider.class)
 public class MenuDAO extends BaseDAO<Menu> {
     private Logger logger = Logger.getLogger(MenuDAO.class);
 

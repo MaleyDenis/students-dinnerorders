@@ -26,8 +26,6 @@ public class MenuCreationPanel extends Panel {
     public static final int DEFAULT_LAYOUT_ROWS = 12;
     public static final int DEFAULT_LAYOUT_COLUMNS = 2;
     private TextField cafeName;
-    private Label serviceDays;
-    private Label[] weekdays;
     private Button saveButton;
     private Button cancelButton;
     private GridLayout layout;
@@ -48,7 +46,6 @@ public class MenuCreationPanel extends Panel {
     }
 
     private void initComponents() {
-        initLabels();
         initTextFields();
         initButtons();
         initDateBox();
@@ -67,20 +64,6 @@ public class MenuCreationPanel extends Panel {
         friday = DateUtils.getNextFridayTime().toString().substring(0, datePattern.length());
         dateBox.addItem("Next week: " + monday + " - " + friday);
         dateBox.addListener(new DateBoxListener());
-    }
-
-    private void initLabels() {
-        int lastIndex = datePattern.length();
-        String mondayDateStr = "2012-7-22";//mondayDate.toString().substring(0, lastIndex);
-        String fridayDateStr = "2012-7-26";//fridayDate.toString().substring(0, lastIndex);
-
-        serviceDays = new Label("Monday - " + mondayDateStr + "<br>Friday - " + fridayDateStr, Label.CONTENT_RAW);
-        serviceDays.setWidth(145, UNITS_PIXELS);
-        weekdays = new Label[NUMBER_OF_SERVICE_DAYS];
-        for (int i = 0; i < NUMBER_OF_SERVICE_DAYS; i++) {
-            weekdays[i] = new Label(Weekday.getWeekday(i + 1).name(), Label.CONTENT_RAW);
-            weekdays[i].setWidth(100, UNITS_PIXELS);
-        }
     }
 
     private void initTextFields() {
@@ -141,18 +124,18 @@ public class MenuCreationPanel extends Panel {
         }
 
         Menu menu = new Menu(null, nameOfCafe, mondayDate, fridayDate, items);
-        boolean result = saveMenuEvent(menu);
+        boolean result = saveMenu(menu);
         showInformationMessage(result);
     }
 
-    private boolean saveMenuEvent(Menu menu) {
-        Menu loaded = MenuService.findMenuByDate(menu.getDateStart());
-        if (loaded == null || !loaded.getCafeName().equals(menu)) {
+    private boolean saveMenu(Menu menu) {
+//        Menu loaded = MenuService.findMenuByDate(menu.getDateStart());
+//        if (loaded == null || !loaded.getCafeName().equals(menu)) {
             return MenuService.save(menu);
-        } else {
-            menu.getItems().putAll(loaded.getItems());
-            return MenuService.update(menu);
-        }
+//        } else {
+//            menu.getItems().putAll(loaded.getItems());
+//            return MenuService.update(menu);
+//        }
     }
 
     private void showInformationMessage(boolean result) {

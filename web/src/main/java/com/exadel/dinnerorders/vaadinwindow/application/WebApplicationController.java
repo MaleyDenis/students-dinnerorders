@@ -15,8 +15,6 @@ public class WebApplicationController extends com.vaadin.Application {
     private EventBus eventBus = Application.getInstance().getEventBus();
     private Layout welcomeLayout;
     private Layout loginLayout;
-    private TableOrderPanel tableOrderPanel;
-    private MenuCreationPanel menuCreationPanel;
 
     @Override
     public void init() {
@@ -57,13 +55,13 @@ public class WebApplicationController extends com.vaadin.Application {
 
     @Subscribe
     public void showUserOrders(ShowAllOrdersEvent showAllOrdersEvent) {
-        tableOrderPanel = new TableOrderPanel();
+        TableOrderPanel tableOrderPanel = new TableOrderPanel();
         replaceCentralPanel(tableOrderPanel);
     }
 
     @Subscribe
     public void showMenuEditor(ShowMenuCreationPanelEvent smcEvent) {
-        menuCreationPanel = new MenuCreationPanel();
+        MenuCreationPanel menuCreationPanel = new MenuCreationPanel();
         replaceCentralPanel(menuCreationPanel);
     }
 
