@@ -10,11 +10,10 @@ import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.TextField;
 
 public class SaveButtonListener implements Button.ClickListener {
-    private final int DEFAULT_EXPECTED = 2;
     @Override
     public void buttonClick(Button.ClickEvent clickEvent) {
         GridLayout mainPanel = (GridLayout)clickEvent.getButton().getParent();
-        int expected = DEFAULT_EXPECTED;
+        int expected = 2;
         int actual = 0;
         if (checkCafeNameField (mainPanel)) {
             actual++;

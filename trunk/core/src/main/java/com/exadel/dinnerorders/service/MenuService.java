@@ -57,7 +57,7 @@ public class MenuService {
                 menuItemDAO.create(item);
             }
         }
-        menuDAO.create(newMenu);    //create after for-cycle
+        menuDAO.create(newMenu);
         return true;
     }
 }
