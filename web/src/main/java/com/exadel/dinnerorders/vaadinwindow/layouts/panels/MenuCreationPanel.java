@@ -129,7 +129,8 @@ public class MenuCreationPanel extends Panel {
     }
 
     private boolean saveMenu(Menu menu) {
-        Menu loaded = MenuService.findMenuByDate(menu.getDateStart());
+        Timestamp searchingDate = new Timestamp(menu.getDateStart().getTime() + DateUtils.MILLISECONDS_IN_SECOND);
+        Menu loaded = MenuService.findMenuByDate(searchingDate);
         if (loaded == null || !loaded.getCafeName().equals(menu.getCafeName())) {
             return MenuService.save(menu);
         } else {
