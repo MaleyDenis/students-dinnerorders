@@ -2,7 +2,9 @@ package com.exadel.dinnerorders.dao;
 
 import com.exadel.dinnerorders.entity.MenuItem;
 import com.exadel.dinnerorders.entity.Weekday;
+
 import junit.framework.Assert;
+
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -10,72 +12,76 @@ import org.junit.Test;
 import java.util.Collection;
 
 public class MenuItemDAOTest {
-    private static MenuItem menuItem1;
-    private static MenuItem menuItem2;
-    private static MenuItem menuItem3;
+    private static MenuItem menuItem;
     private static MenuItemDAO menuItemDAO;
 
+    public boolean isEquals(MenuItem item1, MenuItem item2) {
+        if(item1 == item2){
+            return true;
+        }
+        if(item1 == null || item2 == null){
+            return false;
+        }
+        return item1.getCost().equals(item2.getCost()) && item1.getDescription().equals(item2.getDescription()) && item1.getId().equals(item2.getId()) && item1.getWeekday().equals(item2.getWeekday());
+    }
+
     @BeforeClass
-    public static void setUp() {
-        menuItem1 = new MenuItem(null, Weekday.MONDAY, "1", 1D);
-        menuItem2 = new MenuItem(null, Weekday.TUESDAY, "2", 2D);
-        menuItem3 = new MenuItem(null, Weekday.WEDNESDAY, "3", 3D);
+    public static void setUp() throws Exception {
+        menuItem = new MenuItem(null, Weekday.MONDAY, "1", new Double(1));
         menuItemDAO = new MenuItemDAO();
-        Assert.assertTrue(menuItemDAO.create(menuItem1));
-        Assert.assertTrue(menuItemDAO.create(menuItem2));
-        Assert.assertTrue(menuItemDAO.create(menuItem3));
+        menuItemDAO.create(menuItem);
     }
 
     @Test
-    public void testCreateAndDelete() throws Exception {
-        MenuItem menuItem = new MenuItem(null, Weekday.THURSDAY, "4", 4D);
-        Assert.assertTrue(menuItemDAO.create(menuItem));
-        Assert.assertTrue(menuItemDAO.delete(menuItem));
-        Assert.assertTrue(menuItemDAO.load(menuItem.getId()) == null);
+    public void testDeleteAndCreate() {
+        try{
+            Assert.assertTrue(menuItemDAO.delete(menuItem));
+            Assert.assertTrue(menuItemDAO.load(menuItem.getId()) == null);
+            menuItem.setId(null);
+            Assert.assertTrue(menuItemDAO.create(menuItem));
+        } catch (Exception e){
+            Assert.assertTrue(false);
+        }
     }
 
     @Test
-    public void testUpdate() throws Exception {
-        MenuItem modifiedItem = new MenuItem(menuItem1.getId(), Weekday.MONDAY, "11", 11D);
-        Assert.assertTrue(menuItemDAO.update(modifiedItem));
-        MenuItem actualItem = menuItemDAO.load(modifiedItem.getId());
-        Assert.assertTrue(isEquals(actualItem, modifiedItem));
+    public void testUpdate() {
+        try{
+            MenuItem updatedItem = new MenuItem(menuItem.getId(), Weekday.MONDAY, "11", new Double(11));
+            Assert.assertTrue(menuItemDAO.update(updatedItem));
+            menuItem = menuItemDAO.load(updatedItem.getId());
+            if(menuItem == null || !isEquals(menuItem, updatedItem)){
+                throw new Exception();
+            }
+        } catch (Exception e){
+            Assert.assertTrue(false);
+        }
     }
 
     @Test
-    public void testLoad() throws Exception {
-        MenuItem expectedItem = menuItemDAO.load(menuItem2.getId());
-        Assert.assertTrue(expectedItem != null);
-        Assert.assertTrue(isEquals(expectedItem, menuItem2));
-        Assert.assertTrue(menuItemDAO.load(menuItemDAO.getID()) == null);
+    public void testLoad() {
+        try{
+            MenuItem item = menuItemDAO.load(menuItem.getId());
+            if(item == null || !isEquals(menuItem, item)){
+                throw new Exception();
+            }
+        } catch (Exception e) {
+            Assert.assertTrue(false);
+        }
     }
 
     @Test
-    public void testLoadAll() throws Exception {
-        Collection<MenuItem> loaded = menuItemDAO.loadAll();
-        Assert.assertTrue(loaded != null);
+    public void testLoadAll() {
+        try {
+            Collection<MenuItem> items = menuItemDAO.loadAll();
+            Assert.assertTrue(items != null && items.size() > 0);
+        } catch (Exception e) {
+            Assert.assertTrue(false);
+        }
     }
 
     @AfterClass
-    public static void tearDown() {
-        Assert.assertTrue(menuItemDAO.delete(menuItem1));
-        Assert.assertTrue(menuItemDAO.delete(menuItem2));
-        Assert.assertTrue(menuItemDAO.delete(menuItem3));
-        Assert.assertTrue(menuItemDAO.load(menuItem1.getId()) == null);
-        Assert.assertTrue(menuItemDAO.load(menuItem2.getId()) == null);
-        Assert.assertTrue(menuItemDAO.load(menuItem2.getId()) == null);
-    }
-
-    private boolean isEquals(MenuItem item1, MenuItem item2){
-        try {
-            Assert.assertTrue(item1.getDescription().equals(item2.getDescription()));
-            Assert.assertTrue(item1.getCost().equals(item2.getCost()));
-            Assert.assertTrue(item1.getId().equals(item2.getId()));
-            Assert.assertTrue(item1.getWeekday() == item2.getWeekday());
-
-        } catch (AssertionError assertionError) {
-            return false;
-        }
-        return true;
+    public static void tearDown() throws Exception {
+        menuItemDAO.delete(menuItem);
     }
 }

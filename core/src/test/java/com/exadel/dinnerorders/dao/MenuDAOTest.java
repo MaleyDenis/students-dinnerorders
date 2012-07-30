@@ -3,143 +3,121 @@ package com.exadel.dinnerorders.dao;
 import com.exadel.dinnerorders.entity.Menu;
 import com.exadel.dinnerorders.entity.MenuItem;
 import com.exadel.dinnerorders.entity.Weekday;
-import com.exadel.dinnerorders.service.DateUtils;
+
 import junit.framework.Assert;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
+
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 
 import java.sql.Timestamp;
-import java.util.ArrayList;
+
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Date;
+
 
 public class MenuDAOTest {
-    private static MenuDAO menuDAO;
-    private static MenuItemDAO menuItemDAO;
-    private static Menu menu;
-    private static MenuItem[] items;
-    private static Timestamp currentDate;
-    private static Timestamp futureDate;
+    private MenuDAO menuDAO;
+    private MenuItemDAO menuItemDAO;
+    private Menu menu;
+    private MenuItem menuItem1;
+    private MenuItem menuItem2;
+    private Timestamp date;
 
-    @BeforeClass
-    public static void setInitialData() throws Exception {
-        initDates();
-        menuDAO = new MenuDAO();
-        menuItemDAO = new MenuItemDAO();
-        initMenuItems();
-        initCollections();
-        for (MenuItem menuItem : items) {
-            menuItemDAO.create(menuItem);
+    public boolean isEquals(Menu menu1, Menu menu2) {
+        if(menu1 == menu2){
+            return true;
         }
-    }
-
-    @Test
-    public void testCreateAndDelete() throws Exception {
-        menu.setId(null);
-        Assert.assertTrue(menuDAO.create(menu));
-        Menu createdMenu = menuDAO.load(menu.getId());
-        Assert.assertTrue(isEquals(menu, createdMenu));
-
-        Assert.assertTrue(menuDAO.delete(menu));
-        Assert.assertTrue(menuDAO.load(menu.getId()) == null);
-    }
-
-    @Test
-    public void testUpdate() throws Exception {
-        menu.setId(null);
-        Assert.assertTrue(menuDAO.create(menu));
-        Timestamp newStartDate = DateUtils.getCurrentTime();
-        Timestamp newEndDate = DateUtils.getNextFridayTime();
-        Menu expectedMenu = new Menu(menu.getId(), "ChangedName", newStartDate, newEndDate, menu.getItems());
-        Assert.assertTrue(menuDAO.update(expectedMenu));
-        Menu actualMenu = menuDAO.load(menu.getId());
-        Assert.assertTrue(isEquals(expectedMenu, actualMenu));
-        Assert.assertTrue(menuDAO.delete(menu));
-    }
-
-    @Test
-    public void testLoadAll() throws Exception {
-        menu.setId(null);
-        Assert.assertTrue(menuDAO.create(menu));
-        Collection<Menu> menus = menuDAO.loadAll();
-        Assert.assertTrue(isEquals(menu, menus.iterator().next()));
-        Assert.assertTrue(menuDAO.loadAll() != null);
-        Assert.assertTrue(menuDAO.delete(menu));
-    }
-
-    @Test
-    public void testLoad() throws Exception {
-        menu.setId(null);
-        Assert.assertTrue(menuDAO.create(menu));
-        Menu actual = menuDAO.load(menu.getId());
-        Assert.assertTrue(isEquals(actual, menu));
-        actual = menuDAO.load(menu.getId() + 1);
-        Assert.assertTrue(actual == null);
-        Assert.assertTrue(menuDAO.delete(menu));
-    }
-
-    @AfterClass
-    public static void deleteUsedDate() throws Exception {
-        for (MenuItem item : items) {
-            Assert.assertTrue(menuItemDAO.delete(item));
-        }
-    }
-
-    private static void initCollections() {
-        HashMap<Weekday, List<MenuItem>> map = new HashMap<Weekday, List<MenuItem>>();
-        List<MenuItem> menuItems = new ArrayList<MenuItem>();
-
-        menuItems.add(items[0]);
-        map.put(Weekday.MONDAY, menuItems);
-        menuItems = new ArrayList<MenuItem>();
-        for (int i = 1; i < items.length; i++) {
-            menuItems.add(items[i]);
-            map.put(Weekday.TUESDAY, menuItems);
-        }
-        menu = new Menu(null, "cafe2", currentDate, futureDate, map);
-    }
-
-    private static void initMenuItems() {
-        items = new MenuItem[5];
-        items[0] = new MenuItem(null, Weekday.MONDAY, "Dish0", 0D);
-        for (int i = 1; i < items.length; i++) {
-            items[i] = new MenuItem(null, Weekday.TUESDAY, "Dish" + Integer.toString(i), (double)(i+1));
-        }
-    }
-
-    private static void initDates() {
-        currentDate = DateUtils.getCurrentMondayTime();
-        futureDate = DateUtils.getCurrentFridayTime();
-    }
-
-    private boolean isEquals(Menu menu1, Menu menu2){
-        try {
-            Assert.assertTrue(menu1.getCafeName().equals(menu2.getCafeName()));
-            Assert.assertTrue(menu1.getId().equals(menu2.getId()));
-            Assert.assertTrue(menu1.getItems().size() == menu2.getItems().size());
-
-            for (int i = 0; i < menu1.getItems().get(Weekday.MONDAY).size(); i++) {
-                MenuItem expectedItem = menu1.getItems().get(Weekday.MONDAY).get(i);
-                MenuItem actualItem = menu2.getItems().get(Weekday.MONDAY).get(i);
-                Assert.assertTrue(expectedItem.getDescription().equals(actualItem.getDescription()));
-                Assert.assertTrue(expectedItem.getCost().equals(actualItem.getCost()));
-                Assert.assertTrue(expectedItem.getId().equals(actualItem.getId()));
-                Assert.assertTrue(expectedItem.getWeekday() == actualItem.getWeekday());
-            }
-
-            for (int i = 0; i < menu1.getItems().get(Weekday.TUESDAY).size(); i++) {
-                MenuItem expectedItem = menu1.getItems().get(Weekday.TUESDAY).get(i);
-                MenuItem actualItem = menu2.getItems().get(Weekday.TUESDAY).get(i);
-                Assert.assertTrue(expectedItem.getDescription().equals(actualItem.getDescription()));
-                Assert.assertTrue(expectedItem.getCost().equals(actualItem.getCost()));
-                Assert.assertTrue(expectedItem.getId().equals(actualItem.getId()));
-                Assert.assertTrue(expectedItem.getWeekday() == actualItem.getWeekday());
-            }
-        } catch (AssertionError assertionError) {
+        if(menu1 == null || menu2 == null){
             return false;
         }
+        if(!menu1.getId().equals(menu2.getId()) || !menu1.getCafeName().equals(menu2.getCafeName()) ||
+                !menu1.getDateEnd().equals(menu2.getDateEnd()) || !menu1.getDateStart().equals(menu2.getDateStart())) {
+            return false;
+        }
+        for(int i = 0;i < 5;i++){ //check items
+            List<MenuItem> thisItems = menu1.getItems().get(Weekday.getWeekday(i + 1));
+            List<MenuItem> menuItems = menu2.getItems().get(Weekday.getWeekday(i + 1));
+            if(thisItems != null || menuItems != null) { //check on null
+                if((thisItems == null && menuItems != null) || (menuItems == null && thisItems != null) || (thisItems.size() != menuItems.size()) || (!thisItems.containsAll(menuItems))){
+                    return false;
+                }
+            }
+        }
         return true;
+    }
+
+    @Before
+    public void setUp() throws Exception {
+        menuDAO = new MenuDAO();
+        menuItemDAO = new MenuItemDAO();
+        date = new Timestamp((new Date()).getTime());
+        menuItem1 = new MenuItem(null, Weekday.MONDAY, "rrrrr", new Double(6.7));
+        menuItem2 = new MenuItem(null, Weekday.TUESDAY, "ttttt", new Double(77));
+        menuItemDAO.create(menuItem1);
+        menuItemDAO.create(menuItem2);
+        menu = new Menu(null, "Josh", new Timestamp(date.getTime() - 1000), new Timestamp(date.getTime() + 1000), new HashMap<Weekday, List<MenuItem>>());
+        menu.addItem(menuItem1);
+        menu.addItem(menuItem2);
+        menuDAO.create(menu);
+    }
+
+    @Test
+    public void testDeleteAndCreate() {
+        try {
+            Assert.assertTrue(menuDAO.delete(menu));
+            Assert.assertTrue(menuDAO.load(menu.getId()) == null);
+            menu.setId(null);
+            Assert.assertTrue(menuDAO.create(menu));
+        } catch (Exception e){
+            Assert.assertTrue(false);
+        }
+    }
+
+    @Test
+    public void testUpdate() {
+        try{
+            menu.getDateEnd().setNanos(0);
+            menu.getDateStart().setNanos(0);
+            Menu updatedMenu = new Menu(menu.getId(), "Amerikano", menu.getDateStart(), menu.getDateEnd(), menu.getItems());// change: cafeName;
+            Assert.assertTrue(menuDAO.update(updatedMenu));
+            menu = menuDAO.load(menu.getId());
+            Assert.assertTrue(isEquals(menu, updatedMenu)); // check update
+        } catch (Exception e){
+            Assert.assertTrue(false);
+        }
+    }
+
+    @Test
+    public void testLoadAll() {
+        try{
+            Collection<Menu> menus = menuDAO.loadAll();
+            Assert.assertTrue(menus != null && menus.size() > 0);
+        } catch (Exception e){
+            Assert.assertTrue(false);
+        }
+    }
+
+    @Test
+    public void testLoad() {
+        try{
+            Menu newMenu = menuDAO.load(menu.getId());
+            menu.getDateStart().setNanos(0);
+            menu.getDateEnd().setNanos(0);
+            if(newMenu == null || !isEquals(menu, newMenu)){
+                throw new Exception();
+            }
+        } catch (Exception e){
+            Assert.assertTrue(false);
+        }
+    }
+
+    @After
+    public void tearDown() throws Exception {
+        menuDAO.delete(menu);
+        menuItemDAO.delete(menuItem1);
+        menuItemDAO.delete(menuItem2);
     }
 }
