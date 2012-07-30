@@ -66,7 +66,7 @@ public class TableOrderPanel extends Panel {
     }
 
     public void createTable(){
-        Collection<Order> orderCollection = OrderService.getAllSorderOrders();
+        Collection<Order> orderCollection = OrderService.getAllSortedOrders();
         ArrayList<String> menuItemOrder;
         int i=1;
         int k=1;

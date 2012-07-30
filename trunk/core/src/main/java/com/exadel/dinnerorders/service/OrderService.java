@@ -21,7 +21,7 @@ public class OrderService {
         return orderOrdering.reverse().sortedCopy(orders);
     }
 
-    public static Collection<Order> getAllSorderOrders() {
+    public static Collection<Order> getAllSortedOrders() {
         OrderDAO orderDAO = new OrderDAO();
         Collection<Order> ordersSorted = orderDAO.loadAll();
         if (ordersSorted != null) {
