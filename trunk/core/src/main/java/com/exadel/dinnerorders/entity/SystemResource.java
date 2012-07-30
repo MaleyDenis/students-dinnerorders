@@ -22,7 +22,12 @@ public enum SystemResource {
     MONGODB_PORT("mongoDatabasePort"),
     MONGODB_NAME("mongoDatabaseName"),
     MONGODB_LOGIN("mongoDatabaseLogin"),
-    MONGODB_PASSWORD("mongoDatabasePass");
+    MONGODB_PASSWORD("mongoDatabasePass"),
+
+    DELETION_SERVICE_START_DELAY("initialDelay"),
+    DELETION_SERVICE_INTERVAL_DELAY("intervalDelay"),
+    TIME_UNIT("timeUnit"),
+    ELAPSED_TIME("elapsedTimeForDeletion");
 
 
     public String getValue() {

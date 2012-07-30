@@ -4,6 +4,7 @@ import com.exadel.dinnerorders.dao.MenuDAO;
 import com.exadel.dinnerorders.dao.MenuItemDAO;
 import com.exadel.dinnerorders.entity.Menu;
 import com.exadel.dinnerorders.entity.MenuItem;
+import com.exadel.dinnerorders.entity.Weekday;
 import com.exadel.dinnerorders.exception.WorkflowException;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Collections2;
@@ -11,6 +12,7 @@ import org.apache.log4j.Logger;
 
 import javax.annotation.Nullable;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
@@ -67,7 +69,21 @@ public class MenuService {
 
     public static boolean update(Menu newMenu){
         MenuDAO menuDAO = new MenuDAO();
-        menuDAO.update(newMenu);
-        return true;
+        return menuDAO.update(newMenu);
+    }
+
+    public static boolean delete(Menu menu){
+        MenuDAO menuDAO = new MenuDAO();
+        List<MenuItem> menuItems = new ArrayList<MenuItem>();
+        for (int i = 1; i <= DateUtils.DEFAULT_WORK_DAYS; i++) {
+            if (menu.getItems().get(Weekday.getWeekday(i)) != null) {
+                menuItems.addAll(menu.getItems().get(Weekday.getWeekday(i)));
+            }
+        }
+        MenuItemDAO menuItemDAO = new MenuItemDAO();
+        for (MenuItem menuItem : menuItems) {
+            menuItemDAO.delete(menuItem);
+        }
+        return menuDAO.delete(menu);
     }
 }
