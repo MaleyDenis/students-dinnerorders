@@ -14,6 +14,8 @@ import com.google.common.eventbus.Subscribe;
 import com.vaadin.terminal.Sizeable;
 import com.vaadin.ui.*;
 
+import java.util.Collection;
+
 public class WebApplicationController extends com.vaadin.Application {
     private EventBus eventBus = Application.getInstance().getEventBus();
     private Layout welcomeLayout;
@@ -70,23 +72,23 @@ public class WebApplicationController extends com.vaadin.Application {
 
     @Subscribe
     public void currentWeekMenuSelected(ShowCurrentWeekMenuEvent cwmEvent) {
-        Menu currentWeek = MenuService.findMenuForCurrentWeek();
-        if (currentWeek == null) {
+        Collection<Menu> currentWeek = MenuService.findMenuForCurrentWeek();
+        if (currentWeek == null || currentWeek.isEmpty()) {
             getMainWindow().showNotification("Sorry,", "no any meny for this week available", Window.Notification.TYPE_HUMANIZED_MESSAGE);
             return;
         }
-        CurrentWeekMenuPanel currentWeekMenuPanel = new CurrentWeekMenuPanel(currentWeek);
+        CurrentWeekMenuPanel currentWeekMenuPanel = new CurrentWeekMenuPanel(currentWeek.iterator().next());
         replaceCentralPanel(currentWeekMenuPanel);
     }
 
     @Subscribe
     public void nextWeekMenuSelected(ShowNextWeekMenuEvent nwmEvent){
-        Menu nextWeek = MenuService.findMenuForNextWeek();
-        if (nextWeek == null) {
+        Collection<Menu> nextWeek = MenuService.findMenuForNextWeek();
+        if (nextWeek == null || nextWeek.isEmpty()) {
             getMainWindow().showNotification("Sorry,", "no any meny for next week available", Window.Notification.TYPE_HUMANIZED_MESSAGE);
             return;
         }
-        CurrentWeekMenuPanel currentWeekMenuPanel = new CurrentWeekMenuPanel(nextWeek);
+        CurrentWeekMenuPanel currentWeekMenuPanel = new CurrentWeekMenuPanel(nextWeek.iterator().next());
         replaceCentralPanel(currentWeekMenuPanel);
     }
 

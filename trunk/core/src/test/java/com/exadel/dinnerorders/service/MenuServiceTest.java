@@ -45,7 +45,7 @@ public class MenuServiceTest {
         Timestamp date = DateUtils.getCurrentTime();
         Menu menu;
         try {
-            menu = MenuService.findMenuByDate(date);
+            menu = MenuService.findMenuByDate(date).iterator().next();
         } catch (WorkflowException wfException) {
             return;
         }
@@ -65,7 +65,7 @@ public class MenuServiceTest {
     public void testFindMenuForNextWeek() {
         Menu menu;
         try {
-            menu = MenuService.findMenuForNextWeek();
+            menu = MenuService.findMenuForNextWeek().iterator().next();
         } catch (WorkflowException wfException) {
             return;
         }
@@ -85,7 +85,7 @@ public class MenuServiceTest {
     public void testFindMenuForCurrentWeek() {
         Menu menu;
         try {
-            menu = MenuService.findMenuForCurrentWeek();
+            menu = MenuService.findMenuForCurrentWeek().iterator().next();
         } catch (WorkflowException wfException) {
             return;
         }

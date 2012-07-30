@@ -5,6 +5,7 @@ import com.exadel.dinnerorders.entity.Order;
 import com.exadel.dinnerorders.entity.SystemResource;
 
 import java.sql.Timestamp;
+import java.util.Collection;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -15,6 +16,8 @@ public class DatabaseCleaningService {
     private TimeUnit unit;
     private long elapsedTime;
     private ScheduledExecutorService service;
+    private int initialDelay;
+    private ClearTableTask clearTableTask;
 
     public DatabaseCleaningService() {
         this.startDelay = Long.parseLong(Configuration.getProperty(SystemResource.DELETION_SERVICE_START_DELAY));
@@ -25,22 +28,43 @@ public class DatabaseCleaningService {
     }
 
     public void start() {
-        service.scheduleAtFixedRate(new ClearTableTask(), startDelay, intervalDelay, unit);
+        clearTableTask = new ClearTableTask();
+        service.scheduleAtFixedRate(clearTableTask, startDelay, intervalDelay, unit);
+    }
+
+    public int getInitialDelay() {
+        return initialDelay;
+    }
+
+    public void stop() {
+        service.shutdown();
+    }
+
+    public void setStartDelay(long startDelay) {
+        this.startDelay = startDelay;
     }
 
     private class ClearTableTask implements Runnable {
+        private boolean alreadyOnceCleared = false;
+
         @Override
         public void run() {
             clearOrderTable();
             clearMenuTable();
+            alreadyOnceCleared = true;
+        }
+
+        public boolean isAlreadyOnceCleared() {
+            return alreadyOnceCleared;
         }
     }
 
     private void clearMenuTable() {
         Timestamp deletionDate = DateUtils.getCurrentMondayTime();
         deletionDate.setTime(deletionDate.getTime() - elapsedTime);
-        Menu menu = MenuService.findMenuByDate(deletionDate);
-        if (menu != null) {
+        Collection<Menu> menus = MenuService.findMenuByDate(deletionDate);
+        if (menus != null) {
+            for (Menu menu : menus)
             MenuService.delete(menu);
         }
     }
@@ -52,5 +76,16 @@ public class DatabaseCleaningService {
         if (order != null) {
             OrderService.deleteOrder(order);
         }
+    }
+
+    public void setIntervalDelay(long intervalDelay) {
+        this.intervalDelay = intervalDelay;
+        service.shutdownNow();
+        clearTableTask = new ClearTableTask();
+        service.scheduleAtFixedRate(clearTableTask, startDelay, intervalDelay, unit);
+    }
+
+    public boolean isAlreadyOnceCleared(){
+        return clearTableTask.isAlreadyOnceCleared();
     }
 }

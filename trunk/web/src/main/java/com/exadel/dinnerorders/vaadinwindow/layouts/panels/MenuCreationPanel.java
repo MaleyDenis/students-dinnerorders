@@ -15,6 +15,7 @@ import com.vaadin.terminal.ExternalResource;
 import com.vaadin.ui.*;
 
 import java.sql.Timestamp;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -130,18 +131,28 @@ public class MenuCreationPanel extends Panel {
 
     private boolean saveMenu(Menu menu) {
         Timestamp searchingDate = new Timestamp(menu.getDateStart().getTime());
-        Menu loaded = MenuService.findMenuByDate(searchingDate);
-        if (loaded == null || !loaded.getCafeName().equals(menu.getCafeName())) {
+        Collection<Menu> loaded = MenuService.findMenuByDate(searchingDate);
+        Menu existed = isNewMenu(menu, loaded);
+        if (existed == null) {
             return MenuService.save(menu);
         } else {
-            Map <Weekday, List<MenuItem>> alreadyExisted = loaded.getItems();
+            Map <Weekday, List<MenuItem>> alreadyExisted = existed.getItems();
             for ( int i = 0 ; i < alreadyExisted.size(); i++) {
-                List existedList = loaded.getItems().get(Weekday.getWeekday(i+1));
+                List existedList = existed.getItems().get(Weekday.getWeekday(i+1));
                 menu.getItems().get(Weekday.getWeekday(i+1)).addAll(existedList);
             }
-            menu.setId(loaded.getId());
+            menu.setId(existed.getId());
             return MenuService.update(menu);
         }
+    }
+
+    private Menu isNewMenu(Menu menu, Collection<Menu> loaded) {
+        for (Menu loadedMenu : loaded) {
+            if (!loadedMenu.getCafeName().equals(menu.getCafeName())) {
+                return loadedMenu;
+            }
+        }
+        return null;
     }
 
     private void showInformationMessage(boolean result) {
