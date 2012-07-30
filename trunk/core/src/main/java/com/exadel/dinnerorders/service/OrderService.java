@@ -36,7 +36,7 @@ public class OrderService {
         return ordersSorted;
     }
 
-    private static Order findOrderByDate(final Date date){
+    public static Order findOrderByDate(final Date date){
         Predicate<Order> predicate = new Predicate<Order>() {
             public boolean apply(@Nullable Order  order) {
                 return order != null &&
@@ -56,7 +56,7 @@ public class OrderService {
         return result.iterator().next();
     }
 
-    private static boolean deleteOrder(Order order){
+    public static boolean deleteOrder(Order order){
         return orderDAO.delete(order);
     }
 }
