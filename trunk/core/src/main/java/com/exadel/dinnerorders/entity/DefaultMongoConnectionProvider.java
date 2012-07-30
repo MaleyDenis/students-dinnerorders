@@ -17,7 +17,7 @@ public class DefaultMongoConnectionProvider implements DefaultMongoProvider {
     public DB connection() {
         try {
             Mongo mongo = new Mongo(Configuration.getProperty(SystemResource.MONGODB_HOST),
-                    Integer.parseInt(Configuration.getProperty(SystemResource.MONGODB_PORT)));
+                    Integer.valueOf(Configuration.getProperty(SystemResource.MONGODB_PORT)));
             return mongo.getDB(Configuration.getProperty(SystemResource.MONGODB_NAME));
         } catch (UnknownHostException e) {
             logger.error("Unknown host '" + Configuration.getProperty(SystemResource.MONGODB_HOST) + "'");
