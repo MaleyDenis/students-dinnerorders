@@ -47,9 +47,11 @@ public class DateUtils {
         int firstDayOfWeek = calendar.getFirstDayOfWeek();
         int elapsedDays = calendar.get(Calendar.DAY_OF_WEEK) - firstDayOfWeek;
         calendar.setTimeInMillis(System.currentTimeMillis() - elapsedDays * MILLISECONDS_IN_DAY);
+        calendar.set(Calendar.AM_PM, 0);
         calendar.set(Calendar.HOUR, 0);
         calendar.set(Calendar.MINUTE, 0);
-        calendar.set(Calendar.SECOND, 1);
+        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MILLISECOND, 0);
         return new Timestamp(calendar.getTimeInMillis());
     }
 
@@ -60,6 +62,7 @@ public class DateUtils {
         calendar.set(Calendar.HOUR, 23);
         calendar.set(Calendar.MINUTE, 59);
         calendar.set(Calendar.SECOND, 59);
+        calendar.set(Calendar.MILLISECOND, 999);
         return new Timestamp(calendar.getTimeInMillis());
     }
 

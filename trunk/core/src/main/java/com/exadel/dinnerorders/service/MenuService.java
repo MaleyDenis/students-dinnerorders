@@ -22,20 +22,22 @@ public class MenuService {
 
     public static Menu findMenuForNextWeek() {
         final Timestamp nextMondayDate = DateUtils.getNextMondayTime();
-        long availableTime = nextMondayDate.getTime() + DateUtils.MILLISECONDS_IN_SECOND;
+        long availableTime = nextMondayDate.getTime();
         return findMenuByDate(new Timestamp(availableTime));
     }
 
     public static Menu findMenuForCurrentWeek(){
         final Timestamp currentMondayDate = DateUtils.getCurrentMondayTime();
-        long availableTime = currentMondayDate.getTime() + DateUtils.MILLISECONDS_IN_SECOND;
+        long availableTime = currentMondayDate.getTime();
         return findMenuByDate(new Timestamp(availableTime));
     }
 
     public static Menu findMenuByDate(final Date date){
         Predicate<Menu> predicate = new Predicate<Menu>() {
             public boolean apply(@Nullable Menu o) {
-                return o != null && o.getDateStart().before(date) && o.getDateEnd().after(date);
+                return o != null &&
+                        (o.getDateStart().before(date) || o.getDateStart().equals(date)) &&
+                        (o.getDateEnd().after(date) || o.getDateEnd().equals(date));
             }
         };
         Collection<Menu> result =  Collections2.filter(menuDAO.loadAll(), predicate);

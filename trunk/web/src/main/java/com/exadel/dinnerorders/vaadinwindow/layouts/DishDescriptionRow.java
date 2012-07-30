@@ -129,9 +129,12 @@ public class DishDescriptionRow extends GridLayout {
     }
 
     public boolean checkData() {
+        if (skipBox.booleanValue()) {
+            return skipBox.booleanValue();
+        }
         boolean isDishNameValid = checkDishName();
         boolean isCostValid = checkCost();
-        return skipBox.booleanValue() || (isDishNameValid && isCostValid);
+        return isDishNameValid && isCostValid;
     }
 
     private boolean checkDishName() {
