@@ -3,7 +3,7 @@ package com.exadel.dinnerorders.dao;
 import com.exadel.dinnerorders.entity.DbConnection;
 import com.exadel.dinnerorders.entity.Role;
 import com.exadel.dinnerorders.entity.User;
-import com.exadel.dinnerorders.service.DefaultConnectionProvider;
+import com.exadel.dinnerorders.entity.DefaultMysqlConnectionProvider;
 import org.apache.log4j.Logger;
 
 import java.sql.Connection;
@@ -18,7 +18,7 @@ import java.util.Collection;
  * User: Dima Shulgin
  * Date: 17.07.12
  */
-@DbConnection(connectionType = DefaultConnectionProvider.class)
+@DbConnection(connectionType = DefaultMysqlConnectionProvider.class)
 public class UserDAO extends BaseDAO<User> {
 
     private Logger logger = Logger.getLogger(UserDAO.class);
@@ -33,7 +33,7 @@ public class UserDAO extends BaseDAO<User> {
      * @return true | false.
      */
     public boolean create(User newItem) {
-        Connection connection = connection(this);
+        Connection connection = getConnection(this);
         try {
 
             PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO user (ID,LDAPLOGIN,USERNAME,ROLE) VALUES(?, ?, ?, ?);");
@@ -61,7 +61,7 @@ public class UserDAO extends BaseDAO<User> {
 
     public boolean update(User item) {
 
-        Connection connection = connection(this);
+        Connection connection = getConnection(this);
         PreparedStatement preparedStatement = null;
         try {
             preparedStatement = connection.prepareStatement("UPDATE  user  SET  LDAPLOGIN = ? , USERNAME= ?, ROLE= ?  WHERE ID = ?");
@@ -88,7 +88,7 @@ public class UserDAO extends BaseDAO<User> {
 
     public boolean delete(User item) {
 
-        Connection connection = connection(this);
+        Connection connection = getConnection(this);
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(("DELETE FROM user WHERE ID =  ?"));
             preparedStatement.setLong(1, item.getId());
@@ -102,7 +102,7 @@ public class UserDAO extends BaseDAO<User> {
     }
 
     public User load(Long id) {
-        Connection connection = connection(this);
+        Connection connection = getConnection(this);
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(("SELECT * FROM user WHERE ID =  ?;"));
             preparedStatement.setLong(1, id);
@@ -120,7 +120,7 @@ public class UserDAO extends BaseDAO<User> {
     }
 
     public Collection<User> loadAll() {
-        Connection connection = connection(this);
+        Connection connection = getConnection(this);
         Collection<User> users = new ArrayList<User>();
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(("SELECT * FROM user"));

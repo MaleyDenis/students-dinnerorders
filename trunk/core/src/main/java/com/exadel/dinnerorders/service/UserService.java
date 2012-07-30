@@ -19,7 +19,7 @@ import java.util.Collection;
 public class UserService {
     private static UserDAO userDAO = new UserDAO();
 
-    public static User create(String ldapUsername) throws InstantiationException, IllegalAccessException {
+    public static User create(String ldapUsername)  {
         User user = new User();
         user.setUserName(ldapUsername);
         user.setRole(Role.USER);
@@ -29,11 +29,11 @@ public class UserService {
         return user;
     }
 
-    private static Collection<User> getAllUsers() throws InstantiationException, IllegalAccessException {
+    private static Collection<User> getAllUsers()  {
         return userDAO.loadAll();
     }
 
-    public static Collection<User> loadAllUsersFromLdap() throws InstantiationException, IllegalAccessException {
+    public static Collection<User> loadAllUsersFromLdap()  {
         Collection<String> userNames = new LdapService().loadAll();
         Collection<User> users = new ArrayList<User>();
         for (String userName : userNames) {
@@ -43,7 +43,7 @@ public class UserService {
         return users;
     }
 
-    public static User findUserByUserName(final String ldapUsername) throws IllegalAccessException, InstantiationException {
+    public static User findUserByUserName(final String ldapUsername)  {
 
         Collection<User> users = getAllUsers();
         Iterable<User> iterables = Iterables.filter(users, new Predicate<User>() {
@@ -63,12 +63,12 @@ public class UserService {
         }
     }
 
-    public static User findUserByID(final Long id) throws InstantiationException, IllegalAccessException {
+    public static User findUserByID(final Long id)  {
         return userDAO.load(id);
 
     }
 
-    public static Collection<User> loadAllUsersFromDB() throws InstantiationException, IllegalAccessException {
+    public static Collection<User> loadAllUsersFromDB()  {
         return userDAO.loadAll();
     }
 }
