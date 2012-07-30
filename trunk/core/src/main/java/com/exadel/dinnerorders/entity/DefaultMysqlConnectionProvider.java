@@ -26,8 +26,6 @@ public class DefaultMysqlConnectionProvider implements MysqlConnectionProvider {
             String login = Configuration.getProperty(SystemResource.DATABASE_LOGIN);
             String password = Configuration.getProperty(SystemResource.DATABASE_PASSWORD);
 
-            logger.debug("URL: " + url + "; Login: " + login + "; Password: " + password + ";");
-
             connection = DriverManager.getConnection(url, login, password);
         } catch (ClassNotFoundException e) {
             logger.error("BaseDAO: class has not been found.", e);
