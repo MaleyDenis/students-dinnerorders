@@ -5,7 +5,6 @@ import com.exadel.dinnerorders.dao.MenuItemDAO;
 import com.exadel.dinnerorders.entity.Menu;
 import com.exadel.dinnerorders.entity.MenuItem;
 import com.exadel.dinnerorders.entity.Weekday;
-import com.exadel.dinnerorders.exception.WorkflowException;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Collections2;
 import org.apache.log4j.Logger;
@@ -22,19 +21,19 @@ public class MenuService {
 
     private static MenuDAO menuDAO = new MenuDAO();
 
-    public static Menu findMenuForNextWeek() {
+    public static Collection<Menu> findMenuForNextWeek() {
         final Timestamp nextMondayDate = DateUtils.getNextMondayTime();
         long availableTime = nextMondayDate.getTime();
         return findMenuByDate(new Timestamp(availableTime));
     }
 
-    public static Menu findMenuForCurrentWeek(){
+    public static Collection<Menu> findMenuForCurrentWeek(){
         final Timestamp currentMondayDate = DateUtils.getCurrentMondayTime();
         long availableTime = currentMondayDate.getTime();
         return findMenuByDate(new Timestamp(availableTime));
     }
 
-    public static Menu findMenuByDate(final Date date){
+    public static Collection<Menu> findMenuByDate(final Date date){
         Predicate<Menu> predicate = new Predicate<Menu>() {
             public boolean apply(@Nullable Menu o) {
                 return o != null &&
@@ -44,15 +43,15 @@ public class MenuService {
         };
         Collection<Menu> result =  Collections2.filter(menuDAO.loadAll(), predicate);
 
-        if (result.size() > 1) {
-            throw new WorkflowException();
-        }
+//        if (result.size() > 1) {
+//            throw new WorkflowException();
+//        }
 
         if (result.isEmpty()) {
             return null;
         }
 
-        return result.iterator().next();
+        return result;
     }
 
     public static boolean save(Menu newMenu){
