@@ -2,7 +2,7 @@ package com.exadel.dinnerorders.dao;
 
 import com.exadel.dinnerorders.entity.Role;
 import com.exadel.dinnerorders.entity.User;
-import com.exadel.dinnerorders.service.DefaultConnectionProvider;
+import com.exadel.dinnerorders.entity.DefaultMysqlConnectionProvider;
 import com.exadel.dinnerorders.service.UserService;
 import junit.framework.Assert;
 import org.junit.Test;
@@ -98,7 +98,7 @@ public class UserDAOTest {
         new UserDAO(){
               public void deleteRows() throws InstantiationException, IllegalAccessException {
 
-                    Connection connection = new DefaultConnectionProvider().connection();
+                    Connection connection = new DefaultMysqlConnectionProvider().connection();
 
                     PreparedStatement preparedStatement = null;
                     try {

@@ -1,7 +1,7 @@
-package com.exadel.dinnerorders.service;
+package com.exadel.dinnerorders.entity;
 
-import com.exadel.dinnerorders.entity.ConnectionProvider;
-import com.exadel.dinnerorders.entity.SystemResource;
+import com.exadel.dinnerorders.exception.WorkflowException;
+import com.exadel.dinnerorders.service.Configuration;
 import org.apache.log4j.Logger;
 
 import java.sql.Connection;
@@ -12,10 +12,10 @@ import java.sql.SQLException;
  * User: Dima Shulgin
  * Date: 25.07.12
  */
-public class DefaultConnectionProvider implements ConnectionProvider {
-    private static Logger logger = Logger.getLogger(DefaultConnectionProvider.class);
+public class DefaultMysqlConnectionProvider implements MysqlConnectionProvider {
+    private static Logger logger = Logger.getLogger(DefaultMysqlConnectionProvider.class);
 
-    public   Connection connection() {
+    public Connection connection() {
         Connection connection = null;
         try {
             Class.forName("com.mysql.jdbc.Driver");
@@ -31,8 +31,10 @@ public class DefaultConnectionProvider implements ConnectionProvider {
             connection = DriverManager.getConnection(url, login, password);
         } catch (ClassNotFoundException e) {
             logger.error("BaseDAO: class has not been found.", e);
+            throw new WorkflowException(e);
         } catch (SQLException e) {
-            logger.error("BaseDAO: connection has failed.", e);
+            logger.error("BaseDAO: getConnection has failed.", e);
+            throw new WorkflowException(e);
         }
         return connection;
     }

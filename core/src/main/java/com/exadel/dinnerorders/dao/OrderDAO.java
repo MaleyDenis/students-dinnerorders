@@ -1,7 +1,7 @@
 package com.exadel.dinnerorders.dao;
 
 import com.exadel.dinnerorders.entity.*;
-import com.exadel.dinnerorders.service.DefaultConnectionProvider;
+import com.exadel.dinnerorders.entity.DefaultMysqlConnectionProvider;
 import org.apache.log4j.Logger;
 
 import java.sql.*;
@@ -10,12 +10,12 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
-@DbConnection(connectionType=DefaultConnectionProvider.class)
+@DbConnection(connectionType=DefaultMysqlConnectionProvider.class)
 public class OrderDAO extends BaseDAO<Order> {
     private final Logger logger = Logger.getLogger(OrderDAO.class);
 
     public boolean create(Order orderItem)  {
-        Connection connection = connection(this);
+        Connection connection = getConnection(this);
         try {
             if (connection != null && orderItem.getId() == null){
                 PreparedStatement pst = connection.prepareStatement
@@ -49,7 +49,7 @@ public class OrderDAO extends BaseDAO<Order> {
     }
 
     public boolean update(Order item) {
-        Connection connection = connection(this);
+        Connection connection = getConnection(this);
         Double cost;
         Date datePayment;
         try {
@@ -75,7 +75,7 @@ public class OrderDAO extends BaseDAO<Order> {
     }
 
     public boolean delete(Order item)  {
-        Connection connection = connection(this);
+        Connection connection = getConnection(this);
         try {
             if (connection != null){
                 PreparedStatement preparedStatement = connection.prepareStatement
@@ -100,7 +100,7 @@ public class OrderDAO extends BaseDAO<Order> {
     }
 
     private void deleteFromOrderItemsTable(Order item) throws InstantiationException, IllegalAccessException {
-        Connection connection = connection(this);
+        Connection connection = getConnection(this);
         PreparedStatement preparedStatement;
         try {
             preparedStatement = connection.prepareStatement
@@ -119,7 +119,7 @@ public class OrderDAO extends BaseDAO<Order> {
         Order order;
         List<Order> orders = new ArrayList<Order>();
         List<MenuItem> menuItems;
-        Connection connection = connection(this);
+        Connection connection = getConnection(this);
         try {
             Statement statement = connection.createStatement();
             ResultSet resultSet = statement.executeQuery("SELECT * FROM dinnerorders.order");
@@ -174,7 +174,7 @@ public class OrderDAO extends BaseDAO<Order> {
     }
 
     public Order load(Long id)   {
-        Connection connection = connection(this);
+        Connection connection = getConnection(this);
         Order order = null;
         try {
             PreparedStatement preparedStatement = connection.prepareStatement

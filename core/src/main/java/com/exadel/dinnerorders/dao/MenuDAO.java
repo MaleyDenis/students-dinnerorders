@@ -1,7 +1,7 @@
 package com.exadel.dinnerorders.dao;
 
 import com.exadel.dinnerorders.entity.*;
-import com.exadel.dinnerorders.service.DefaultConnectionProvider;
+import com.exadel.dinnerorders.entity.DefaultMysqlConnectionProvider;
 import org.apache.log4j.Logger;
 
 import java.sql.*;
@@ -10,12 +10,12 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 
-@DbConnection(connectionType=DefaultConnectionProvider.class)
+@DbConnection(connectionType=DefaultMysqlConnectionProvider.class)
 public class MenuDAO extends BaseDAO<Menu> {
     private Logger logger = Logger.getLogger(MenuDAO.class);
 
     public boolean create(Menu newItem) {
-        Connection connection = connection(this);
+        Connection connection = getConnection(this);
         if (connection != null && newItem.getId() == null) {
             try {
                 PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO menu VALUES(?, ?, ?, ?);");
@@ -46,7 +46,7 @@ public class MenuDAO extends BaseDAO<Menu> {
     }
 
     public boolean update(Menu item) {
-        Connection connection = connection(this);
+        Connection connection = getConnection(this);
         boolean result = false;
         if (connection != null) {
             try {
@@ -69,7 +69,7 @@ public class MenuDAO extends BaseDAO<Menu> {
     }
 
     public boolean delete(Menu item) {
-        Connection connection = connection(this);
+        Connection connection = getConnection(this);
         if (connection != null) {
             try {
                 PreparedStatement preparedStatement =  connection.prepareStatement("DELETE FROM menu WHERE menu_id =?;");
@@ -90,7 +90,7 @@ public class MenuDAO extends BaseDAO<Menu> {
 
     public Menu load(Long id){
         Menu menu = null;
-        Connection connection = connection(this);
+        Connection connection = getConnection(this);
         if (connection != null) {
             try {
                 PreparedStatement menuStatement =  connection.prepareStatement("SELECT * FROM menu WHERE menu_id = ?;");
@@ -118,7 +118,7 @@ public class MenuDAO extends BaseDAO<Menu> {
     }
 
     public Collection<Menu> loadAll() {
-        Connection connection = connection(this);
+        Connection connection = getConnection(this);
         Collection<Menu> menus = new ArrayList<Menu>();
         if (connection != null) {
             try {

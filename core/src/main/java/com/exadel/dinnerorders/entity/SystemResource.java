@@ -5,16 +5,25 @@ public enum SystemResource {
     PORT("port"),
     LOGIN("login"),
     PASSWORD("password"),
-    DATABASE_HOST("databaseHost"),
-    DATABASE_PORT("databasePort"),
-    DATABASE_NAME("databaseName"),
-    DATABASE_LOGIN("databaseLogin"),
-    DATABASE_PASSWORD("databasePass"),
+
+    DATABASE_HOST("mysqlDatabaseHost"),
+    DATABASE_PORT("mysqlDatabasePort"),
+    DATABASE_NAME("mysqlDatabaseName"),
+    DATABASE_LOGIN("mysqlDatabaseLogin"),
+    DATABASE_PASSWORD("mysqlDatabasePass"),
+
     LDAP_HOST("ldapHost"),
     LDAP_SEARCHING_ATTRIBUTES("ldapSearchingAttributes"),
     LDAP_SEARCHING_FILTER("ldapSearchingFilter"),
     LDAP_SEARCHING_START_BASE("ldapSearchingStartBase"),
-    LDAP_AUTHENTICATION_TYPE ("ldapAuthenticationType");
+    LDAP_AUTHENTICATION_TYPE ("ldapAuthenticationType"),
+
+    MONGODB_HOST("mongoDatabaseHost"),
+    MONGODB_PORT("mongoDatabasePort"),
+    MONGODB_NAME("mongoDatabaseName"),
+    MONGODB_LOGIN("mongoDatabaseLogin"),
+    MONGODB_PASSWORD("mongoDatabasePass");
+
 
     public String getValue() {
         return value;
