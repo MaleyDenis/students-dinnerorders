@@ -63,4 +63,48 @@ public class Menu {
             menuForDay.add(newItem);
         }
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o){
+            return true;
+        }
+        if (o == null || this.getClass() != o.getClass()){
+            return false;
+        }
+        Menu menu = (Menu) o;
+        if (!cafeName.equals(menu.cafeName)){
+            return false;
+        }
+        if (!dateEnd.equals(menu.dateEnd)){
+            return false;
+        }
+        if (!dateStart.equals(menu.dateStart)){
+            return false;
+        }
+        if (!id.equals(menu.id)){
+            return false;
+        }
+        for(int i = 0;i < 7;i++){ //check items
+            List<MenuItem> thisItems = this.getItems().get(Weekday.getWeekday(i + 1));
+            List<MenuItem> menuItems = menu.getItems().get(Weekday.getWeekday(i + 1));
+            if(thisItems != null || menuItems != null) { //check on null
+                if((thisItems == null && menuItems != null) || (menuItems == null && thisItems != null) ||
+                        (!thisItems.equals(menuItems))){
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = id.hashCode();
+        result = 31 * result + cafeName.hashCode();
+        result = 31 * result + dateStart.hashCode();
+        result = 31 * result + dateEnd.hashCode();
+        result = 31 * result + items.hashCode();
+        return result;
+    }
 }

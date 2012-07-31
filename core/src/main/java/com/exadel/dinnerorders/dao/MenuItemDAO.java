@@ -17,7 +17,7 @@ import java.util.Collection;
  * User: Василий Силин
  * Date: 16.7.12
  */
-@DbConnection(connectionType=DefaultMysqlConnectionProvider.class)
+@DbConnection(connectionType = DefaultMysqlConnectionProvider.class)
 public class MenuItemDAO extends BaseDAO<MenuItem> {
     private Logger logger = Logger.getLogger(MenuItemDAO.class);
 
