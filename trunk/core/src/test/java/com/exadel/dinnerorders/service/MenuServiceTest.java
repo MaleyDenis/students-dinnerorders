@@ -68,6 +68,7 @@ public class MenuServiceTest extends TestCase {
     public void testDeleteAndSave() {
         try {
             MenuService.delete(currentMenu);
+            Assert.assertTrue(menuDAO.load(currentMenu.getId()) == null);
             currentMenu.setId(null);
             menuItem1.setId(null);
             menuItem2.setId(null);
