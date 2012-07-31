@@ -14,6 +14,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.sql.Timestamp;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 
@@ -54,7 +55,8 @@ public class MenuServiceTest extends TestCase {
     public void testFindMenuByDate() {
         try {
             Timestamp date = new Timestamp((long)134262 * 10000000 + 2791664 + 2000);
-            Menu menu = MenuService.findMenuByDate(date);
+            Collection<Menu> menus = MenuService.findMenuByDate(date);
+            Menu menu = menus.iterator().next();
             Assert.assertTrue(menu != null);
             Assert.assertTrue(menu.equals(currentMenu));
         } catch (Exception e) {
@@ -63,12 +65,9 @@ public class MenuServiceTest extends TestCase {
     }
 
     @Test
-    public void testSave() {
+    public void testDeleteAndSave() {
         try {
-            menuDAO.delete(currentMenu);
-            menuItemDAO.delete(menuItem1);
-            menuItemDAO.delete(menuItem2);
-            menuItemDAO.delete(menuItem3);
+            MenuService.delete(currentMenu);
             currentMenu.setId(null);
             menuItem1.setId(null);
             menuItem2.setId(null);
