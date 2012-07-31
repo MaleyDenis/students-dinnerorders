@@ -74,4 +74,8 @@ public class MenuService {
         }
         return menuDAO.delete(menu);
     }
+
+    public static boolean update(Menu newMenu){
+        return menuDAO.update(newMenu);
+    }
 }
