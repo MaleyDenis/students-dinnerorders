@@ -82,6 +82,20 @@ public class MenuServiceTest extends TestCase {
         }
     }
 
+    @Test
+    public void testUpdate() {
+        try{
+            Menu updatedMenu = new Menu(currentMenu.getId(), "jjjjjj", currentMenu.getDateStart(), currentMenu.getDateEnd(), currentMenu.getItems());
+            MenuService.update(updatedMenu);
+            currentMenu = menuDAO.load(currentMenu.getId());
+            if(currentMenu == null || !currentMenu.equals(updatedMenu)){
+                throw new Exception();
+            }
+        } catch (Exception e) {
+            Assert.assertTrue(false);
+        }
+    }
+
     @After
     public void tearDown() throws Exception {
         menuDAO.delete(currentMenu);
