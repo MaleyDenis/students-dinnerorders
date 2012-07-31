@@ -12,6 +12,7 @@ import java.sql.SQLException;
  * User: Dima Shulgin
  * Date: 25.07.12
  */
+
 public class DefaultMysqlConnectionProvider implements MysqlConnectionProvider {
     private static Logger logger = Logger.getLogger(DefaultMysqlConnectionProvider.class);
 

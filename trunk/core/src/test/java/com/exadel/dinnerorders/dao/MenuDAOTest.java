@@ -26,29 +26,6 @@ public class MenuDAOTest {
     private MenuItem menuItem2;
     private Timestamp date;
 
-    public boolean isEquals(Menu menu1, Menu menu2) {
-        if(menu1 == menu2){
-            return true;
-        }
-        if(menu1 == null || menu2 == null){
-            return false;
-        }
-        if(!menu1.getId().equals(menu2.getId()) || !menu1.getCafeName().equals(menu2.getCafeName()) ||
-                !menu1.getDateEnd().equals(menu2.getDateEnd()) || !menu1.getDateStart().equals(menu2.getDateStart())) {
-            return false;
-        }
-        for(int i = 0;i < 5;i++){ //check items
-            List<MenuItem> thisItems = menu1.getItems().get(Weekday.getWeekday(i + 1));
-            List<MenuItem> menuItems = menu2.getItems().get(Weekday.getWeekday(i + 1));
-            if(thisItems != null || menuItems != null) { //check on null
-                if((thisItems == null && menuItems != null) || (menuItems == null && thisItems != null) || (thisItems.size() != menuItems.size()) || (!thisItems.containsAll(menuItems))){
-                    return false;
-                }
-            }
-        }
-        return true;
-    }
-
     @Before
     public void setUp() throws Exception {
         menuDAO = new MenuDAO();
@@ -84,7 +61,9 @@ public class MenuDAOTest {
             Menu updatedMenu = new Menu(menu.getId(), "Amerikano", menu.getDateStart(), menu.getDateEnd(), menu.getItems());// change: cafeName;
             Assert.assertTrue(menuDAO.update(updatedMenu));
             menu = menuDAO.load(menu.getId());
-            Assert.assertTrue(isEquals(menu, updatedMenu)); // check update
+            if(menu == null || !menu.equals(updatedMenu)) { // check update
+                throw new Exception();
+            }
         } catch (Exception e){
             Assert.assertTrue(false);
         }
@@ -106,7 +85,7 @@ public class MenuDAOTest {
             Menu newMenu = menuDAO.load(menu.getId());
             menu.getDateStart().setNanos(0);
             menu.getDateEnd().setNanos(0);
-            if(newMenu == null || !isEquals(menu, newMenu)){
+            if(newMenu == null || !menu.equals(newMenu)){
                 throw new Exception();
             }
         } catch (Exception e){

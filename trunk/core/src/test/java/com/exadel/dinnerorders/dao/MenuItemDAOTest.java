@@ -15,16 +15,6 @@ public class MenuItemDAOTest {
     private static MenuItem menuItem;
     private static MenuItemDAO menuItemDAO;
 
-    public boolean isEquals(MenuItem item1, MenuItem item2) {
-        if(item1 == item2){
-            return true;
-        }
-        if(item1 == null || item2 == null){
-            return false;
-        }
-        return item1.getCost().equals(item2.getCost()) && item1.getDescription().equals(item2.getDescription()) && item1.getId().equals(item2.getId()) && item1.getWeekday().equals(item2.getWeekday());
-    }
-
     @BeforeClass
     public static void setUp() throws Exception {
         menuItem = new MenuItem(null, Weekday.MONDAY, "1", new Double(1));
@@ -50,7 +40,7 @@ public class MenuItemDAOTest {
             MenuItem updatedItem = new MenuItem(menuItem.getId(), Weekday.MONDAY, "11", new Double(11));
             Assert.assertTrue(menuItemDAO.update(updatedItem));
             menuItem = menuItemDAO.load(updatedItem.getId());
-            if(menuItem == null || !isEquals(menuItem, updatedItem)){
+            if(menuItem == null || !menuItem.equals(updatedItem)){
                 throw new Exception();
             }
         } catch (Exception e){
@@ -62,7 +52,7 @@ public class MenuItemDAOTest {
     public void testLoad() {
         try{
             MenuItem item = menuItemDAO.load(menuItem.getId());
-            if(item == null || !isEquals(menuItem, item)){
+            if(item == null || !menuItem.equals(item)){
                 throw new Exception();
             }
         } catch (Exception e) {

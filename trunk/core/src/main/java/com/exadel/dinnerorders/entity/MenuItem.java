@@ -37,4 +37,26 @@ public class MenuItem {
     public void setId(Long id) {
         this.id = id;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o){
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()){
+            return false;
+        }
+        MenuItem menuItem = (MenuItem) o;
+        return cost.equals(menuItem.cost) && description.equals(menuItem.description) &&
+                id.equals(menuItem.id) && weekday == menuItem.weekday;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = id.hashCode();
+        result = 31 * result + weekday.hashCode();
+        result = 31 * result + description.hashCode();
+        result = 31 * result + cost.hashCode();
+        return result;
+    }
 }
