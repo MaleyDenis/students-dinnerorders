@@ -2,7 +2,7 @@ package com.exadel.dinnerorders.vaadinwindow.application;
 
 import com.exadel.dinnerorders.entity.Role;
 import com.exadel.dinnerorders.entity.User;
-import com.exadel.dinnerorders.service.GetExcelService;
+import com.exadel.dinnerorders.service.ExportService;
 import com.exadel.dinnerorders.service.UserService;
 import com.google.common.eventbus.EventBus;
 import com.jensjansson.pagedtable.PagedTable;
@@ -13,12 +13,8 @@ import com.vaadin.terminal.FileResource;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.NativeSelect;
 import com.vaadin.ui.Window;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 
 /**
@@ -50,24 +46,7 @@ public class AdminPage extends com.vaadin.Application {
                     @Override
                     public DownloadStream getStream() {
 
-                        HSSFWorkbook workbook = GetExcelService.getUsersExcel();
-                        ByteArrayOutputStream bos = new ByteArrayOutputStream();
-                        try {
-                            workbook.write(bos);
-
-                            bos.close();
-                            ByteArrayInputStream in = new ByteArrayInputStream(bos.toByteArray());
-                            DownloadStream ds = new DownloadStream(in, "application/vnd.ms-excel", "users.xls");
-                            // Need a file download POPUP
-                            ds.setParameter("Content-Disposition",
-                                    "attachment; filename=users.xls");
-                            return ds;
-                        } catch (IOException e) {
-                            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-                        }
-
-                        return null;
-
+                        return ExportService.getUsersExcel();
                     }
                 };
 
