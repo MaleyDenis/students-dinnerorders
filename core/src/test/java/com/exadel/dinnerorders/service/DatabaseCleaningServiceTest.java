@@ -13,6 +13,7 @@ import java.util.*;
 public class DatabaseCleaningServiceTest {
     private Timestamp startDate;
     private Timestamp endDate;
+
     @Test(expected = IllegalArgumentException.class)
     public void testDatabaseCleaningServiceForException() {
         DatabaseCleaningService databaseCleaningService = new DatabaseCleaningService();
@@ -30,9 +31,7 @@ public class DatabaseCleaningServiceTest {
         databaseCleaningService.setStartDelay(0);
         databaseCleaningService.start();
 
-        while (!databaseCleaningService.isAlreadyOnceCleared()){
-        }
-
+        databaseCleaningService.waitCertainLaunch(0);
         Collection<Menu> menus = MenuService.findMenuByDate(startDate);
         Assert.assertTrue(menus == null || menus.size() == 0);
     }
