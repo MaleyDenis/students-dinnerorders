@@ -40,7 +40,8 @@ public class MenuService {
     public static Collection<Menu> findMenuByDate(final Timestamp date){
         Predicate<Menu> predicate = new Predicate<Menu>() {
             public boolean apply(@Nullable Menu o) {
-                return o != null && o.getDateStart().before(date) && o.getDateEnd().after(date);
+                return o != null && ((o.getDateStart().before(date) && o.getDateEnd().after(date)) ||
+                        (o.getDateStart().equals(date) || o.getDateEnd().equals(date)));
             }
         };
         MenuDAO menuDAO = new MenuDAO();
