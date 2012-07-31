@@ -62,13 +62,8 @@
         <dependency>
             <groupId>org.vaadin.addons</groupId>
             <artifactId>pagedtable</artifactId>
+        </dependency>
 
-        </dependency>
-        <dependency>
-            <groupId>org.apache.poi</groupId>
-            <artifactId>poi</artifactId>
-            <version>3.7</version>
-        </dependency>
 
     </dependencies>
 

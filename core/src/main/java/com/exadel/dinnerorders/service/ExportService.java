@@ -1,7 +1,6 @@
 package com.exadel.dinnerorders.service;
 
 import com.exadel.dinnerorders.entity.User;
-import com.vaadin.terminal.DownloadStream;
 import org.apache.log4j.Logger;
 import org.apache.poi.hssf.usermodel.*;
 import org.apache.poi.hssf.util.HSSFColor;
@@ -9,7 +8,8 @@ import org.apache.poi.hssf.util.HSSFColor;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.ArrayList;
+import java.io.InputStream;
+import java.util.Collection;
 
 /**
  * User: Dima Shulgin
@@ -18,8 +18,8 @@ import java.util.ArrayList;
 public class ExportService {
     private static Logger logger = Logger.getLogger(ExportService.class);
 
-    public static DownloadStream getUsersExcel() {
-        ArrayList<User> users = (ArrayList<User>) UserService.loadAllUsersFromDB();
+    public static InputStream getUsersExcel() {
+        Collection<User> users = UserService.loadAllUsersFromDB();
 
         HSSFWorkbook workbook = new HSSFWorkbook();
         HSSFSheet worksheet = workbook.createSheet("Page 1");
@@ -41,33 +41,26 @@ public class ExportService {
         cellStyle.setFillForegroundColor(HSSFColor.RED.index);
         cellStyle.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
         cellB1.setCellStyle(cellStyle);
-
-        for (int i = 0; i < users.size(); ++i) {
-            HSSFRow row = worksheet.createRow(i + 1);
+        int i = 1;
+        for (User user : users) {
+            HSSFRow row = worksheet.createRow(i);
             HSSFCell namecell = row.createCell(0);
-            namecell.setCellValue(users.get(i).getUserName());
+            namecell.setCellValue(user.getUserName());
             HSSFCell cell = row.createCell(1);
-            cell.setCellValue(users.get(i).getRole().name());
+            cell.setCellValue(user.getRole().name());
+            ++i;
         }
 
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
         try {
             workbook.write(bos);
-
-
             bos.close();
             ByteArrayInputStream in = new ByteArrayInputStream(bos.toByteArray());
-            DownloadStream ds = new DownloadStream(in, "application/vnd.ms-excel", "users.xls");
-
-            ds.setParameter("Content-Disposition",
-                    "attachment; filename=users.xls");
-            return ds;
+            return in;
         } catch (IOException e) {
             logger.error("File hasn't been created");
         }
-
-
-        return  null;
+        return null;
 
     }
 }
