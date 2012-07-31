@@ -108,7 +108,7 @@ public class MenuDAO extends BaseDAO<Menu> {
         return false;
     }
 
-    public Menu load(Long id){
+    public Menu load(Long id) {
         Connection connection = getConnection(this);
         if (connection != null) {
             try {
