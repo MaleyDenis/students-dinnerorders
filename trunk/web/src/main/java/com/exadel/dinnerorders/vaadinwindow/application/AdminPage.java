@@ -46,7 +46,7 @@ public class AdminPage extends com.vaadin.Application {
                     @Override
                     public DownloadStream getStream() {
 
-                        return ExportService.getUsersExcel();
+                        return new DownloadStream(ExportService.getUsersExcel(),"application/vnd.ms-excel","users.xls");
                     }
                 };
 

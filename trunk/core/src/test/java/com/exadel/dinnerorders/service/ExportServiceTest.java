@@ -1,7 +1,8 @@
 package com.exadel.dinnerorders.service;
 
-import com.vaadin.terminal.DownloadStream;
 import org.junit.Test;
+
+import java.io.InputStream;
 
 import static junit.framework.Assert.assertTrue;
 
@@ -12,10 +13,10 @@ import static junit.framework.Assert.assertTrue;
 public class ExportServiceTest {
     @Test
     public void testGetUsersExcel() throws Exception {
-        DownloadStream downloadStream = ExportService.getUsersExcel();
-      if( downloadStream.getStream() !=null){
-          assertTrue(true);
-      }else
-          assertTrue(false);
+        InputStream inputStream = ExportService.getUsersExcel();
+        if (inputStream != null) {
+            assertTrue(true);
+        } else
+            assertTrue(false);
     }
 }
