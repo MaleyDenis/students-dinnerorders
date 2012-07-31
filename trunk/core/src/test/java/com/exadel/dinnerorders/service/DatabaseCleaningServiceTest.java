@@ -29,6 +29,7 @@ public class DatabaseCleaningServiceTest {
         final DatabaseCleaningService databaseCleaningService = new DatabaseCleaningService();
         databaseCleaningService.setStartDelay(0);
         databaseCleaningService.start();
+
         while (!databaseCleaningService.isAlreadyOnceCleared()){
         }
 

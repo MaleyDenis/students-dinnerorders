@@ -6,9 +6,7 @@ import com.exadel.dinnerorders.entity.SystemResource;
 
 import java.sql.Timestamp;
 import java.util.Collection;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 
 public class DatabaseCleaningService {
     private long startDelay;
@@ -18,6 +16,7 @@ public class DatabaseCleaningService {
     private ScheduledExecutorService service;
     private int initialDelay;
     private ClearTableTask clearTableTask;
+    private Boolean executionResult = false;
 
     public DatabaseCleaningService() {
         this.startDelay = Long.parseLong(Configuration.getProperty(SystemResource.DELETION_SERVICE_START_DELAY));
@@ -44,38 +43,26 @@ public class DatabaseCleaningService {
         this.startDelay = startDelay;
     }
 
-    private class ClearTableTask implements Runnable {
-        private boolean alreadyOnceCleared = false;
-
-        @Override
-        public void run() {
-            clearOrderTable();
-            clearMenuTable();
-            alreadyOnceCleared = true;
-        }
-
-        public boolean isAlreadyOnceCleared() {
-            return alreadyOnceCleared;
-        }
-    }
-
-    private void clearMenuTable() {
+    private boolean clearMenuTable() {
         Timestamp deletionDate = DateUtils.getCurrentMondayTime();
         deletionDate.setTime(deletionDate.getTime() - elapsedTime);
         Collection<Menu> menus = MenuService.findMenuByDate(deletionDate);
-        if (menus != null) {
-            for (Menu menu : menus)
-            MenuService.delete(menu);
+        if (menus == null) {
+            return true;
         }
+        for (Menu menu : menus) {
+            if (!MenuService.delete(menu)) {
+                return false;
+            }
+        }
+        return true;
     }
 
-    private void clearOrderTable() {
+    private boolean clearOrderTable() {
         Timestamp deletionDate = DateUtils.getCurrentMondayTime();
         deletionDate.setTime(deletionDate.getTime() - elapsedTime);
         Order order = OrderService.findOrderByDate(deletionDate);
-        if (order != null) {
-            OrderService.deleteOrder(order);
-        }
+        return order == null || OrderService.deleteOrder(order);
     }
 
     public void setIntervalDelay(long intervalDelay) {
@@ -85,7 +72,14 @@ public class DatabaseCleaningService {
         service.scheduleAtFixedRate(clearTableTask, startDelay, intervalDelay, unit);
     }
 
-    public boolean isAlreadyOnceCleared(){
-        return clearTableTask.isAlreadyOnceCleared();
+    public boolean isAlreadyOnceCleared() {
+        return executionResult;
+    }
+
+    private class ClearTableTask implements Runnable {
+        @Override
+        public void run() {
+            executionResult = clearOrderTable() && clearMenuTable();
+        }
     }
 }
