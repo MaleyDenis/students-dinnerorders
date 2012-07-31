@@ -14,7 +14,6 @@ import javax.annotation.Nullable;
 import java.sql.Timestamp;
 
 import java.util.Collection;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -62,7 +61,7 @@ public class MenuService {
                 }
             }
         }
-        return (menuDAO.create(newMenu) ? true : false);
+        return menuDAO.create(newMenu);
     }
 
     public static boolean delete(Menu menu) {
@@ -73,6 +72,6 @@ public class MenuService {
                 }
             }
         }
-        return (menuDAO.delete(menu) ? true : false);
+        return menuDAO.delete(menu);
     }
 }
