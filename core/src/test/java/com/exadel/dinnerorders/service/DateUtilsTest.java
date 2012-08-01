@@ -10,6 +10,7 @@ public class DateUtilsTest {
 
     @Test
     public void testGetDateOfThisMonday() {
+        new TasksManagerService();
         int actualDate = DateUtils.getDateOfThisMonday();
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis(DateUtils.getCurrentMondayTime().getTime());

@@ -138,7 +138,7 @@ public class MenuCreationPanel extends Panel {
         } else {
             Map <Weekday, List<MenuItem>> alreadyExisted = existed.getItems();
             for ( int i = 0 ; i < alreadyExisted.size(); i++) {
-                List existedList = existed.getItems().get(Weekday.getWeekday(i+1));
+                List<MenuItem> existedList = existed.getItems().get(Weekday.getWeekday(i+1));
                 menu.getItems().get(Weekday.getWeekday(i+1)).addAll(existedList);
             }
             menu.setId(existed.getId());

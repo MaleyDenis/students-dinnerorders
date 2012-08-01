@@ -1,37 +1,36 @@
 package com.exadel.dinnerorders.service;
 
+import com.exadel.dinnerorders.dao.MenuItemDAO;
 import com.exadel.dinnerorders.entity.Menu;
 import com.exadel.dinnerorders.entity.MenuItem;
 import com.exadel.dinnerorders.entity.SystemResource;
 import com.exadel.dinnerorders.entity.Weekday;
 import junit.framework.Assert;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 
 import java.sql.Timestamp;
 import java.util.*;
 
-public class DatabaseCleaningServiceTest {
+public class TasksManagerServiceTest {
     private Timestamp startDate;
     private Timestamp endDate;
+    private Menu menu;
 
-    @Test(expected = IllegalArgumentException.class)
-    public void testDatabaseCleaningServiceForException() {
-        DatabaseCleaningService databaseCleaningService = new DatabaseCleaningService();
-        databaseCleaningService.setIntervalDelay(-1000L);
-        databaseCleaningService.stop();
+    @Before
+    public void setUp() {
+        initDates();
+        Map<Weekday, List<MenuItem>> map = createMenuItemsMap();
+        menu = new Menu(null, "cafeName", startDate, endDate, map);
+        Assert.assertTrue(MenuService.save(menu));
     }
 
     @Test
-    public void testDatabaseCleaningServiceForDeletion(){
-        Map<Weekday, List<MenuItem>> map = createMenuItemsMap();
-        initDates();
-        Menu menu = new Menu(null, "cafename", startDate, endDate, map);
-        Assert.assertTrue(MenuService.save(menu));
-        final DatabaseCleaningService databaseCleaningService = new DatabaseCleaningService();
-        databaseCleaningService.setStartDelay(0);
-        databaseCleaningService.start();
-
-        databaseCleaningService.waitCertainLaunch(0);
+    public void testCleaning() {
+        TasksManagerService tasksManagerService = new TasksManagerService();
+        tasksManagerService.start();
+        tasksManagerService.getLastExecutionResult();
         Collection<Menu> menus = MenuService.findMenuByDate(startDate);
         Assert.assertTrue(menus == null || menus.size() == 0);
     }
@@ -50,5 +49,16 @@ public class DatabaseCleaningServiceTest {
             map.put(Weekday.getWeekday(i), list);
         }
         return map;
+    }
+
+    @After
+    public void tearDown() {
+        MenuService.delete(menu);
+        MenuItemDAO menuItemDAO = new MenuItemDAO();
+        for (int i = 1 ; i <= menu.getItems().size(); i++) {
+            for (MenuItem menuItem : menu.getItems().get(Weekday.getWeekday(i))) {
+                menuItemDAO.delete(menuItem);
+            }
+        }
     }
 }

@@ -2,17 +2,17 @@ package com.exadel.dinnerorders.vaadinwindow.application;
 
 
 import com.exadel.dinnerorders.entity.User;
-import com.exadel.dinnerorders.service.DatabaseCleaningService;
+import com.exadel.dinnerorders.service.TasksManagerService;
 import com.google.common.eventbus.EventBus;
 
 public class Application {
     private EventBus eventBus = new EventBus();
     private static Application INSTANCE = new Application();
     private User user;
-    private DatabaseCleaningService dbcService = new DatabaseCleaningService();
+    private TasksManagerService tasksManagerService = new TasksManagerService();
 
     private Application() {
-        dbcService.start();
+        tasksManagerService.start();
     }
 
     public synchronized static Application getInstance(){
