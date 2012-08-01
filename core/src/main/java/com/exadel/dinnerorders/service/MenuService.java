@@ -69,20 +69,15 @@ public class MenuService {
     }
 
     public static Collection<Menu> loadAll () {
-        Collection<Menu> menus  = new ArrayList<Menu>();
+        Collection<Long> menusId = menuDAO.callMenuID();
         MenuCache cache = MenuCache.getInstance();
-        Long lastIdInCache = (long) 0;
-        for(Long id : cache.getKeys()) {
-            menus.add(cache.get(id));
-            lastIdInCache = id;
+        menusId.removeAll(cache.getKeys());
+        Collection<Menu> menus = new ArrayList<Menu>();
+        for(Long key : cache.getKeys()){
+            menus.add(cache.get(key));
         }
-        long lastIdInDB = menuDAO.getID();
-        Menu newMenu;
-        for(long i = lastIdInCache;i < lastIdInDB;i++) {
-            newMenu = menuDAO.load(i);
-            if(newMenu != null) {
-                menus.add(newMenu);
-            }
+        for(Long id : menusId){
+            menus.add(menuDAO.load(id));
         }
         return menus;
     }
@@ -95,10 +90,13 @@ public class MenuService {
                 }
             }
         }
+        MenuCache.getInstance().evict(menu.getId());
         return menuDAO.delete(menu);
     }
 
     public static boolean update(Menu newMenu){
+        MenuCache cache = MenuCache.getInstance();
+        cache.update(newMenu.getId(), newMenu);
         return menuDAO.update(newMenu);
     }
 }
