@@ -45,6 +45,23 @@
                 </resources>
             </build>
         </profile>
+        <profile>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+            </activation>
+            <id>tasks</id>
+            <build>
+                <filters>
+                    <filter>src/main/resources/tasks.txt</filter>
+                </filters>
+                <resources>
+                    <resource>
+                        <directory>src/main/resources</directory>
+                        <filtering>true</filtering>
+                    </resource>
+                </resources>
+            </build>
+        </profile>
     </profiles>
 
     <parent>

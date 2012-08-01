@@ -2,6 +2,7 @@ package com.exadel.dinnerorders.service;
 
 import java.sql.Timestamp;
 import java.util.Calendar;
+import java.util.concurrent.TimeUnit;
 
 public class DateUtils {
     public static final long MILLISECONDS_IN_SECOND = 1000;
@@ -16,6 +17,7 @@ public class DateUtils {
     public static final int DEFAULT_WORK_DAYS = 5;
     public static final int DAYS_IN_WEEK = 7;
     private static final long MILLISECONDS_IN_WEEK = DAYS_IN_WEEK * MILLISECONDS_IN_DAY;
+    public static final long MILLISECONDS_IN_MINUTE = MILLISECONDS_IN_SECOND * SECONDS_IN_MINUTE;
 
     public static int getDateOfThisMonday() {
         Calendar calendar = Calendar.getInstance();
@@ -78,5 +80,26 @@ public class DateUtils {
     public static Timestamp getNextFridayTime() {
         Timestamp thisFriday = getCurrentFridayTime();
         return new Timestamp(thisFriday.getTime() + MILLISECONDS_IN_WEEK);
+    }
+
+    public static long convertToMillis(long value, TimeUnit fromValue) {
+        switch (fromValue) {
+            case DAYS:
+                return value * DateUtils.MILLISECONDS_IN_DAY;
+            case HOURS:
+                return value * DateUtils.MILLISECONDS_IN_HOUR;
+            case MINUTES:
+                return value * DateUtils.MILLISECONDS_IN_MINUTE;
+            case SECONDS:
+                return value * DateUtils.MILLISECONDS_IN_SECOND;
+            case MILLISECONDS:
+                return value;
+            case MICROSECONDS:
+                return (long)(value * 10e-3f);
+            case NANOSECONDS:
+                return (long)(value * 10e-9f);
+            default:
+                return 0;
+        }
     }
 }
