@@ -46,7 +46,6 @@ public class MenuService {
                         (o.getDateStart().equals(date) || o.getDateEnd().equals(date)));
             }
         };
-        MenuDAO menuDAO = new MenuDAO();
         Collection<Menu> result =  Collections2.filter(loadAll(), predicate);
         if (result.isEmpty()) {
             return null;
@@ -72,13 +71,13 @@ public class MenuService {
     public static Collection<Menu> loadAll () {
         Collection<Menu> menus  = new ArrayList<Menu>();
         MenuCache cache = MenuCache.getInstance();
-        Long lastIdInCache = new Long(0);
+        Long lastIdInCache = (long) 0;
         for(Long id : cache.getKeys()) {
             menus.add(cache.get(id));
             lastIdInCache = id;
         }
         long lastIdInDB = menuDAO.getID();
-        Menu newMenu = null;
+        Menu newMenu;
         for(long i = lastIdInCache;i < lastIdInDB;i++) {
             newMenu = menuDAO.load(i);
             if(newMenu != null) {
