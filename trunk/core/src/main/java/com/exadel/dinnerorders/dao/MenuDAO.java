@@ -188,4 +188,24 @@ public class MenuDAO extends BaseDAO<Menu> {
         }
         return null;
     }
+
+    public Collection<Long> callMenuID() {
+        Connection connection = getConnection(this);
+        if (connection != null) {
+            try {
+                Collection<Long> menusID = new ArrayList<Long>();
+                PreparedStatement menuStatement =  connection.prepareStatement("SELECT menu_id FROM menu;");
+                ResultSet menuResultSet = menuStatement.executeQuery();
+                while(menuResultSet.next()){
+                    menusID.add(menuResultSet.getLong(1));
+                }
+                return menusID;
+            } catch (SQLException e) {
+                logger.error("MenuDAO: call id has failed.", e);
+            }  finally{
+                disconnect(connection);
+            }
+        }
+        return null;
+    }
 }

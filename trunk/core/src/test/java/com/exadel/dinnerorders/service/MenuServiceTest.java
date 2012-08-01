@@ -90,7 +90,6 @@ public class MenuServiceTest extends TestCase {
             Menu updatedMenu = new Menu(currentMenu.getId(), "jjjjjj", currentMenu.getDateStart(), currentMenu.getDateEnd(), currentMenu.getItems());
             MenuService.update(updatedMenu);
             currentMenu = MenuService.load(currentMenu.getId());
-            MenuCache.getInstance().evict(currentMenu.getId());
             if(currentMenu == null || !currentMenu.equals(updatedMenu)){
                 throw new Exception();
             }

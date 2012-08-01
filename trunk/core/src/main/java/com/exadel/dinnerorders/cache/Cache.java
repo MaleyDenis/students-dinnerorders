@@ -19,7 +19,13 @@ public abstract class Cache<E>{
     }
 
     public Object evict(Long id) {
+        keys.remove(id);
         return cache.evict(id);
+    }
+
+    public void update(Object key, Object data) {
+        cache.evict(key);
+        cache.put(key, data);
     }
 
     public abstract E get(final Long key);
