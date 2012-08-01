@@ -8,7 +8,11 @@ public class User {
 
     private Long id;
     private String ldapLogin;
+
+    @Export(column = "User",collection = false)
     private String userName;
+
+    @Export(column = "Role",collection = false)
     private Role role;
 
 

@@ -4,7 +4,6 @@ import com.exadel.dinnerorders.entity.Role;
 import com.exadel.dinnerorders.entity.User;
 import com.exadel.dinnerorders.service.ExportService;
 import com.exadel.dinnerorders.service.UserService;
-import com.google.common.eventbus.EventBus;
 import com.jensjansson.pagedtable.PagedTable;
 import com.vaadin.data.Item;
 import com.vaadin.data.util.IndexedContainer;
@@ -21,9 +20,9 @@ import java.util.ArrayList;
  * User: Dima Shulgin
  * Date: 23.07.12
  */
-public class AdminPage extends com.vaadin.Application {
+public class AdminPage extends com.vaadin.Application  {
     private Window mainWindow;
-    private EventBus eventBus = Application.getInstance().getEventBus();
+
     private PagedTable table;
     private IndexedContainer container;
 
@@ -45,8 +44,17 @@ public class AdminPage extends com.vaadin.Application {
                         AdminPage.this) {
                     @Override
                     public DownloadStream getStream() {
+                        DownloadStream downloadStream = null;
+                        try {
+                            downloadStream = new DownloadStream(ExportService.getUsersExcel(User.class),"application/vnd.ms-excel","users.xls");
+                        } catch (NoSuchFieldException e) {
 
-                        return new DownloadStream(ExportService.getUsersExcel(),"application/vnd.ms-excel","users.xls");
+                        } catch (IllegalAccessException e) {
+
+                        } catch (InstantiationException e) {
+
+                        }
+                        return downloadStream;
                     }
                 };
 
