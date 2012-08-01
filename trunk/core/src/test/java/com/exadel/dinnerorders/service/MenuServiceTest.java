@@ -1,5 +1,6 @@
 package com.exadel.dinnerorders.service;
 
+import com.exadel.dinnerorders.cache.MenuCache;
 import com.exadel.dinnerorders.dao.MenuDAO;
 import com.exadel.dinnerorders.dao.MenuItemDAO;
 import com.exadel.dinnerorders.entity.Menu;
@@ -84,14 +85,36 @@ public class MenuServiceTest extends TestCase {
     }
 
     @Test
-    public void testUpdate() {
+    public void testUpdateAndLoad() {
         try{
             Menu updatedMenu = new Menu(currentMenu.getId(), "jjjjjj", currentMenu.getDateStart(), currentMenu.getDateEnd(), currentMenu.getItems());
             MenuService.update(updatedMenu);
-            currentMenu = menuDAO.load(currentMenu.getId());
+            currentMenu = MenuService.load(currentMenu.getId());
+            MenuCache.getInstance().evict(currentMenu.getId());
             if(currentMenu == null || !currentMenu.equals(updatedMenu)){
                 throw new Exception();
             }
+        } catch (Exception e) {
+            Assert.assertTrue(false);
+        }
+    }
+
+    @Test
+    public void testLoadAll () {
+        try {
+            Collection<Menu> menus = MenuService.loadAll();
+            for(Menu menu : menus){
+                MenuService.delete(menu);
+            }
+            Assert.assertTrue(MenuService.loadAll().size() == 0);
+            currentMenu.setId(null);
+            menuItem1.setId(null);
+            menuItem2.setId(null);
+            menuItem3.setId(null);
+            menuItemDAO.create(menuItem1);
+            menuItemDAO.create(menuItem2);
+            menuItemDAO.create(menuItem3);
+            menuDAO.create(currentMenu);
         } catch (Exception e) {
             Assert.assertTrue(false);
         }

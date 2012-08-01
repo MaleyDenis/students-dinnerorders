@@ -5,8 +5,8 @@ import com.exadel.dinnerorders.entity.Weekday;
 
 import junit.framework.Assert;
 
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 
 import java.util.Collection;
@@ -15,8 +15,8 @@ public class MenuItemDAOTest {
     private static MenuItem menuItem;
     private static MenuItemDAO menuItemDAO;
 
-    @BeforeClass
-    public static void setUp() throws Exception {
+    @Before
+    public void setUp() throws Exception {
         menuItem = new MenuItem(null, Weekday.MONDAY, "1", new Double(1));
         menuItemDAO = new MenuItemDAO();
         menuItemDAO.create(menuItem);
@@ -70,8 +70,8 @@ public class MenuItemDAOTest {
         }
     }
 
-    @AfterClass
-    public static void tearDown() throws Exception {
+    @After
+    public void tearDown() throws Exception {
         menuItemDAO.delete(menuItem);
     }
 }

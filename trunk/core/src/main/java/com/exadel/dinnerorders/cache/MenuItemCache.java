@@ -1,6 +1,6 @@
 package com.exadel.dinnerorders.cache;
 
-import com.exadel.dinnerorders.entity.Menu;
+import com.exadel.dinnerorders.entity.MenuItem;
 
 import net.sf.ashkay.CreationException;
 import net.sf.ashkay.ObjectCache;
@@ -9,26 +9,25 @@ import org.apache.log4j.Logger;
 
 /**
  * User: Василий Силин
- * Date: 31.7.12
+ * Date: 1.8.12
  */
-
-public class MenuCache extends Cache<Menu> {
+public class MenuItemCache extends Cache<MenuItem> {
     private Logger logger = Logger.getLogger(MenuCache.class);
-    private static MenuCache menuCache = new MenuCache();
+    private static MenuItemCache menuItemCache = new MenuItemCache();
 
-    private MenuCache () {
-        cache = new ObjectCache(new MenuFactory());
+    private MenuItemCache () {
+        cache = new ObjectCache(new MenuItemFactory());
     }
 
-    public static MenuCache getInstance () {
-        return menuCache;
+    public static MenuItemCache getInstance () {
+        return menuItemCache;
     }
 
     @Override
-    public Menu get (Long key) {
+    public MenuItem get (Long key) {
         try {
             keys.add(key);
-            return (Menu) cache.get(key);
+            return (MenuItem) cache.get(key);
         } catch (CreationException e) {
             logger.error(e);
         }

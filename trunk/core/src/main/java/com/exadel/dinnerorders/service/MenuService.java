@@ -1,9 +1,11 @@
 package com.exadel.dinnerorders.service;
 
+import com.exadel.dinnerorders.cache.MenuCache;
 import com.exadel.dinnerorders.dao.MenuDAO;
 import com.exadel.dinnerorders.dao.MenuItemDAO;
 import com.exadel.dinnerorders.entity.Menu;
 import com.exadel.dinnerorders.entity.MenuItem;
+
 import com.google.common.base.Predicate;
 import com.google.common.collect.Collections2;
 
@@ -13,6 +15,7 @@ import javax.annotation.Nullable;
 
 import java.sql.Timestamp;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -23,7 +26,6 @@ import java.util.List;
 
 public class MenuService {
     private Logger logger = Logger.getLogger(MenuService.class);
-
     private static MenuDAO menuDAO = new MenuDAO();
     private static MenuItemDAO menuItemDAO = new MenuItemDAO();
 
@@ -45,12 +47,10 @@ public class MenuService {
             }
         };
         MenuDAO menuDAO = new MenuDAO();
-        Collection<Menu> result =  Collections2.filter(menuDAO.loadAll(), predicate);
-
+        Collection<Menu> result =  Collections2.filter(loadAll(), predicate);
         if (result.isEmpty()) {
             return null;
         }
-
         return result;
     }
 
@@ -63,6 +63,29 @@ public class MenuService {
             }
         }
         return menuDAO.create(newMenu);
+    }
+
+    public static Menu load(Long id){
+        return MenuCache.getInstance().get(id);
+    }
+
+    public static Collection<Menu> loadAll () {
+        Collection<Menu> menus  = new ArrayList<Menu>();
+        MenuCache cache = MenuCache.getInstance();
+        Long lastIdInCache = new Long(0);
+        for(Long id : cache.getKeys()) {
+            menus.add(cache.get(id));
+            lastIdInCache = id;
+        }
+        long lastIdInDB = menuDAO.getID();
+        Menu newMenu = null;
+        for(long i = lastIdInCache;i < lastIdInDB;i++) {
+            newMenu = menuDAO.load(i);
+            if(newMenu != null) {
+                menus.add(newMenu);
+            }
+        }
+        return menus;
     }
 
     public static boolean delete(Menu menu) {
