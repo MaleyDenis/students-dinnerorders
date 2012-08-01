@@ -5,6 +5,7 @@ import com.exadel.dinnerorders.entity.MenuItem;
 import com.exadel.dinnerorders.entity.DbConnection;
 import com.exadel.dinnerorders.entity.DefaultMysqlConnectionProvider;
 import com.exadel.dinnerorders.entity.Weekday;
+import java.util.Collections;
 import org.apache.log4j.Logger;
 
 import java.sql.Connection;
@@ -189,7 +190,7 @@ public class MenuDAO extends BaseDAO<Menu> {
         return null;
     }
 
-    public Collection<Long> callMenuID() {
+    public Collection<Long> getAllMenuIds() {
         Connection connection = getConnection(this);
         if (connection != null) {
             try {
@@ -206,6 +207,6 @@ public class MenuDAO extends BaseDAO<Menu> {
                 disconnect(connection);
             }
         }
-        return null;
+        return Collections.emptyList();
     }
 }

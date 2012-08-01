@@ -69,14 +69,16 @@ public class MenuService {
     }
 
     public static Collection<Menu> loadAll () {
-        Collection<Long> menusId = menuDAO.callMenuID();
+        Collection<Long> menuIds = menuDAO.getAllMenuIds();
+
         MenuCache cache = MenuCache.getInstance();
-        menusId.removeAll(cache.getKeys());
+        menuIds.removeAll(cache.getKeys());
+
         Collection<Menu> menus = new ArrayList<Menu>();
         for(Long key : cache.getKeys()){
             menus.add(cache.get(key));
         }
-        for(Long id : menusId){
+        for(Long id : menuIds){
             menus.add(menuDAO.load(id));
         }
         return menus;
