@@ -40,9 +40,9 @@
             </dependency>
 
             <dependency>
-               <groupId>org.vaadin.addons</groupId>
-               <artifactId>pagedtable</artifactId>
-               <version>0.6.3</version>
+                <groupId>org.vaadin.addons</groupId>
+                <artifactId>pagedtable</artifactId>
+                <version>0.6.3</version>
             </dependency>
 
             <dependency>
@@ -97,6 +97,12 @@
                 <groupId>ashkay</groupId>
                 <artifactId>ashkay</artifactId>
                 <version>0.6</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.poi</groupId>
+                <artifactId>poi</artifactId>
+                <version>3.8</version>
             </dependency>
 
         </dependencies>
