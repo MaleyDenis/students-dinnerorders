@@ -6,12 +6,18 @@ import java.util.Date;
 import java.util.List;
 
 
-public class Order {
+public class Order  implements Entity{
+    @Export(column = "OrderId")
     private Long id;
+    @Export(column = "UserId")
     private Long userID;
+    @Export(column = "Cost")
     private double cost;
+    @Export(column = "Date of payment")
     private Date datePayment;
+    @Export(column = "Date of order")
     private Date dateOrder;
+
     private List<MenuItem> menuItemList;
 
     public Order(Long id, Long userID, double cost, Date dateOrder, Date datePayment) {
