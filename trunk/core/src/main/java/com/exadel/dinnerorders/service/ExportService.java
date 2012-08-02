@@ -1,6 +1,9 @@
 package com.exadel.dinnerorders.service;
 
+import com.exadel.dinnerorders.entity.Entity;
 import com.exadel.dinnerorders.entity.Export;
+import com.exadel.dinnerorders.entity.ExportStrategy;
+import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.log4j.Logger;
 import org.apache.poi.hssf.usermodel.*;
 import org.apache.poi.hssf.util.HSSFColor;
@@ -11,19 +14,20 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Iterator;
 
 /**
  * User: Dima Shulgin
  * Date: 31.07.12
  */
-public class ExportService<E> {
+public class ExportService {
     private static Logger logger = Logger.getLogger(ExportService.class);
 
-    public static InputStream getUsersExcel(Class clazz) throws NoSuchFieldException, IllegalAccessException, InstantiationException {
+    public static InputStream getExcel(ExportStrategy exportStrategy) {
 
+        Class mainClass = exportStrategy.getClazz();
         ArrayList<String> fieldNames = new ArrayList<String>();
         int rowsCount = 0;
         int cellIndex = 0;
@@ -33,15 +37,17 @@ public class ExportService<E> {
         HSSFRow row1 = worksheet.createRow(rowsCount);
         ++rowsCount;
 
-        Field[] fields = clazz.getDeclaredFields();
+        Field[] fields = mainClass.getDeclaredFields();
         for (Field field : fields) {
             Annotation annotation = field.getAnnotation(Export.class);
-            if (annotation instanceof Export) {
+            if (annotation != null) {
                 Export export = (Export) annotation;
                 fieldNames.add(field.getName());
+
                 //create cell
                 HSSFCell cell = row1.createCell(cellIndex);
                 cell.setCellValue(((Export) annotation).column());
+
                 //create style of cell
                 HSSFCellStyle cellStyle = workbook.createCellStyle();
                 cellStyle.setFillForegroundColor(HSSFColor.RED.index);
@@ -51,25 +57,34 @@ public class ExportService<E> {
             }
         }
 
-        Collection users = UserService.loadAllUsersFromDB();
+        try {
 
-        Iterator collectionIt = users.iterator();
-        cellIndex = 0;
 
-        while (collectionIt.hasNext()) {
-            Object item = collectionIt.next();
-            HSSFRow row = worksheet.createRow(rowsCount);
-            for (String fieldName : fieldNames) {
-                Field field = clazz.getDeclaredField(fieldName);
-                field.setAccessible(true);
-                HSSFCell namecell = row.createCell(cellIndex);
-                namecell.setCellValue(field.get(item).toString());
-                ++cellIndex;
-            }
+            Collection<Entity> collection = exportStrategy.getCollection();
+
 
             cellIndex = 0;
-            ++rowsCount;
 
+            for (Entity entity : collection) {
+                Object item = entity;
+                HSSFRow row = worksheet.createRow(rowsCount);
+                for (String fieldName : fieldNames) {
+                    HSSFCell namecell = row.createCell(cellIndex);
+                    namecell.setCellValue(PropertyUtils.getProperty(item, fieldName).toString());
+                    ++cellIndex;
+                }
+
+                cellIndex = 0;
+                ++rowsCount;
+
+            }
+
+        } catch (NoSuchMethodException e) {
+            logger.error("Method has not been found", e);
+        } catch (InvocationTargetException e) {
+            logger.error("Some Error", e);
+        }   catch (IllegalAccessException e) {
+            logger.error("Some Error", e);
         }
 
 

@@ -20,7 +20,7 @@ public class UserStrategy implements ExportStrategy {
     }
 
     public Collection getCollection() {
-        return UserService.loadAllFromDB();  //To change body of implemented methods use File | Settings | File Templates.
+        return UserService.loadAllUsersFromDB();  //To change body of implemented methods use File | Settings | File Templates.
     }
 
     public Class getClazz() {
