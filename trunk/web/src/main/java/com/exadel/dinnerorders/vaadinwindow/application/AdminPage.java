@@ -1,9 +1,11 @@
 package com.exadel.dinnerorders.vaadinwindow.application;
 
+import com.exadel.dinnerorders.entity.ExportStrategy;
 import com.exadel.dinnerorders.entity.Role;
 import com.exadel.dinnerorders.entity.User;
 import com.exadel.dinnerorders.service.ExportService;
 import com.exadel.dinnerorders.service.UserService;
+import com.exadel.dinnerorders.stategies.UserStrategy;
 import com.jensjansson.pagedtable.PagedTable;
 import com.vaadin.data.Item;
 import com.vaadin.data.util.IndexedContainer;
@@ -20,12 +22,11 @@ import java.util.ArrayList;
  * User: Dima Shulgin
  * Date: 23.07.12
  */
-public class AdminPage extends com.vaadin.Application  {
+public class AdminPage extends com.vaadin.Application {
     private Window mainWindow;
-
     private PagedTable table;
     private IndexedContainer container;
-
+    private ExportStrategy exportStrategy;
 
     @Override
     public void init() {
@@ -45,15 +46,9 @@ public class AdminPage extends com.vaadin.Application  {
                     @Override
                     public DownloadStream getStream() {
                         DownloadStream downloadStream = null;
-                        try {
-                            downloadStream = new DownloadStream(ExportService.getUsersExcel(User.class),"application/vnd.ms-excel","users.xls");
-                        } catch (NoSuchFieldException e) {
+                        exportStrategy = new UserStrategy();
+                        downloadStream = new DownloadStream(ExportService.getExcel(exportStrategy), "application/vnd.ms-excel", exportStrategy.getFileName());
 
-                        } catch (IllegalAccessException e) {
-
-                        } catch (InstantiationException e) {
-
-                        }
                         return downloadStream;
                     }
                 };
@@ -69,7 +64,7 @@ public class AdminPage extends com.vaadin.Application  {
     }
 
     private void createPagedTable() {
-        ArrayList<User> users = (ArrayList<User>) UserService.loadAllUsersFromDB();
+        ArrayList<User> users = (ArrayList<User>) UserService.loadAllFromDB();
         final Role[] roles = Role.values();
         NativeSelect nativeSelect;
 

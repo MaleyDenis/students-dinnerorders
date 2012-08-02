@@ -4,7 +4,7 @@ package com.exadel.dinnerorders.entity;
  * User: Dima Shulgin
  * Date: 17.07.12
  */
-public class User {
+public class User implements Entity {
 
     private Long id;
     private String ldapLogin;
