@@ -64,7 +64,7 @@ public class AdminPage extends com.vaadin.Application {
     }
 
     private void createPagedTable() {
-        ArrayList<User> users = (ArrayList<User>) UserService.loadAllFromDB();
+        ArrayList<User> users = (ArrayList<User>) UserService.loadAllUsersFromDB();
         final Role[] roles = Role.values();
         NativeSelect nativeSelect;
 
