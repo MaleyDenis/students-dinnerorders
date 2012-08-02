@@ -1,8 +1,8 @@
 package com.exadel.dinnerorders.service;
 
-import com.exadel.dinnerorders.entity.Entity;
 import com.exadel.dinnerorders.entity.Export;
 import com.exadel.dinnerorders.entity.ExportStrategy;
+import com.exadel.dinnerorders.exception.WorkflowException;
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.log4j.Logger;
 import org.apache.poi.hssf.usermodel.*;
@@ -41,7 +41,7 @@ public class ExportService {
         for (Field field : fields) {
             Annotation annotation = field.getAnnotation(Export.class);
             if (annotation != null) {
-                Export export = (Export) annotation;
+
                 fieldNames.add(field.getName());
 
                 //create cell
@@ -60,17 +60,16 @@ public class ExportService {
         try {
 
 
-            Collection<Entity> collection = exportStrategy.getCollection();
+            Collection collection = exportStrategy.getCollection();
 
 
             cellIndex = 0;
 
-            for (Entity entity : collection) {
-                Object item = entity;
+            for (Object entity : collection) {
                 HSSFRow row = worksheet.createRow(rowsCount);
                 for (String fieldName : fieldNames) {
                     HSSFCell namecell = row.createCell(cellIndex);
-                    namecell.setCellValue(PropertyUtils.getProperty(item, fieldName).toString());
+                    namecell.setCellValue(PropertyUtils.getProperty(entity, fieldName).toString());
                     ++cellIndex;
                 }
 
@@ -80,11 +79,14 @@ public class ExportService {
             }
 
         } catch (NoSuchMethodException e) {
-            logger.error("Method has not been found", e);
+            logger.error("Method has not been found");
+            throw new WorkflowException(e);
         } catch (InvocationTargetException e) {
-            logger.error("Some Error", e);
+            logger.error("Some Error");
+            throw new WorkflowException(e);
         }   catch (IllegalAccessException e) {
-            logger.error("Some Error", e);
+            logger.error("Some Error");
+            throw new WorkflowException(e);
         }
 
 
@@ -92,8 +94,7 @@ public class ExportService {
         try {
             workbook.write(bos);
             bos.close();
-            ByteArrayInputStream in = new ByteArrayInputStream(bos.toByteArray());
-            return in;
+            return new ByteArrayInputStream(bos.toByteArray());
         } catch (IOException e) {
             logger.error("File hasn't been created");
         }
