@@ -16,6 +16,7 @@ import com.vaadin.ui.NativeSelect;
 import com.vaadin.ui.Window;
 
 import java.io.File;
+import java.io.InputStream;
 import java.util.ArrayList;
 
 /**
@@ -47,13 +48,20 @@ public class AdminPage extends com.vaadin.Application {
                     public DownloadStream getStream() {
                         DownloadStream downloadStream = null;
                         exportStrategy = new UserStrategy();
-                        downloadStream = new DownloadStream(ExportService.getExcel(exportStrategy), "application/vnd.ms-excel", exportStrategy.getFileName());
+                        InputStream in = ExportService.getExcel(exportStrategy);
+                        if (in != null) {
+                            downloadStream = new DownloadStream(in, "application/vnd.ms-excel", exportStrategy.getFileName());
+                            return downloadStream;
+                        } else {
+                            return null;
+                        }
 
-                        return downloadStream;
                     }
                 };
-
-                mainWindow.open(stream);
+                if (stream.getStream() != null)
+                    mainWindow.open(stream);
+                else
+                    getMainWindow().showNotification("Server is overloaded.Wait please.");
 
             }
 
