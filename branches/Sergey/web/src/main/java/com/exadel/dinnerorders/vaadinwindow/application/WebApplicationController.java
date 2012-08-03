@@ -5,10 +5,7 @@ import com.exadel.dinnerorders.service.MenuService;
 import com.exadel.dinnerorders.vaadinwindow.events.*;
 import com.exadel.dinnerorders.vaadinwindow.layouts.LoginLayout;
 import com.exadel.dinnerorders.vaadinwindow.layouts.WelcomeLayout;
-import com.exadel.dinnerorders.vaadinwindow.layouts.panels.CurrentWeekMenuPanel;
-import com.exadel.dinnerorders.vaadinwindow.layouts.panels.MenuCreationPanel;
-import com.exadel.dinnerorders.vaadinwindow.layouts.panels.ShowMadeOrderPanel;
-import com.exadel.dinnerorders.vaadinwindow.layouts.panels.TableOrderPanel;
+import com.exadel.dinnerorders.vaadinwindow.layouts.panels.*;
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
 import com.vaadin.terminal.Sizeable;
@@ -100,5 +97,11 @@ public class WebApplicationController extends com.vaadin.Application {
     public void showMadeOrderPanel(ShowMadeOrderEvent showMadeOrderEvent){
         ShowMadeOrderPanel showMadeOrderPanel = new ShowMadeOrderPanel();
         replaceCentralPanel(showMadeOrderPanel);
+    }
+
+    @Subscribe
+    public void showTaskCreationPanel(ShowTasksCreationPanelEvent scpEvent) {
+        TasksCreationPanel panel = new TasksCreationPanel();
+        replaceCentralPanel(panel);
     }
 }

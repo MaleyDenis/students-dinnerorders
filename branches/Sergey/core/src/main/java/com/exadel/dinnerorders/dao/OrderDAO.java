@@ -80,7 +80,7 @@ public class OrderDAO extends BaseDAO<Order> {
             if (connection != null){
                 PreparedStatement preparedStatement = connection.prepareStatement
                         ("DELETE FROM dinnerorders.order WHERE order_id=?");
-                preparedStatement.setLong(1,item.getId());
+                preparedStatement.setLong(1, item.getId());
                 preparedStatement.executeUpdate();
                 deleteFromOrderItemsTable(item);
                 preparedStatement.close();
@@ -140,9 +140,7 @@ public class OrderDAO extends BaseDAO<Order> {
         } catch (SQLException e) {
            logger.error("LoadAll error the method",e);
         } finally {
-
             disconnect(connection);
-
         }
         return orders;
     }

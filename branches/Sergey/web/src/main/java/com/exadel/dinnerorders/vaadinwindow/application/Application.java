@@ -30,4 +30,8 @@ public class Application {
     public User getUser() {
         return user;
     }
+
+    public TasksManagerService getTasksManagerService() {
+        return tasksManagerService;
+    }
 }

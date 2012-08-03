@@ -15,7 +15,6 @@ import com.vaadin.terminal.ExternalResource;
 import com.vaadin.ui.*;
 
 import java.sql.Timestamp;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -26,11 +25,12 @@ public class MenuCreationPanel extends Panel {
     public static final int DEFAULT_ITEMS_COUNT = 5;
     public static final int DEFAULT_LAYOUT_ROWS = 12;
     public static final int DEFAULT_LAYOUT_COLUMNS = 2;
+    public static final String DATE_PATTERN = "YYYY-MM-DD";
+    public static final int NOTIFICATION_DISPLAY_TIME = 2000;
     private TextField cafeName;
     private Button saveButton;
     private Button cancelButton;
     private GridLayout layout;
-    private String datePattern = "YYYY-MM-DD";
     private Timestamp mondayDate;
     private Timestamp fridayDate;
     private NativeSelect dateBox;
@@ -58,11 +58,11 @@ public class MenuCreationPanel extends Panel {
         dateBox.setImmediate(true);
         dateBox.setNewItemsAllowed(false);
         dateBox.setWriteThrough(false);
-        String monday = DateUtils.getCurrentMondayTime().toString().substring(0, datePattern.length());
-        String friday = DateUtils.getCurrentFridayTime().toString().substring(0, datePattern.length());
+        String monday = DateUtils.getCurrentMondayTime().toString().substring(0, DATE_PATTERN.length());
+        String friday = DateUtils.getCurrentFridayTime().toString().substring(0, DATE_PATTERN.length());
         dateBox.addItem("Current week: " + monday + " - " + friday);
-        monday = DateUtils.getNextMondayTime().toString().substring(0, datePattern.length());
-        friday = DateUtils.getNextFridayTime().toString().substring(0, datePattern.length());
+        monday = DateUtils.getNextMondayTime().toString().substring(0, DATE_PATTERN.length());
+        friday = DateUtils.getNextFridayTime().toString().substring(0, DATE_PATTERN.length());
         dateBox.addItem("Next week: " + monday + " - " + friday);
         dateBox.addListener(new DateBoxListener());
     }
@@ -125,42 +125,15 @@ public class MenuCreationPanel extends Panel {
         }
 
         Menu menu = new Menu(null, nameOfCafe, mondayDate, fridayDate, items);
-        boolean result = saveMenu(menu);
+        boolean result = MenuService.merge(menu);
         showInformationMessage(result);
     }
 
-    private boolean saveMenu(Menu menu) {
-        Timestamp searchingDate = new Timestamp(menu.getDateStart().getTime());
-        Collection<Menu> loaded = MenuService.findMenuByDate(searchingDate);
-        Menu existed = isNewMenu(menu, loaded);
-        if (existed == null) {
-            return MenuService.save(menu);
-        } else {
-            Map <Weekday, List<MenuItem>> alreadyExisted = existed.getItems();
-            for ( int i = 0 ; i < alreadyExisted.size(); i++) {
-                List<MenuItem> existedList = existed.getItems().get(Weekday.getWeekday(i+1));
-                menu.getItems().get(Weekday.getWeekday(i+1)).addAll(existedList);
-            }
-            menu.setId(existed.getId());
-            return MenuService.update(menu);
-        }
-    }
-
-    private Menu isNewMenu(Menu menu, Collection<Menu> loaded) {
-        for (Menu loadedMenu : loaded) {
-            if (!loadedMenu.getCafeName().equals(menu.getCafeName())) {
-                return loadedMenu;
-            }
-        }
-        return null;
-    }
-
     private void showInformationMessage(boolean result) {
-        int displayedTime = 2000;
         String messageText = result ? "Saved OK" : "Error while saving";
         int type = result ? Window.Notification.TYPE_HUMANIZED_MESSAGE : Window.Notification.TYPE_ERROR_MESSAGE;
         Window.Notification message = new Window.Notification(messageText, type);
-        message.setDelayMsec(displayedTime);
+        message.setDelayMsec(NOTIFICATION_DISPLAY_TIME);
         getApplication().getMainWindow().showNotification(message);
         flush();
     }
@@ -189,10 +162,6 @@ public class MenuCreationPanel extends Panel {
 
     public Timestamp getMondayDate() {
         return mondayDate;
-    }
-
-    public Timestamp getFridayDate() {
-        return fridayDate;
     }
 
     public Button getSaveButton() {

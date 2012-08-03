@@ -2,11 +2,7 @@ package com.exadel.dinnerorders.service;
 
 import com.exadel.dinnerorders.entity.SystemResource;
 import com.exadel.dinnerorders.entity.tasks.Task;
-import org.apache.log4j.Logger;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.*;
@@ -19,7 +15,6 @@ public class TasksManagerService implements Runnable {
     private ScheduledFuture sFuture;
     private long period;
     private TimeUnit unit;
-    private final Logger logger = Logger.getLogger(TasksManagerService.class);
 
     public TasksManagerService() {
         executor = Executors.newSingleThreadScheduledExecutor();
@@ -28,26 +23,16 @@ public class TasksManagerService implements Runnable {
         tasksExecutionResult = new ArrayList<Future<Boolean>>();
         this.period = Long.parseLong(Configuration.getProperty(SystemResource.DELETION_SERVICE_INTERVAL_DELAY));
         this.unit = TimeUnit.valueOf(Configuration.getProperty(SystemResource.TIME_UNIT));
-        loadAllTasks();
+        loadDefaultTasks();
     }
 
-    private void loadAllTasks() {
-        try {
-            InputStreamReader inputStreamReader = new InputStreamReader(getClass().getResourceAsStream("/tasks.txt"));
-            BufferedReader reader = new BufferedReader(inputStreamReader);
-            String line = reader.readLine();
-            while (line != null) {
-                tasks.add(TasksFactory.createTask(line));
-                line = reader.readLine();
-            }
-        } catch (IOException ioe) {
-            logger.error("TaskManager: can't load tasks", ioe);
-        }
+    private void loadDefaultTasks() {
+        addTask(TasksFactory.createTask("1 * 2 8 * com.exadel.dinnerorders.entity.tasks.ClearMenuTableTask"));
+        addTask(TasksFactory.createTask("2 * 2 8 * com.exadel.dinnerorders.entity.tasks.ClearOrderTableTask"));
     }
 
     public void start() {
-        run();
-        sFuture = executor.scheduleAtFixedRate(this, period, period, unit);
+        sFuture = executor.scheduleAtFixedRate(this, 0, period, unit);
     }
 
     @Override
@@ -77,5 +62,15 @@ public class TasksManagerService implements Runnable {
             result = false;
         }
         return result;
+    }
+
+    public void addTask(Task task) {
+        if (task != null) {
+            tasks.add(task);
+        }
+    }
+
+    public List<Task> getTasksList() {
+        return tasks;
     }
 }

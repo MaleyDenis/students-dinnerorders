@@ -29,7 +29,7 @@ public class TasksManagerServiceTest {
     @Test
     public void testCleaning() {
         TasksManagerService tasksManagerService = new TasksManagerService();
-        tasksManagerService.start();
+        tasksManagerService.run();
         tasksManagerService.getLastExecutionResult();
         Collection<Menu> menus = MenuService.findMenuByDate(startDate);
         Assert.assertTrue(menus == null || menus.size() == 0);
