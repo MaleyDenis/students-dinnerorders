@@ -96,7 +96,7 @@ public class MenuDAOTest {
     @Test
     public void testCallMenuId () {
         try {
-            Collection<Long> menusId = menuDAO.callMenuID();
+            Collection<Long> menusId = menuDAO.getAllMenuIds();
             Assert.assertTrue(menusId.size() > 0);
         } catch (Exception e){
             Assert.assertTrue(false);
