@@ -8,10 +8,7 @@ import org.apache.log4j.Logger;
 import org.apache.poi.hssf.usermodel.*;
 import org.apache.poi.hssf.util.HSSFColor;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -84,7 +81,7 @@ public class ExportService {
         } catch (InvocationTargetException e) {
             logger.error("Some Error");
             throw new WorkflowException(e);
-        }   catch (IllegalAccessException e) {
+        } catch (IllegalAccessException e) {
             logger.error("Some Error");
             throw new WorkflowException(e);
         }
@@ -101,4 +98,53 @@ public class ExportService {
         return null;
 
     }
+
+    public static InputStream getTxt(ExportStrategy exportStrategy) {
+
+        Class mainClass = exportStrategy.getClazz();
+        ArrayList<String> fieldNames = new ArrayList<String>();
+
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        PrintWriter writer = new PrintWriter(stream);
+
+        Field[] fields = mainClass.getDeclaredFields();
+        for (Field field : fields) {
+            Annotation annotation = field.getAnnotation(Export.class);
+            if (annotation != null) {
+
+                fieldNames.add(field.getName());
+                writer.write(((Export) annotation).column() + " ");
+            }
+        }
+        writer.append("\r\n");
+
+        try {
+
+
+            Collection collection = exportStrategy.getCollection();
+
+            for (Object entity : collection) {
+                for (String fieldName : fieldNames) {
+                    writer.write(PropertyUtils.getProperty(entity, fieldName).toString() + " ");
+                }
+                writer.append("\r\n");
+            }
+
+        } catch (NoSuchMethodException e) {
+            logger.error("Method has not been found");
+            throw new WorkflowException(e);
+        } catch (InvocationTargetException e) {
+            logger.error("Some Error");
+            throw new WorkflowException(e);
+        } catch (IllegalAccessException e) {
+            logger.error("Some Error");
+            throw new WorkflowException(e);
+        }
+        writer.flush();
+        byte[] data = stream.toByteArray();
+        InputStream inputStream = new ByteArrayInputStream(data);
+
+        return inputStream;
+    }
+
 }

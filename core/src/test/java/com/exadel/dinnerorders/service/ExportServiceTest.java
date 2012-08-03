@@ -3,8 +3,11 @@ package com.exadel.dinnerorders.service;
 import com.exadel.dinnerorders.entity.ExportStrategy;
 import com.exadel.dinnerorders.stategies.UserStrategy;
 import junit.framework.Assert;
+import org.apache.poi.util.IOUtils;
 import org.junit.Test;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.InputStream;
 
 /**
@@ -17,9 +20,42 @@ public class ExportServiceTest {
         ExportStrategy exportStrategy = new UserStrategy();
         InputStream inputStream = ExportService.getExcel(exportStrategy);
         if (inputStream != null) {
-            Assert.assertTrue(true);
+
+            File f = new File("ExportService-test.xls");
+            FileOutputStream fileOut = new FileOutputStream("ExportService-test.xls");
+            byte[] bytes = IOUtils.toByteArray(inputStream);
+            fileOut.write(bytes);
+
+
+            if (f.exists()) {
+                Assert.assertTrue(true);
+            } else {
+                Assert.assertTrue(false);
+            }
         } else {
             Assert.assertTrue(false);
         }
+    }
+
+    @Test
+    public void testgetTxt() throws Exception {
+        ExportStrategy exportStrategy = new UserStrategy();
+          InputStream inputStream = ExportService.getTxt(exportStrategy);
+          if (inputStream != null) {
+
+              File f = new File("ExportService-test.xls");
+              FileOutputStream fileOut = new FileOutputStream("ExportService-test.xls");
+              byte[] bytes = IOUtils.toByteArray(inputStream);
+              fileOut.write(bytes);
+
+
+              if (f.exists()) {
+                  Assert.assertTrue(true);
+              } else {
+                  Assert.assertTrue(false);
+              }
+          } else {
+              Assert.assertTrue(false);
+          }
     }
 }
