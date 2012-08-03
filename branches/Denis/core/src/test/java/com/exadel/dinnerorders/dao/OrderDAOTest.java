@@ -39,7 +39,7 @@ import java.util.List;
 
         assertTrue(orderDAO.create(order));
 
-        Order order1 = new Order((long)2,(long)2,23.5,date,date);
+        Order order1 = new Order(null,(long)2,23.5,date,date);
         Assert.assertNotNull(order1);
 
         MenuItem  menuItem2 = new MenuItem((long)3, Weekday.MONDAY, "4", (double)1);
