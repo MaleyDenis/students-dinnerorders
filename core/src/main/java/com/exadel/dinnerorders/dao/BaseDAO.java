@@ -5,12 +5,13 @@ import com.exadel.dinnerorders.entity.DefaultMongoConnectionProvider;
 import com.exadel.dinnerorders.entity.MysqlConnectionProvider;
 import com.exadel.dinnerorders.exception.WorkflowException;
 import com.mongodb.DB;
+import org.apache.log4j.Logger;
+
 import java.lang.annotation.Annotation;
 import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Types;
-import org.apache.log4j.Logger;
 
 /**
  * User: Василий Силин
@@ -60,21 +61,18 @@ public abstract class BaseDAO<E> implements DAO<E> {
 
     public Long getID()  {
         Connection connection = getConnection(this);
-
         try {
-
             CallableStatement callableStatement = connection.prepareCall("{call getID(?)}");
-            callableStatement.registerOutParameter("idOUT", Types.INTEGER);
+            callableStatement.registerOutParameter("idOUT", Types.BIGINT);
             boolean hadResults = callableStatement.execute();
-            if (!hadResults)
+            if (!hadResults) {
                 return callableStatement.getLong(1);
-
+            }
         } catch (SQLException e) {
             logger.error("Error , value hasn't been returned");
         } finally {
             disconnect(connection);
         }
-
         throw new WorkflowException();
     }
 }

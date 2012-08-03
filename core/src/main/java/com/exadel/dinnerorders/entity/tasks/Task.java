@@ -1,39 +1,59 @@
 package com.exadel.dinnerorders.entity.tasks;
 
-import com.exadel.dinnerorders.entity.Operation;
-
+import java.sql.Timestamp;
 import java.util.concurrent.Callable;
-import java.util.concurrent.TimeUnit;
 
 public abstract class Task implements Callable<Boolean> {
-    protected long period;
-    protected TimeUnit units;
-    protected Operation operation;
+    protected int minutes;
+    protected int hours;
+    protected int dayOfMonth;
+    protected int month;
+    protected int dayOfWeek;
+    protected Timestamp lastExecutionTime;
+
     public abstract boolean isTimeToServe();
 
-    public void setUnits(TimeUnit units) {
-        this.units = units;
+    public int getMinutes() {
+        return minutes;
     }
 
-    public void setOperation(Operation operation) {
-        this.operation = operation;
+    public int getHours() {
+        return hours;
     }
 
-    public void setPeriod(long period) {
-
-        this.period = period;
+    public int getDayOfMonth() {
+        return dayOfMonth;
     }
 
-    public long getPeriod() {
-
-        return period;
+    public int getMonth() {
+        return month;
     }
 
-    public TimeUnit getUnits() {
-        return units;
+    public int getDayOfWeek() {
+        return dayOfWeek;
     }
 
-    public Operation getOperation() {
-        return operation;
+    public void setMinutes(int minutes) {
+        this.minutes = minutes;
+    }
+
+    public void setHours(int hours) {
+        this.hours = hours;
+    }
+
+    public void setDayOfMonth(int dayOfMonth) {
+        this.dayOfMonth = dayOfMonth;
+    }
+
+    public void setMonth(int month) {
+        this.month = month;
+    }
+
+    public void setDayOfWeek(int dayOfWeek) {
+        this.dayOfWeek = dayOfWeek;
+    }
+
+    public Timestamp getLastExecutionTime() {
+        return lastExecutionTime;
     }
 }

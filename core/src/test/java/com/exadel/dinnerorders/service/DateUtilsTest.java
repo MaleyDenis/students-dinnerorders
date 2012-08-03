@@ -10,7 +10,6 @@ public class DateUtilsTest {
 
     @Test
     public void testGetDateOfThisMonday() {
-        new TasksManagerService();
         int actualDate = DateUtils.getDateOfThisMonday();
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis(DateUtils.getCurrentMondayTime().getTime());
@@ -105,5 +104,12 @@ public class DateUtilsTest {
         Assert.assertEquals(actualCalendar.get(Calendar.DATE), calendar.get(Calendar.DATE));
         Assert.assertEquals(actualCalendar.get(Calendar.YEAR), calendar.get(Calendar.YEAR));
         Assert.assertEquals(actualCalendar.get(Calendar.DAY_OF_WEEK), calendar.get(Calendar.DAY_OF_WEEK));
+    }
+
+    @Test
+    public void testGetDayOfWeek() {
+        Calendar actualCalendar = Calendar.getInstance();
+        actualCalendar.setFirstDayOfWeek(Calendar.MONDAY);
+        Assert.assertEquals(DateUtils.getDayOfWeek(), actualCalendar.get(Calendar.DAY_OF_WEEK)-1);
     }
 }

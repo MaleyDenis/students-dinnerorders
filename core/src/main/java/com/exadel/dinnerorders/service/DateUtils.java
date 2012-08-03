@@ -26,6 +26,22 @@ public class DateUtils {
         return calendar.get(Calendar.DATE);
     }
 
+    public static int getMinutes() {
+        Calendar calendar = Calendar.getInstance();
+        return calendar.get(Calendar.MINUTE);
+    }
+
+    public static int getHours() {
+        Calendar calendar = Calendar.getInstance();
+        int am_pm = calendar.get(Calendar.AM_PM);
+        return calendar.get(Calendar.HOUR) + (am_pm * (int) HOURS_IN_DAY >> 1);
+    }
+
+    public static int getDayOfWeek() {
+        Calendar calendar = Calendar.getInstance();
+        return calendar.get(Calendar.DAY_OF_WEEK) - 1;
+    }
+
     public static int getMonth() {
         Calendar calendar = Calendar.getInstance();
         return calendar.get(Calendar.MONTH) + 1;
@@ -101,5 +117,10 @@ public class DateUtils {
             default:
                 return 0;
         }
+    }
+
+    public static int getDayOfMonth() {
+        Calendar calendar = Calendar.getInstance();
+        return calendar.get(Calendar.DAY_OF_MONTH);
     }
 }

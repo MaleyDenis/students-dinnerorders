@@ -5,27 +5,18 @@ import com.exadel.dinnerorders.dao.MenuDAO;
 import com.exadel.dinnerorders.dao.MenuItemDAO;
 import com.exadel.dinnerorders.entity.Menu;
 import com.exadel.dinnerorders.entity.MenuItem;
-
+import com.exadel.dinnerorders.entity.Weekday;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Collections2;
 
-import org.apache.log4j.Logger;
-
 import javax.annotation.Nullable;
-
 import java.sql.Timestamp;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-
-/**
- * User: Василий Силин
- * Date: 18.7.12
- */
+import java.util.Map;
 
 public class MenuService {
-    private Logger logger = Logger.getLogger(MenuService.class);
     private static MenuDAO menuDAO = new MenuDAO();
     private static MenuItemDAO menuItemDAO = new MenuItemDAO();
 
@@ -37,6 +28,15 @@ public class MenuService {
     public static Collection<Menu> findMenuForCurrentWeek(){
         Timestamp date = DateUtils.getCurrentMondayTime();
         return findMenuByDate(date);
+    }
+
+    public static Collection<Menu> findMenuBeforeDate(final Timestamp date){
+        Predicate<Menu> predicate = new Predicate<Menu>() {
+            public boolean apply(@Nullable Menu o) {
+                return o != null && ((o.getDateStart().before(date) && (o.getDateStart().equals(date) )));
+            }
+        };
+        return Collections2.filter(loadAll(), predicate);
     }
 
     public static Collection<Menu> findMenuByDate(final Timestamp date){
@@ -53,7 +53,34 @@ public class MenuService {
         return result;
     }
 
-    public static boolean save(Menu newMenu){
+    public static boolean merge(Menu menu) {
+        Timestamp searchingDate = new Timestamp(menu.getDateStart().getTime());
+        Collection<Menu> loaded = MenuService.findMenuByDate(searchingDate);
+        Menu existed = isNewMenu(menu, loaded);
+        if (existed == null) {
+            return MenuService.save(menu);
+        } else {
+            Map<Weekday, List<MenuItem>> alreadyExisted = existed.getItems();
+            for ( int i = 0 ; i < alreadyExisted.size(); i++) {
+                List<MenuItem> existedList = existed.getItems().get(Weekday.getWeekday(i+1));
+                menu.getItems().get(Weekday.getWeekday(i+1)).addAll(existedList);
+            }
+            menu.setId(existed.getId());
+            return MenuService.update(menu);
+        }
+    }
+
+    private static Menu isNewMenu(Menu menu, Collection<Menu> loaded) {
+        for (Menu loadedMenu : loaded) {
+            if (loadedMenu.getCafeName().equals(menu.getCafeName())) {
+                return loadedMenu;
+            }
+        }
+        return null;
+    }
+
+    public static boolean save(Menu newMenu) {
+
         for(List<MenuItem> items : newMenu.getItems().values()){
             for(MenuItem item : items){
                 if(!menuItemDAO.create(item)){
@@ -100,5 +127,13 @@ public class MenuService {
         MenuCache cache = MenuCache.getInstance();
         cache.update(newMenu.getId(), newMenu);
         return menuDAO.update(newMenu);
+    }
+
+    public static boolean deleteAll(Collection<Menu> menus) {
+        boolean result = true;
+        for (Menu menu : menus) {
+            result = result && delete(menu);
+        }
+        return result;
     }
 }

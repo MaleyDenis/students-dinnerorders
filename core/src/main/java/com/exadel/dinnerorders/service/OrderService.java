@@ -1,16 +1,15 @@
 package com.exadel.dinnerorders.service;
 
+import com.exadel.dinnerorders.dao.MenuItemDAO;
 import com.exadel.dinnerorders.dao.OrderDAO;
+import com.exadel.dinnerorders.entity.MenuItem;
 import com.exadel.dinnerorders.entity.Order;
-import com.exadel.dinnerorders.exception.WorkflowException;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Collections2;
 import com.google.common.collect.Ordering;
 
 import javax.annotation.Nullable;
-import java.util.Collection;
-import java.util.Comparator;
-import java.util.Date;
+import java.util.*;
 
 
 public class OrderService {
@@ -45,19 +44,34 @@ public class OrderService {
         };
         Collection<Order> result =  Collections2.filter(orderDAO.loadAll(), predicate);
 
-        if (result.size() > 1) {
-            throw new WorkflowException();
-        }
-
-        if (result.isEmpty()) {
-            return null;
-        }
-
         return result.iterator().next();
     }
 
     public static boolean deleteOrder(Order order){
+        List<MenuItem> orderItems = order.getMenuItemList();
+        MenuItemDAO menuItemDAO = new MenuItemDAO();
+        for (MenuItem menuItem : orderItems){
+            menuItemDAO.delete(menuItem);
+        }
         return orderDAO.delete(order);
+    }
+
+    public static Collection<Order> findOrderBeforeDate(final Date date) {
+        Predicate<Order> predicate = new Predicate<Order>() {
+            public boolean apply(@Nullable Order  order) {
+                return order != null &&
+                        (order.getDateOrder().equals(date) || order.getDateOrder().before(date));
+            }
+        };
+        return Collections2.filter(orderDAO.loadAll(), predicate);
+    }
+
+    public static boolean deleteAll(Collection<Order> orders) {
+        boolean result = true;
+        for (Order order : orders) {
+            result = result && deleteOrder(order);
+        }
+        return result;
     }
 }
 

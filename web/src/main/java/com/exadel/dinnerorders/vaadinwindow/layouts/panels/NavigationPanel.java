@@ -36,5 +36,6 @@ public class NavigationPanel extends Panel {
         MenuBar.MenuItem userOrders = orderList.addItem("Show my orders", new ShowUserOrdersCommand() );
 
         adminList.addItem("Create menu...", new CreateMenuCommand());
+        adminList.addItem("Manage tasks", new ManageTasksCommand());
     }
 }

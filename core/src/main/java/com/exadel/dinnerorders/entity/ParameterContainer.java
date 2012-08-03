@@ -1,82 +1,86 @@
 package com.exadel.dinnerorders.entity;
 
-import com.exadel.dinnerorders.entity.Operation;
-
 import java.util.Scanner;
-import java.util.concurrent.TimeUnit;
+import java.util.regex.Pattern;
 
 public class ParameterContainer {
-    private Operation operation;
-    private String tableName;
-    private long period;
-    private long returnTime;
-    private TimeUnit unit;
+    private int minutes;
+    private int hours;
+    private int daysOfMonth;
+    private int month;
+    private int dayOfWeek;
+    private String className;
 
     public ParameterContainer(Scanner scanner) {
-        operation = Operation.getOperationByCode(scanner.next().charAt(0));
-        tableName = scanner.next();
-        period = scanner.nextLong();
-        returnTime = scanner.nextLong();
-        unit = getTimeUnit(scanner.next());
+        parseMinutes(scanner.next());
+        parseHours(scanner.next());
+        parseDaysOfMonth(scanner.next());
+        parseMonth(scanner.next());
+        parseDaysOfWeek(scanner.next());
+        className = scanner.next(Pattern.compile("[\\S]{1,}"));
     }
 
-    private TimeUnit getTimeUnit(String next) {
-        switch (next.charAt(0)){
-            case 'D':
-                return TimeUnit.DAYS;
-            case 'H':
-                return TimeUnit.HOURS;
-            case 'M':
-                return TimeUnit.MINUTES;
-            case 'S':
-                return TimeUnit.SECONDS;
-            case 'm':
-                return TimeUnit.MILLISECONDS;
-            case 'N':
-                return TimeUnit.NANOSECONDS;
-            default:
-                return TimeUnit.MILLISECONDS;
+    private void parseMinutes(String strValue) {
+        if (strValue.charAt(0) == '*') {
+            minutes = -1;
+        } else {
+            minutes = Integer.parseInt(strValue);
         }
     }
 
-    public Operation getOperation() {
-        return operation;
+    private void parseHours(String strValue) {
+        if (strValue.charAt(0) == '*') {
+            hours = -1;
+        } else {
+            hours = Integer.parseInt(strValue);
+        }
     }
 
-    public void setOperation(Operation operation) {
-        this.operation = operation;
+    private void parseDaysOfMonth(String strValue) {
+        if (strValue.charAt(0) == '*') {
+            daysOfMonth = -1;
+        } else {
+            daysOfMonth = Integer.parseInt(strValue);
+        }
     }
 
-    public void setTableName(String tableName) {
-        this.tableName = tableName;
+    private void parseMonth(String strValue) {
+        if (strValue.charAt(0) == '*') {
+            month = -1;
+        } else {
+            month = Integer.parseInt(strValue);
+        }
     }
 
-    public void setPeriod(long period) {
-        this.period = period;
+    private void parseDaysOfWeek(String strValue) {
+        if (strValue.charAt(0) == '*') {
+            dayOfWeek = -1;
+        } else {
+            dayOfWeek = Integer.parseInt(strValue);
+        }
     }
 
-    public void setReturnTime(long returnTime) {
-        this.returnTime = returnTime;
+    public String getClassName() {
+        return className;
     }
 
-    public void setUnit(TimeUnit unit) {
-        this.unit = unit;
+    public int getMinutes() {
+        return minutes;
     }
 
-    public String getTableName() {
-
-        return tableName;
+    public int getHours() {
+        return hours;
     }
 
-    public long getPeriod() {
-        return period;
+    public int getDaysOfMonth() {
+        return daysOfMonth;
     }
 
-    public long getReturnTime() {
-        return returnTime;
+    public int getMonth() {
+        return month;
     }
 
-    public TimeUnit getUnit() {
-        return unit;
+    public int getDayOfWeek() {
+        return dayOfWeek;
     }
 }
