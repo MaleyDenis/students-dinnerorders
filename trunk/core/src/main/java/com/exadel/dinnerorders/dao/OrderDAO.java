@@ -1,7 +1,6 @@
 package com.exadel.dinnerorders.dao;
 
 import com.exadel.dinnerorders.entity.*;
-import com.exadel.dinnerorders.entity.DefaultMysqlConnectionProvider;
 import org.apache.log4j.Logger;
 
 import java.sql.*;
@@ -20,7 +19,8 @@ public class OrderDAO extends BaseDAO<Order> {
             if (connection != null && orderItem.getId() == null){
                 PreparedStatement pst = connection.prepareStatement
                         ("INSERT INTO dinnerorders.order VALUES(?,?,?,?,?)");
-                pst.setLong(1, getID());
+                orderItem.setId(getID());
+                pst.setLong(1, orderItem.getId());
                 pst.setLong(2, orderItem.getUserID());
                 pst.setDouble(3, orderItem.getCost());
                 pst.setTimestamp(4, new java.sql.Timestamp(orderItem.getDateOrder().getTime()));
