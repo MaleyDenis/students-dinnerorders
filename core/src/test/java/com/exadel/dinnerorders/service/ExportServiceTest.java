@@ -43,8 +43,8 @@ public class ExportServiceTest {
           InputStream inputStream = ExportService.getTxt(exportStrategy);
           if (inputStream != null) {
 
-              File f = new File("ExportService-test.xls");
-              FileOutputStream fileOut = new FileOutputStream("ExportService-test.xls");
+              File f = new File("ExportService-test.txt");
+              FileOutputStream fileOut = new FileOutputStream("ExportService-test.txt");
               byte[] bytes = IOUtils.toByteArray(inputStream);
               fileOut.write(bytes);
 
