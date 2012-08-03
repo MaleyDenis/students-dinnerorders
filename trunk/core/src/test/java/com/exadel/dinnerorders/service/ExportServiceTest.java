@@ -22,7 +22,7 @@ public class ExportServiceTest {
         if (inputStream != null) {
 
             File f = new File("ExportService-test.xls");
-            FileOutputStream fileOut = new FileOutputStream("ExportService-test.xls");
+            FileOutputStream fileOut = new FileOutputStream(f);
             byte[] bytes = IOUtils.toByteArray(inputStream);
             fileOut.write(bytes);
 
@@ -44,7 +44,8 @@ public class ExportServiceTest {
           if (inputStream != null) {
 
               File f = new File("ExportService-test.txt");
-              FileOutputStream fileOut = new FileOutputStream("ExportService-test.txt");
+
+              FileOutputStream fileOut = new FileOutputStream(f);
               byte[] bytes = IOUtils.toByteArray(inputStream);
               fileOut.write(bytes);
 
