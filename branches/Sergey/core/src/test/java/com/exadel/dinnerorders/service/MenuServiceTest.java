@@ -1,15 +1,11 @@
 package com.exadel.dinnerorders.service;
 
-import com.exadel.dinnerorders.cache.MenuCache;
 import com.exadel.dinnerorders.dao.MenuDAO;
 import com.exadel.dinnerorders.dao.MenuItemDAO;
 import com.exadel.dinnerorders.entity.Menu;
 import com.exadel.dinnerorders.entity.MenuItem;
 import com.exadel.dinnerorders.entity.Weekday;
-
 import junit.framework.Assert;
-import junit.framework.TestCase;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -24,26 +20,31 @@ import java.util.List;
  * Date: 18.7.12
  */
 
-public class MenuServiceTest extends TestCase {
+public class MenuServiceTest {
     private MenuDAO menuDAO;
     private MenuItemDAO menuItemDAO;
     private Menu currentMenu;
     private MenuItem menuItem1;
     private MenuItem menuItem2;
     private MenuItem menuItem3;
+    private Timestamp startDate;
+    private Timestamp endDate;
 
     @Before
-    protected void setUp() throws Exception {
+    public void setUp() throws Exception {
         menuItemDAO = new MenuItemDAO();
         menuDAO = new MenuDAO();
-        menuItem1 = new MenuItem(null, Weekday.FRIDAY, "A", (double)1);
-        menuItem2 = new MenuItem(null, Weekday.WEDNESDAY, "B", (double)2);
-        menuItem3 = new MenuItem(null, Weekday.TUESDAY, "C", (double)3);
+        menuItem1 = new MenuItem(null, Weekday.FRIDAY, "Friday dish", 50d);
+        menuItem2 = new MenuItem(null, Weekday.WEDNESDAY, "Wednesday dish", 30d);
+        menuItem3 = new MenuItem(null, Weekday.TUESDAY, "Tuesday dish", 20d);
         menuItemDAO.create(menuItem1);
         menuItemDAO.create(menuItem2);
         menuItemDAO.create(menuItem3);
-        currentMenu = new Menu(null, "1", new Timestamp((long)134262 * 10000000 + 2791664),
-                new Timestamp((long)134262 * 10000000 + 2791664 + 3000), new HashMap<Weekday, List<MenuItem>>());
+        startDate = new Timestamp(DateUtils.getCurrentMondayTime().getTime() -
+                DateUtils.MILLISECONDS_IN_DAY * DateUtils.DAYS_IN_WEEK);
+        endDate = new Timestamp(DateUtils.getCurrentFridayTime().getTime() -
+                DateUtils.MILLISECONDS_IN_DAY * DateUtils.DAYS_IN_WEEK);
+        currentMenu = new Menu(null, "cafeName", startDate, endDate, new HashMap<Weekday, List<MenuItem>>());
         currentMenu.addItem(menuItem1);
         currentMenu.addItem(menuItem2);
         currentMenu.addItem(menuItem3);
@@ -55,14 +56,20 @@ public class MenuServiceTest extends TestCase {
     @Test
     public void testFindMenuByDate() {
         try {
-            Timestamp date = new Timestamp((long)134262 * 10000000 + 2791664 + 2000);
-            Collection<Menu> menus = MenuService.findMenuByDate(date);
-            Menu menu = menus.iterator().next();
-            Assert.assertTrue(menu != null);
-            Assert.assertTrue(menu.equals(currentMenu));
+            Collection<Menu> menus = MenuService.findMenuByDate(startDate);
+            Assert.assertTrue(isOneEqualExist(menus));
         } catch (Exception e) {
             Assert.assertTrue(false);
         }
+    }
+
+    private boolean isOneEqualExist(Collection<Menu> menus) {
+        for (Menu menu : menus) {
+            if (currentMenu.equals(menu)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     @Test
@@ -87,7 +94,8 @@ public class MenuServiceTest extends TestCase {
     @Test
     public void testUpdateAndLoad() {
         try{
-            Menu updatedMenu = new Menu(currentMenu.getId(), "jjjjjj", currentMenu.getDateStart(), currentMenu.getDateEnd(), currentMenu.getItems());
+            Menu updatedMenu = new Menu(currentMenu.getId(), "updatedCafeName",
+                    currentMenu.getDateStart(), currentMenu.getDateEnd(), currentMenu.getItems());
             MenuService.update(updatedMenu);
             currentMenu = MenuService.load(currentMenu.getId());
             if(currentMenu == null || !currentMenu.equals(updatedMenu)){
@@ -102,28 +110,17 @@ public class MenuServiceTest extends TestCase {
     public void testLoadAll () {
         try {
             Collection<Menu> menus = MenuService.loadAll();
-            for(Menu menu : menus){
-                MenuService.delete(menu);
-            }
-            Assert.assertTrue(MenuService.loadAll().size() == 0);
-            currentMenu.setId(null);
-            menuItem1.setId(null);
-            menuItem2.setId(null);
-            menuItem3.setId(null);
-            menuItemDAO.create(menuItem1);
-            menuItemDAO.create(menuItem2);
-            menuItemDAO.create(menuItem3);
-            menuDAO.create(currentMenu);
+            Assert.assertTrue(isOneEqualExist(menus));
         } catch (Exception e) {
             Assert.assertTrue(false);
         }
     }
 
     @After
-    public void tearDown() throws Exception {
-        menuDAO.delete(currentMenu);
-        menuItemDAO.delete(menuItem1);
-        menuItemDAO.delete(menuItem2);
-        menuItemDAO.delete(menuItem3);
+    public void tearDown() {
+        Assert.assertTrue(menuDAO.delete(currentMenu));
+        Assert.assertTrue(menuItemDAO.delete(menuItem1));
+        Assert.assertTrue(menuItemDAO.delete(menuItem2));
+        Assert.assertTrue(menuItemDAO.delete(menuItem3));
     }
 }

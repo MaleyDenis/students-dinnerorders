@@ -1,2 +1,0 @@
-u order 28 7 D
-u menu 28 7 D

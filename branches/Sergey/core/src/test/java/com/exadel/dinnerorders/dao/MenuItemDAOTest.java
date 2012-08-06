@@ -17,7 +17,7 @@ public class MenuItemDAOTest {
 
     @Before
     public void setUp() throws Exception {
-        menuItem = new MenuItem(null, Weekday.MONDAY, "1", new Double(1));
+        menuItem = new MenuItem(null, Weekday.MONDAY, "1", 10d);
         menuItemDAO = new MenuItemDAO();
         menuItemDAO.create(menuItem);
     }
@@ -37,13 +37,13 @@ public class MenuItemDAOTest {
     @Test
     public void testUpdate() {
         try{
-            MenuItem updatedItem = new MenuItem(menuItem.getId(), Weekday.MONDAY, "11", new Double(11));
+            MenuItem updatedItem = new MenuItem(menuItem.getId(), Weekday.MONDAY, "11", 11d);
             Assert.assertTrue(menuItemDAO.update(updatedItem));
             menuItem = menuItemDAO.load(updatedItem.getId());
             if(menuItem == null || !menuItem.equals(updatedItem)){
                 throw new Exception();
             }
-        } catch (Exception e){
+        } catch (Exception e) {
             Assert.assertTrue(false);
         }
     }

@@ -13,6 +13,7 @@ public abstract class Task implements Callable<Boolean> {
 
     public abstract boolean isTimeToServe();
 
+
     public int getMinutes() {
         return minutes;
     }

@@ -4,75 +4,125 @@ import com.exadel.dinnerorders.entity.MenuItem;
 import com.exadel.dinnerorders.entity.Order;
 import com.exadel.dinnerorders.entity.Weekday;
 import junit.framework.Assert;
-import junit.framework.TestCase;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Test;
+
+import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 
- public class OrderDAOTest extends TestCase {
-    @Before
-    public void setUp() throws Exception {
+public class OrderDAOTest {
+    private static OrderDAO orderDAO;
+    private static Order order1;
+    private static Order order2;
+    private static MenuItem menuItem1;
+    private static MenuItem menuItem2;
+    private static MenuItem menuItem3;
+    private static MenuItemDAO menuItemDAO;
 
+    @Before
+    public void setUp() {
+        double cost = 50;
+        orderDAO = new OrderDAO();
+        menuItemDAO = new MenuItemDAO();
+        Timestamp dateOrder = new Timestamp(System.currentTimeMillis());
+        Timestamp datePayment = new Timestamp(System.currentTimeMillis());
+
+        order1 = new Order(null, orderDAO.getID(), cost, dateOrder, datePayment);
+        menuItem1 = new MenuItem(null, Weekday.MONDAY, "OrderItem1", 50d);
+        Assert.assertTrue(menuItemDAO.create(menuItem1));
+        List<MenuItem> menuItems = new ArrayList<MenuItem>();
+        menuItems.add(menuItem1);
+        order1.setMenuItemList(menuItems);
+
+        order2 = new Order(null, orderDAO.getID(), cost, dateOrder, datePayment);
+        menuItem2 = new MenuItem(null, Weekday.TUESDAY, "OrderItem2", 50d);
+        Assert.assertTrue(menuItemDAO.create(menuItem2));
+        menuItems = new ArrayList<MenuItem>();
+        menuItems.add(menuItem2);
+        order2.setMenuItemList(menuItems);
+
+        menuItem3 = new MenuItem(null, Weekday.WEDNESDAY, "OrderItem3", 50d);
+        Assert.assertTrue(menuItemDAO.create(menuItem3));
+
+        Assert.assertTrue(orderDAO.create(order1));
+        Assert.assertTrue(orderDAO.create(order2));
+    }
+
+    @Test
+    public void testCreate() {
+        Assert.assertTrue(orderDAO.delete(order1));
+        Assert.assertTrue(orderDAO.delete(order2));
+        Assert.assertNotNull(order1);
+        order1.setId(null);
+        Assert.assertTrue(orderDAO.create(order1));
+        order2.setId(null);
+        Assert.assertNotNull(order2);
+        Assert.assertTrue(orderDAO.create(order2));
+    }
+
+    @Test
+    public void testUpdate() {
+        Timestamp newOrderDate = new Timestamp(System.currentTimeMillis());
+        newOrderDate.setNanos(0);
+        Timestamp newPaymentDate = new Timestamp(System.currentTimeMillis());
+        newPaymentDate.setNanos(0);
+
+        double newCost = 100;
+
+        Order updatedOrder = new Order(order1.getId(), order1.getUserID(), newCost, newOrderDate, newPaymentDate);
+        List<MenuItem> itemsList = new ArrayList<MenuItem>();
+        itemsList.addAll(order1.getMenuItemList());
+        itemsList.add(menuItem3);
+        updatedOrder.setMenuItemList(itemsList);
+
+        orderDAO.update(updatedOrder);
+        Order loaded = orderDAO.load(updatedOrder.getId());
+        Assert.assertNotNull(loaded);
+        Assert.assertTrue(loaded.getId().equals(updatedOrder.getId()));
+        Assert.assertTrue(loaded.getUserID().equals(updatedOrder.getUserID()));
+        Assert.assertTrue(loaded.getCost() == updatedOrder.getCost());
+        Assert.assertTrue(loaded.getDateOrder().equals(updatedOrder.getDateOrder()));
+        Assert.assertTrue(loaded.getDatePayment().equals(updatedOrder.getDatePayment()));
+        Assert.assertTrue(isItemsIdentical(loaded.getMenuItemList(), updatedOrder.getMenuItemList()));
+        order1 = updatedOrder;
+    }
+
+    private boolean isItemsIdentical(List<MenuItem> menuItemList, List<MenuItem> menuItemList1) {
+        boolean isOneEquals = false;
+        for (MenuItem menuItem : menuItemList) {
+            for(MenuItem menuItem2: menuItemList1) {
+                if (menuItem.equals(menuItem2)) {
+                    isOneEquals = true;
+                    break;
+                }
+            }
+            if (!isOneEquals) {
+                return false;
+            }
+            isOneEquals = false;
+        }
+        return true;
+    }
+
+    @Test
+    public void testDelete() {
+        Assert.assertTrue(orderDAO.delete(order1));
+        Assert.assertTrue(menuItemDAO.delete(menuItem1));
+        Assert.assertTrue(orderDAO.delete(order2));
+        Assert.assertTrue(menuItemDAO.delete(menuItem2));
+        Assert.assertTrue(menuItemDAO.delete(menuItem3));
     }
 
     @After
-    public void tearDown() throws Exception {
-
-    }
-
-    public void testCreate() throws Exception {
-        OrderDAO orderDAO = new OrderDAO();
-        Date date = new Date();
-
-        Order order = new Order((long)1,(long)1,23.5,date,date);
-        Assert.assertNotNull(order);
-
-        MenuItem  menuItem1 = new MenuItem((long)2, Weekday.MONDAY, "4", (double)1);
-        MenuItemDAO menuItemDAO = new MenuItemDAO();
-        assertTrue(menuItemDAO.create(menuItem1));
-        List<MenuItem> menuItems = new ArrayList<MenuItem>();
-        menuItems.add(menuItem1);
-        order.setMenuItemList(menuItems);
-
-        assertTrue(orderDAO.create(order));
-
-        Order order1 = new Order((long)2,(long)2,23.5,date,date);
-        Assert.assertNotNull(order1);
-
-        MenuItem  menuItem2 = new MenuItem((long)3, Weekday.MONDAY, "4", (double)1);
-        menuItemDAO.create(menuItem2);
-        List<MenuItem> menuItems2 = new ArrayList<MenuItem>();
-        menuItems2.add(menuItem2);
-        order1.setMenuItemList(menuItems2);
-        orderDAO.create(order1);
-
-    }
-
-   public void testUpdate() throws Exception {
-        OrderDAO orderDAO = new OrderDAO();
-        Date date = new Date();
-        Order order2 = new Order((long)2,(long)2,23.5,date,date);
-        order2.setCost(54645);
-        order2.setDatePayment(date);
-        orderDAO.update(order2);
-    }
-
-
-   public void testDelete() throws Exception {
-        OrderDAO orderDAO = new OrderDAO();
-        MenuItemDAO menuItemDAO = new MenuItemDAO();
-        Date date = new Date();
-        Order order = new Order((long)1,(long)2,645.65,date,date);
-        assertTrue(orderDAO.delete(order));
-        MenuItem  menuItem1 = new MenuItem((long)2, Weekday.MONDAY, "4", (double)1);
-        assertTrue(menuItemDAO.delete(menuItem1));
-        Order order1 = new Order((long)2,(long)2,555,date,date);
-        assertTrue(orderDAO.delete(order1));
-        MenuItem  menuItem2 = new MenuItem((long)3, Weekday.MONDAY, "4", (double)1);
-        assertTrue(menuItemDAO.delete(menuItem2));
+    public void tearDown() {
+        orderDAO.delete(order1);
+        orderDAO.delete(order2);
+        menuItemDAO.delete(menuItem1);
+        menuItemDAO.delete(menuItem2);
+        menuItemDAO.delete(menuItem3);
     }
 }
 

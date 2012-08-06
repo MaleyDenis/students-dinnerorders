@@ -57,6 +57,7 @@ public class ClearOrderTableTask extends Task {
         return answer;
     }
 
+
     private boolean isEveryTime() {
         boolean answer;
         answer = minutes == -1;
