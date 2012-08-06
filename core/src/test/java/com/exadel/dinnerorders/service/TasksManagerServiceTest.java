@@ -13,6 +13,9 @@ import org.junit.Test;
 import java.sql.Timestamp;
 import java.util.*;
 
+/**
+ * Does not work. Will be fixed later.
+ */
 public class TasksManagerServiceTest {
     private Timestamp startDate;
     private Timestamp endDate;
@@ -29,10 +32,17 @@ public class TasksManagerServiceTest {
     @Test
     public void testCleaning() {
         TasksManagerService tasksManagerService = new TasksManagerService();
-        tasksManagerService.run();
+        addSpecificTask(tasksManagerService);
+        tasksManagerService.start();
         tasksManagerService.getLastExecutionResult();
         Collection<Menu> menus = MenuService.findMenuByDate(startDate);
         Assert.assertTrue(menus == null || menus.size() == 0);
+    }
+
+    private void addSpecificTask(TasksManagerService tasksManagerService) {
+        tasksManagerService.getTasksList().clear();
+        tasksManagerService.addTask
+                (TasksFactory.createTask("* * * * * com.exadel.dinnerorders.entity.tasks.ClearMenuTableTask"));
     }
 
     private void initDates() {

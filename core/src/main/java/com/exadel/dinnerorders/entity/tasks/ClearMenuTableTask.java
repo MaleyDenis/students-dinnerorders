@@ -28,7 +28,11 @@ public class ClearMenuTableTask extends Task {
 
     @Override
     public boolean isTimeToServe() {
-        return isEveryTime() || isAppropriateTime();
+        boolean everyTimeFlag = isEveryTime();
+        if (everyTimeFlag) {
+            lastExecutionTime = new Timestamp(System.currentTimeMillis());
+        }
+        return everyTimeFlag || isAppropriateTime();
     }
 
     private boolean isAppropriateTime() {

@@ -15,7 +15,6 @@ import java.util.Collection;
 
 public class WebApplicationController extends com.vaadin.Application {
     private EventBus eventBus = Application.getInstance().getEventBus();
-    private Layout welcomeLayout;
     private Layout loginLayout;
 
     @Override
@@ -46,7 +45,7 @@ public class WebApplicationController extends com.vaadin.Application {
 
     @Subscribe
     public void authenticationPassed(AuthenticationEvent authenticationEvent) {
-        welcomeLayout = new WelcomeLayout();
+        Layout welcomeLayout = new WelcomeLayout();
         getMainWindow().setContent(welcomeLayout);
     }
 
@@ -71,7 +70,8 @@ public class WebApplicationController extends com.vaadin.Application {
     public void currentWeekMenuSelected(ShowCurrentWeekMenuEvent cwmEvent) {
         Collection<Menu> currentWeek = MenuService.findMenuForCurrentWeek();
         if (currentWeek == null || currentWeek.isEmpty()) {
-            getMainWindow().showNotification("Sorry,", "no any meny for this week available", Window.Notification.TYPE_HUMANIZED_MESSAGE);
+            getMainWindow().showNotification("Sorry,", "no any menu for this week available",
+                    Window.Notification.TYPE_HUMANIZED_MESSAGE);
             return;
         }
         CurrentWeekMenuPanel currentWeekMenuPanel = new CurrentWeekMenuPanel(currentWeek.iterator().next());
@@ -82,7 +82,8 @@ public class WebApplicationController extends com.vaadin.Application {
     public void nextWeekMenuSelected(ShowNextWeekMenuEvent nwmEvent){
         Collection<Menu> nextWeek = MenuService.findMenuForNextWeek();
         if (nextWeek == null || nextWeek.isEmpty()) {
-            getMainWindow().showNotification("Sorry,", "no any meny for next week available", Window.Notification.TYPE_HUMANIZED_MESSAGE);
+            getMainWindow().showNotification("Sorry,", "no any menu for next week available",
+                    Window.Notification.TYPE_HUMANIZED_MESSAGE);
             return;
         }
         CurrentWeekMenuPanel currentWeekMenuPanel = new CurrentWeekMenuPanel(nextWeek.iterator().next());

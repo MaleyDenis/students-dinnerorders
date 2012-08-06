@@ -1,13 +1,11 @@
 package com.exadel.dinnerorders.dao;
 
 import com.exadel.dinnerorders.entity.*;
-import com.exadel.dinnerorders.entity.DefaultMysqlConnectionProvider;
 import org.apache.log4j.Logger;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Date;
 import java.util.List;
 
 @DbConnection(connectionType=DefaultMysqlConnectionProvider.class)
@@ -20,11 +18,12 @@ public class OrderDAO extends BaseDAO<Order> {
             if (connection != null && orderItem.getId() == null){
                 PreparedStatement pst = connection.prepareStatement
                         ("INSERT INTO dinnerorders.order VALUES(?,?,?,?,?)");
-                pst.setLong(1, getID());
+                orderItem.setId(getID());
+                pst.setLong(1, orderItem.getId());
                 pst.setLong(2, orderItem.getUserID());
                 pst.setDouble(3, orderItem.getCost());
-                pst.setTimestamp(4, new java.sql.Timestamp(orderItem.getDateOrder().getTime()));
-                pst.setTimestamp(5, new java.sql.Timestamp(orderItem.getDatePayment().getTime()));
+                pst.setTimestamp(4, orderItem.getDateOrder());
+                pst.setTimestamp(5, orderItem.getDatePayment());
                 pst.executeUpdate();
                 List<MenuItem> list = orderItem.getMenuItemList();
                 pst.close();
@@ -37,7 +36,6 @@ public class OrderDAO extends BaseDAO<Order> {
                     preparedStatement.executeUpdate();
                 }
                 disconnect(connection);
-
                 return true;
             }
         } catch (SQLException e) {
@@ -50,18 +48,19 @@ public class OrderDAO extends BaseDAO<Order> {
 
     public boolean update(Order item) {
         Connection connection = getConnection(this);
-        Double cost;
-        Date datePayment;
         try {
             if (connection != null){
-                cost = item.getCost();
-                datePayment = item.getDatePayment();
                 PreparedStatement preparedStatement = connection.prepareStatement
-                        ("UPDATE dinnerorders.order SET" +" cost = ?,date_payment = ? ");
-                preparedStatement.setDouble(1, cost);
-                preparedStatement.setTimestamp(2, new java.sql.Timestamp(datePayment.getTime()));
+                        ("UPDATE dinnerorders.order SET cost = ?, date_order = ?, date_payment = ? ");
+                preparedStatement.setDouble(1, item.getCost());
+                preparedStatement.setTimestamp(2, item.getDateOrder());
+                preparedStatement.setTimestamp(3, item.getDatePayment());
                 preparedStatement.executeUpdate();
                 preparedStatement.close();
+
+                deleteFromOrderItemsTable(item);
+                createNewOrderItems(item, connection);
+
                 disconnect(connection);
                 return true;
             }
@@ -74,10 +73,28 @@ public class OrderDAO extends BaseDAO<Order> {
         return false;
     }
 
+    private boolean createNewOrderItems(Order order, Connection connection) {
+        boolean result = false;
+        try {
+            for (MenuItem menuItem : order.getMenuItemList()){
+                PreparedStatement preparedStatement = connection.prepareStatement
+                        ("INSERT INTO dinnerorders.order_menuitem (id ,order_id, menu_item_id) VALUE (?,?,?)");
+                preparedStatement.setLong(1, getID());
+                preparedStatement.setLong(2, order.getId());
+                preparedStatement.setLong(3, menuItem.getId());
+                preparedStatement.executeUpdate();
+            }
+            result = true;
+        } catch (SQLException sqlException) {
+            logger.error("");
+        }
+        return result;
+    }
+
     public boolean delete(Order item)  {
         Connection connection = getConnection(this);
         try {
-            if (connection != null){
+            if (connection != null && item.getId() != null){
                 PreparedStatement preparedStatement = connection.prepareStatement
                         ("DELETE FROM dinnerorders.order WHERE order_id=?");
                 preparedStatement.setLong(1, item.getId());
@@ -89,23 +106,19 @@ public class OrderDAO extends BaseDAO<Order> {
             }
         } catch (SQLException e) {
            logger.error("Delete error the method",e);
-        } catch (InstantiationException e) {
-            logger.error("Delete error the method", e);
-        } catch (IllegalAccessException e) {
-            logger.error("Delete error the method", e);
         } finally {
             disconnect(connection);
         }
         return false;
     }
 
-    private void deleteFromOrderItemsTable(Order item) throws InstantiationException, IllegalAccessException {
+    private void deleteFromOrderItemsTable(Order item) {
         Connection connection = getConnection(this);
         PreparedStatement preparedStatement;
         try {
             preparedStatement = connection.prepareStatement
                     ("DELETE FROM dinnerorders.order_menuitem WHERE order_id=?");
-            preparedStatement.setLong(1,item.getId());
+            preparedStatement.setLong(1, item.getId());
             preparedStatement.executeUpdate();
             preparedStatement.close();
         } catch (SQLException e) {
@@ -128,8 +141,8 @@ public class OrderDAO extends BaseDAO<Order> {
                         resultSet.getLong(1),
                         resultSet.getLong(2),
                         resultSet.getDouble(3),
-                        resultSet.getDate(4),
-                        resultSet.getDate(5));
+                        resultSet.getTimestamp(4),
+                        resultSet.getTimestamp(5));
 
                 orders.add(order);
                 menuItems = getOrderMenuItem(order,connection);
@@ -181,7 +194,7 @@ public class OrderDAO extends BaseDAO<Order> {
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()){
             order = new Order(resultSet.getLong(1),resultSet.getLong(2),resultSet.getDouble(3),
-                    resultSet.getDate(4),resultSet.getDate(5));
+                    resultSet.getTimestamp(4),resultSet.getTimestamp(5));
             }
             if (order != null) {
                 order.setMenuItemList(getOrderMenuItem(order, connection));

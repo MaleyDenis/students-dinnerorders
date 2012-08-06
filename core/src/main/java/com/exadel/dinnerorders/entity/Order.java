@@ -2,7 +2,7 @@ package com.exadel.dinnerorders.entity;
 
 import com.exadel.dinnerorders.dao.OrderDAO;
 
-import java.util.Date;
+import java.sql.Timestamp;
 import java.util.List;
 
 
@@ -14,13 +14,13 @@ public class Order  implements Entity{
     @Export(column = "Cost")
     private double cost;
     @Export(column = "Date of payment")
-    private Date datePayment;
+    private Timestamp datePayment;
     @Export(column = "Date of order")
-    private Date dateOrder;
+    private Timestamp dateOrder;
 
     private List<MenuItem> menuItemList;
 
-    public Order(Long id, Long userID, double cost, Date dateOrder, Date datePayment) {
+    public Order(Long id, Long userID, double cost, Timestamp dateOrder, Timestamp datePayment) {
         this.id = id;
         this.userID = userID;
         this.cost = cost;
@@ -28,7 +28,7 @@ public class Order  implements Entity{
         this.datePayment = datePayment;
     }
 
-    public Order(Long userID, double cost, Date dateOrder, Date datePayment) {
+    public Order(Long userID, double cost, Timestamp dateOrder, Timestamp datePayment) {
         OrderDAO orderDAO = new OrderDAO();
         id = orderDAO.getID();
         this.userID = userID;
@@ -45,19 +45,19 @@ public class Order  implements Entity{
         this.cost = cost;
     }
 
-    public Date getDatePayment() {
+    public Timestamp getDatePayment() {
         return datePayment;
     }
 
-    public void setDatePayment(Date datePayment) {
+    public void setDatePayment(Timestamp datePayment) {
         this.datePayment = datePayment;
     }
 
-    public Date getDateOrder() {
+    public Timestamp getDateOrder() {
         return dateOrder;
     }
 
-    public void setDateOrder(Date dateOrder) {
+    public void setDateOrder(Timestamp dateOrder) {
         this.dateOrder = dateOrder;
     }
 
@@ -75,5 +75,9 @@ public class Order  implements Entity{
 
     public void setMenuItemList(List<MenuItem> menuItemList) {
         this.menuItemList = menuItemList;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 }

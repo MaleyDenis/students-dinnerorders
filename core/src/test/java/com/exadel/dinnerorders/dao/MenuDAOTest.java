@@ -3,19 +3,16 @@ package com.exadel.dinnerorders.dao;
 import com.exadel.dinnerorders.entity.Menu;
 import com.exadel.dinnerorders.entity.MenuItem;
 import com.exadel.dinnerorders.entity.Weekday;
-
+import com.exadel.dinnerorders.service.DateUtils;
 import junit.framework.Assert;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.sql.Timestamp;
-
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Date;
 
 
 public class MenuDAOTest {
@@ -24,18 +21,26 @@ public class MenuDAOTest {
     private Menu menu;
     private MenuItem menuItem1;
     private MenuItem menuItem2;
-    private Timestamp date;
+    private Timestamp startDate;
+    private Timestamp endDate;
 
     @Before
     public void setUp() throws Exception {
+        int testWeekReturn = 52;
         menuDAO = new MenuDAO();
         menuItemDAO = new MenuItemDAO();
-        date = new Timestamp((new Date()).getTime());
-        menuItem1 = new MenuItem(null, Weekday.MONDAY, "rrrrr", new Double(6.7));
-        menuItem2 = new MenuItem(null, Weekday.TUESDAY, "ttttt", new Double(77));
+        startDate = new Timestamp(DateUtils.getCurrentMondayTime().getTime() -
+                DateUtils.MILLISECONDS_IN_DAY * DateUtils.DAYS_IN_WEEK * testWeekReturn);
+        endDate = new Timestamp(DateUtils.getCurrentFridayTime().getTime() -
+                DateUtils.DAYS_IN_WEEK * DateUtils.MILLISECONDS_IN_DAY * testWeekReturn);
+        startDate.setNanos(0);
+        endDate.setNanos(0);
+        menuItem1 = new MenuItem(null, Weekday.MONDAY, "Item1", 67d);
+        menuItem2 = new MenuItem(null, Weekday.TUESDAY, "Item2", 21d);
+
         menuItemDAO.create(menuItem1);
         menuItemDAO.create(menuItem2);
-        menu = new Menu(null, "Josh", new Timestamp(date.getTime() - 1000), new Timestamp(date.getTime() + 1000), new HashMap<Weekday, List<MenuItem>>());
+        menu = new Menu(null, "InitialName",startDate, endDate, new HashMap<Weekday, List<MenuItem>>());
         menu.addItem(menuItem1);
         menu.addItem(menuItem2);
         menuDAO.create(menu);
@@ -56,12 +61,15 @@ public class MenuDAOTest {
     @Test
     public void testUpdate() {
         try{
-            menu.getDateEnd().setNanos(0);
-            menu.getDateStart().setNanos(0);
-            Menu updatedMenu = new Menu(menu.getId(), "Amerikano", menu.getDateStart(), menu.getDateEnd(), menu.getItems());// change: cafeName;
+            String newName = "UpdatedName";
+            Timestamp newStartDate = new Timestamp(startDate.getTime() + DateUtils.MILLISECONDS_IN_DAY * DateUtils.DAYS_IN_WEEK);
+            Timestamp newEndDate = new Timestamp(endDate.getTime() + DateUtils.MILLISECONDS_IN_DAY * DateUtils.DAYS_IN_WEEK);
+            newStartDate.setNanos(0);
+            newEndDate.setNanos(0);
+            Menu updatedMenu = new Menu(menu.getId(), newName, newStartDate, newEndDate, menu.getItems());
             Assert.assertTrue(menuDAO.update(updatedMenu));
             menu = menuDAO.load(menu.getId());
-            if(menu == null || !menu.equals(updatedMenu)) { // check update
+            if(menu == null || !menu.equals(updatedMenu)) {
                 throw new Exception();
             }
         } catch (Exception e){
@@ -80,11 +88,9 @@ public class MenuDAOTest {
     }
 
     @Test
-    public void testLoad() {
+    public void testLoadByID() {
         try{
             Menu newMenu = menuDAO.load(menu.getId());
-            menu.getDateStart().setNanos(0);
-            menu.getDateEnd().setNanos(0);
             if(newMenu == null || !menu.equals(newMenu)){
                 throw new Exception();
             }
@@ -96,15 +102,15 @@ public class MenuDAOTest {
     @Test
     public void testCallMenuId () {
         try {
-            //Collection<Long> menusId = menuDAO.callMenuID();
-            //Assert.assertTrue(menusId.size() > 0);
+            Collection<Long> menusId = menuDAO.getAllMenuIds();
+            Assert.assertTrue(menusId.size() > 0);
         } catch (Exception e){
             Assert.assertTrue(false);
         }
     }
 
     @After
-    public void tearDown() throws Exception {
+    public void tearDown() {
         menuDAO.delete(menu);
         menuItemDAO.delete(menuItem1);
         menuItemDAO.delete(menuItem2);
