@@ -14,15 +14,15 @@ public class LoginFormListener implements LoginForm.LoginListener {
 
     @Override
     public void onLogin(LoginForm.LoginEvent loginEvent) {
-       if (isInformationValid(loginEvent)) {
+        if (isInformationValid(loginEvent)) {
             showWelcomePage(loginEvent);
-       } else {
+        } else {
             clearForm(loginEvent);
         }
     }
 
     private void clearForm(LoginForm.LoginEvent loginEvent) {
-        LoginForm loginForm = (LoginForm)loginEvent.getSource();
+        LoginForm loginForm = (LoginForm) loginEvent.getSource();
         loginForm.setCaption("Incorrect login or password");
         Window.Notification warning = new Window.Notification("Mistake!", "Incorrect login or password", Window.Notification.TYPE_WARNING_MESSAGE);
         loginForm.getWindow().showNotification(warning);

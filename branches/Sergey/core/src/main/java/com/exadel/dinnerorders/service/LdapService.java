@@ -4,11 +4,11 @@ import com.exadel.dinnerorders.entity.SystemResource;
 import com.exadel.dinnerorders.exception.IllegalUserLoginException;
 import org.apache.log4j.Logger;
 
-import java.util.*;
 import javax.naming.Context;
 import javax.naming.NamingEnumeration;
 import javax.naming.NamingException;
 import javax.naming.directory.*;
+import java.util.*;
 
 public class LdapService {
     private Hashtable<String, String> environment = new Hashtable<String, String>();
@@ -45,7 +45,7 @@ public class LdapService {
         while (scanner.hasNext()) {
             attributes.add(scanner.next());
         }
-        return (String[])attributes.toArray(new String[attributes.size()]);
+        return attributes.toArray(new String[attributes.size()]);
     }
 
     public boolean checkUser(String login, String password) {
@@ -118,6 +118,21 @@ public class LdapService {
             while (searchResult.hasMore()) {
                 SearchResult resultUnit = (SearchResult)searchResult.next();
                 String userName = resultUnit.getName().substring(("cn=").length());
+                nameList.add(userName);
+            }
+        } catch (NamingException namingException) {
+            logger.error("NamingException at " + getClass().getPackage().getName() + "loadAll()", namingException);
+        }
+        return nameList;
+    }
+
+    public Collection<String> loadAllLdapLogin() {
+        List<String> nameList = new ArrayList<String>();
+        try {
+            NamingEnumeration searchResult = getAttributes();
+            while (searchResult.hasMore()) {
+                SearchResult resultUnit = (SearchResult)searchResult.next();
+                String userName = resultUnit.getAttributes().get("uid").get().toString();
                 nameList.add(userName);
             }
         } catch (NamingException namingException) {
