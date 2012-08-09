@@ -27,7 +27,10 @@ public enum SystemResource {
     DELETION_SERVICE_START_DELAY("initialDelay"),
     DELETION_SERVICE_INTERVAL_DELAY("intervalDelay"),
     TIME_UNIT("timeUnit"),
-    ELAPSED_TIME("elapsedTimeForDeletion");
+    ELAPSED_TIME("elapsedTimeForDeletion"),
+
+    SOLR_HOST("solrHost"),
+    SOLR_PORT("solrPort");
 
 
     public String getValue() {

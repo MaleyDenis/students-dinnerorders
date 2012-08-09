@@ -22,18 +22,17 @@ public class LoginLayout extends GridLayout {
     private void constraintRatios(){
         setRowExpandRatio(0, 1);
         setColumnExpandRatio(0, 1);
-        setColumnExpandRatio(1, 2);
-        setColumnExpandRatio(1, 2);
-        setColumnExpandRatio(2, 7);
-        setColumnExpandRatio(2, 7);
+        setColumnExpandRatio(1, 3);
+        setColumnExpandRatio(2, 3);
     }
 
     private void locateComponents() {
         addComponent(emptyLabel);
         addComponent(loginForm, 1, 1);
 
-        Embedded image = new Embedded("My image", new ExternalResource(""));
-        addComponent(image, 2, 2, 2, 2);
+        String resourceURL = "http://receptic-bonappetit.ru/wp-content/uploads/2012/01/412.jpg";
+        Embedded image = new Embedded("", new ExternalResource(resourceURL));
+        addComponent(image, 2, 1);
     }
 
     private void initComponents() {
