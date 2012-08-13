@@ -3,7 +3,6 @@ package com.exadel.dinnerorders.cache;
 import net.sf.ashkay.ObjectCache;
 
 import java.util.HashSet;
-import java.util.Map;
 
 /**
  * User: Василий Силин

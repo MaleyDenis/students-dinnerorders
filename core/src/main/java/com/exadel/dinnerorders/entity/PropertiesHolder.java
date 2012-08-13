@@ -9,9 +9,8 @@ import java.lang.annotation.Target;
  * User: Dima Shulgin
  * Date: 25.07.12
  */
-
-@Target(ElementType.TYPE)
+@Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface  DbConnection {
-    Class connectionType() ;
+public @interface PropertiesHolder {
+    String file();
 }

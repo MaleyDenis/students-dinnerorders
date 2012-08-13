@@ -6,13 +6,19 @@ package com.exadel.dinnerorders.entity;
  */
 
 public enum Weekday {
-    MONDAY,
-    TUESDAY,
-    WEDNESDAY,
-    THURSDAY,
-    FRIDAY,
-    SATURDAY,
-    SUNDAY;
+    MONDAY(1),
+    TUESDAY(2),
+    WEDNESDAY(3),
+    THURSDAY(4),
+    FRIDAY(5),
+    SATURDAY(6),
+    SUNDAY(7);
+
+    private int n;
+
+    private Weekday(int n) {
+        this.n = n;
+    }
 
     public static Weekday getWeekday(int i){
         switch(i){
@@ -39,5 +45,9 @@ public enum Weekday {
             }
             default: return null;
         }
+    }
+
+    public int getN() {
+        return n;
     }
 }

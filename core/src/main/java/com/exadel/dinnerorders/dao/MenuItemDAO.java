@@ -1,128 +1,115 @@
 package com.exadel.dinnerorders.dao;
 
 import com.exadel.dinnerorders.entity.DbConnection;
-import com.exadel.dinnerorders.entity.MenuItem;
-import com.exadel.dinnerorders.entity.Weekday;
 import com.exadel.dinnerorders.entity.DefaultMysqlConnectionProvider;
+import com.exadel.dinnerorders.entity.MenuItem;
+import com.exadel.dinnerorders.entity.WeekdayComparator;
 import org.apache.log4j.Logger;
+import org.hibernate.Query;
+import org.hibernate.Session;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * User: Василий Силин
  * Date: 16.7.12
  */
+
 @DbConnection(connectionType = DefaultMysqlConnectionProvider.class)
 public class MenuItemDAO extends BaseDAO<MenuItem> {
     private Logger logger = Logger.getLogger(MenuItemDAO.class);
 
     public boolean create(MenuItem newItem)  {
-        Connection connection = getConnection(this);
-        if (connection != null && newItem.getId() == null) {
-            try {
-                PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO menuitem VALUE(?, ?, ?, ?);");
+        Session session = openSession();
+        try {
+            if (session != null) {
                 newItem.setId(getID());
-                preparedStatement.setLong(1, newItem.getId());
-                preparedStatement.setString(2, newItem.getWeekday().name());
-                preparedStatement.setString(3, newItem.getDescription());
-                preparedStatement.setDouble(4, newItem.getCost());
-                preparedStatement.executeUpdate();
+                session.beginTransaction();
+                session.save(newItem);
+                session.getTransaction().commit();
                 return true;
-            } catch (SQLException e) {
-                logger.error("MenuItemDAO: create has failed.", e);
-            }  finally{
-                disconnect(connection);
             }
+        } catch (Exception e) {
+            logger.error(e);
+        } finally {
+            closeSession();
         }
         return false;
     }
 
     public boolean update(MenuItem item)  {
-        Connection connection = getConnection(this);
-        if (connection != null) {
-            try {
-                PreparedStatement preparedStatement = connection.prepareStatement("UPDATE menuitem SET weekday = ?, description = ?, cost = ? WHERE menuitem_id = ?;");
-                preparedStatement.setString(1, item.getWeekday().name());
-                preparedStatement.setString(2, item.getDescription());
-                preparedStatement.setDouble(3, item.getCost());
-                preparedStatement.setLong(4, item.getId());
-                preparedStatement.executeUpdate();
+        Session session = openSession();
+        try {
+            if (session != null) {
+                session.beginTransaction();
+                session.update(item);
+                session.getTransaction().commit();
                 return true;
-            } catch (SQLException e) {
-                logger.error("MenuItemDAO: update has failed.", e);
-            }  finally{
-                disconnect(connection);
             }
+        } catch (Exception e) {
+            logger.error(e);
+        } finally {
+            closeSession();
         }
         return false;
     }
 
     public boolean delete(MenuItem item) {
-        Connection connection = getConnection(this);
-        if (connection != null) {
-            try {
-                PreparedStatement preparedStatement =  connection.prepareStatement("DELETE FROM menuitem WHERE menuitem_id = ?;");
-                preparedStatement.setLong(1, item.getId());
-                preparedStatement.executeUpdate();
+        Session session = openSession();
+        try {
+            if (session != null) {
+                session.beginTransaction();
+                session.delete(item);
+                session.getTransaction().commit();
                 return true;
-            } catch (SQLException e) {
-                logger.error("MenuItemDAO: delete has failed.", e);
-            } finally{
-                disconnect(connection);
             }
+        } catch (Exception e) {
+            logger.error(e);
+        } finally {
+            closeSession();
         }
         return false;
     }
 
     public MenuItem load(Long id)  {
-        Connection connection = getConnection(this);
-        if (connection != null) {
-            try {
-                PreparedStatement menuStatement =  connection.prepareStatement("SELECT * FROM menuitem WHERE menuitem_id = ?;");
-                menuStatement.setLong(1, id);
-                ResultSet menuItemResultSet = menuStatement.executeQuery();
-                if(menuItemResultSet.next()){
-                    Weekday weekday = Weekday.valueOf(menuItemResultSet.getString(2));
-                    String description = menuItemResultSet.getString(3);
-                    Double cost = menuItemResultSet.getDouble(4);
-                    return new MenuItem(id, weekday, description, cost);
-                }
-            } catch (SQLException e) {
-                logger.error("MenuItemDAO: load has failed.", e);
-            }  finally{
-                disconnect(connection);
+        Session session = openSession();
+        try {
+            if (session != null) {
+                session.beginTransaction();
+                MenuItem menuItem = (MenuItem) session.get(MenuItem.class, id);
+                session.getTransaction().commit();
+                return menuItem;
             }
+        } catch (Exception e) {
+            logger.error(e);
+        } finally {
+            closeSession();
         }
         return null;
     }
 
     public Collection<MenuItem> loadAll()   {
-        Collection<MenuItem> items = new ArrayList<MenuItem>();
-        Connection connection = getConnection(this);
-        if (connection != null) {
-            try {
-                PreparedStatement menuStatement =  connection.prepareStatement("SELECT * FROM menuitem;");
-                ResultSet menuItemResultSet = menuStatement.executeQuery();
-                while(menuItemResultSet.next()){
-                    Long id = menuItemResultSet.getLong(1);
-                    Weekday weekday = Weekday.valueOf(menuItemResultSet.getString(2));
-                    String description = menuItemResultSet.getString(3);
-                    Double cost = menuItemResultSet.getDouble(4);
-                    MenuItem newMenuItem = new MenuItem(id, weekday, description, cost);
-                    items.add(newMenuItem);
+        List<MenuItem> items = new ArrayList<MenuItem>();
+        Session session = openSession();
+        try {
+            if (session != null) {
+                session.beginTransaction();
+                Query query = session.createQuery("from MenuItem");//createQuery("select item from MenuItem item order by item.weekday");
+                items = query.list();
+                Collections.sort(items, new WeekdayComparator());
+                session.getTransaction().commit();
+                if (items != null) {
+                    return items;
                 }
-                return items;
-            } catch (SQLException e) {
-                logger.error("MenuItemDAO: load all has failed.", e);
-            }  finally{
-                disconnect(connection);
             }
+        } catch (Exception e) {
+            logger.error(e);
+        } finally {
+            closeSession();
         }
-        return null;
+        return Collections.emptyList();
     }
 }

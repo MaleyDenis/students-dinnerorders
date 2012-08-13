@@ -18,8 +18,8 @@ public class ClearOrderTableTask extends Task {
         super();
         this.units = unit;
         this.operation = operation;
-        this.period = DateUtils.convertToMillis(period, unit);
-        this.returnTime = DateUtils.convertToMillis(returnTime, unit);
+        /*this.period = DateUtils.convertToMillis(period, unit);
+        this.returnTime = DateUtils.convertToMillis(returnTime, unit);*/
         lastLaunch = 0;
     }
 
@@ -29,11 +29,11 @@ public class ClearOrderTableTask extends Task {
         switch (operation) {
             case UPDATE: {
                 Timestamp targetDate = new Timestamp(DateUtils.getCurrentMondayTime().getTime() - returnTime);
-                Collection<Order> orders = new ArrayList<Order>();
-                //Collection<Order> orders = OrderService.findOrderByDate(targetDate);
+                /*Collection<Order> orders = new ArrayList<Order>();
+                Collection<Order> orders = OrderService.findOrderByDate(targetDate);
                 for (Order order : orders) {
                     result = result && OrderService.deleteOrder(order);
-                }
+                }*/
             }
             case ERASE: {
                 //result = MenuService.erase();

@@ -19,8 +19,8 @@ import java.util.Date;
 
 
 public class MenuDAOTest {
-    private MenuDAO menuDAO;
-    private MenuItemDAO menuItemDAO;
+    private MenuDAO menuDAO = new MenuDAO();
+    private MenuItemDAO menuItemDAO = new MenuItemDAO();
     private Menu menu;
     private MenuItem menuItem1;
     private MenuItem menuItem2;
@@ -28,8 +28,6 @@ public class MenuDAOTest {
 
     @Before
     public void setUp() throws Exception {
-        menuDAO = new MenuDAO();
-        menuItemDAO = new MenuItemDAO();
         date = new Timestamp((new Date()).getTime());
         menuItem1 = new MenuItem(null, Weekday.MONDAY, "rrrrr", new Double(6.7));
         menuItem2 = new MenuItem(null, Weekday.TUESDAY, "ttttt", new Double(77));
@@ -96,8 +94,11 @@ public class MenuDAOTest {
     @Test
     public void testCallMenuId () {
         try {
-            Collection<Long> menusId = menuDAO.getAllMenuIds();
+            Collection<Long> menusId = menuDAO.getMenuIds();
             Assert.assertTrue(menusId.size() > 0);
+            for(Long id : menusId){
+                Assert.assertNotNull(menuDAO.load(id));
+            }
         } catch (Exception e){
             Assert.assertTrue(false);
         }
