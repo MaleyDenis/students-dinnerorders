@@ -1,18 +1,24 @@
 package com.exadel.dinnerorders.entity;
 
+import javax.persistence.Entity;
+import javax.persistence.Table;
+import javax.persistence.Column;
+import javax.persistence.Id;
+import javax.persistence.Enumerated;
+import javax.persistence.EnumType;
+
 /**
  * User: Dima Shulgin
  * Date: 17.07.12
  */
-public class User implements Entity {
+
+@Entity
+@Table(name = "user", catalog = "dinnerorders")
+public class User {
 
     private Long id;
     private String ldapLogin;
-
-    @Export(column = "User",collection = false)
     private String userName;
-
-    @Export(column = "Role",collection = false)
     private Role role;
 
 
@@ -35,7 +41,8 @@ public class User implements Entity {
 
     }
 
-
+    @Id
+    @Column(name = "ID", nullable = false, unique = true)
     public Long getId() {
         return id;
     }
@@ -44,6 +51,7 @@ public class User implements Entity {
         this.id = id;
     }
 
+    @Column(name = "LDAPLOGIN", nullable = false, unique = false)
     public String getLdapLogin() {
         return ldapLogin;
     }
@@ -52,6 +60,7 @@ public class User implements Entity {
         this.ldapLogin = ldapLogin;
     }
 
+    @Column(name = "USERNAME", nullable = false, unique = false)
     public String getUserName() {
         return userName;
     }
@@ -60,6 +69,8 @@ public class User implements Entity {
         this.userName = userName;
     }
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "ROLE", nullable = false, unique = false)
     public Role getRole() {
         return role;
     }

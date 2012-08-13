@@ -1,17 +1,16 @@
 package com.exadel.dinnerorders.dao;
 
 import com.exadel.dinnerorders.entity.DbConnection;
-import com.exadel.dinnerorders.entity.Role;
 import com.exadel.dinnerorders.entity.User;
 import com.exadel.dinnerorders.entity.DefaultMysqlConnectionProvider;
 import org.apache.log4j.Logger;
+import org.hibernate.Query;
+import org.hibernate.Session;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 
 
 /**
@@ -33,110 +32,96 @@ public class UserDAO extends BaseDAO<User> {
      * @return true | false.
      */
     public boolean create(User newItem) {
-        Connection connection = getConnection(this);
-        try {
-
-            PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO user (ID,LDAPLOGIN,USERNAME,ROLE) VALUES(?, ?, ?, ?);");
-            newItem.setId(getID());
-            preparedStatement.setLong(1, newItem.getId());
-            preparedStatement.setString(2, newItem.getLdapLogin());
-            preparedStatement.setString(3, newItem.getUserName());
-
-            if (newItem.getRole() != null)
-                preparedStatement.setString(4, newItem.getRole().name());
-            else
-                preparedStatement.setString(4, Role.USER.name());
-            preparedStatement.execute();
-
-        } catch (SQLException e) {
-            logger.error("Error in the function create", e);
-
+        Session session = openSession();
+        try{
+            if(session != null) {
+                newItem.setId(getID());
+                session.beginTransaction();
+                session.save(newItem);
+                session.getTransaction().commit();
+                return true;
+            }
+        } catch (Exception e){
+            logger.error(e);
         } finally {
-            disconnect(connection);
+            closeSession();
         }
-
-        return true;
+        return false;
     }
 
 
     public boolean update(User item) {
-
-        Connection connection = getConnection(this);
-        PreparedStatement preparedStatement = null;
-        try {
-            preparedStatement = connection.prepareStatement("UPDATE  user  SET  LDAPLOGIN = ? , USERNAME= ?, ROLE= ?  WHERE ID = ?");
-            preparedStatement.setString(1, item.getLdapLogin());
-            preparedStatement.setString(2, item.getUserName());
-            if (item.getRole() != null)
-                preparedStatement.setString(3, item.getRole().name());
-            else
-                preparedStatement.setString(3, Role.USER.name());
-
-            preparedStatement.setLong(4, item.getId());
-
-            preparedStatement.execute();
-        } catch (SQLException e) {
-            logger.error("Error in the function update", e);
-
+        Session session = openSession();
+        try{
+            if(session != null) {
+                session.beginTransaction();
+                session.update(item);
+                session.getTransaction().commit();
+                return true;
+            }
+        } catch (Exception e){
+            logger.error(e);
         } finally {
-            disconnect(connection);
+            closeSession();
         }
-
         return false;
     }
 
 
     public boolean delete(User item) {
-
-        Connection connection = getConnection(this);
-        try {
-            PreparedStatement preparedStatement = connection.prepareStatement(("DELETE FROM user WHERE ID =  ?"));
-            preparedStatement.setLong(1, item.getId());
-            preparedStatement.executeUpdate();
-        } catch (SQLException e) {
-            logger.error("Error in the function delete", e);
+        Session session = openSession();
+        try{
+            if(session != null) {
+                session.beginTransaction();
+                session.delete(item);
+                session.getTransaction().commit();
+                return true;
+            }
+        } catch (Exception e){
+            logger.error(e);
         } finally {
-            disconnect(connection);
+            closeSession();
         }
         return false;
     }
 
     public User load(Long id) {
-        Connection connection = getConnection(this);
-        try {
-            PreparedStatement preparedStatement = connection.prepareStatement(("SELECT * FROM user WHERE ID =  ?;"));
-            preparedStatement.setLong(1, id);
-            ResultSet resultSet = preparedStatement.executeQuery();
-            if (resultSet.next()) {
-                return new User(resultSet.getLong("ID"), resultSet.getString("LDAPLOGIN"), resultSet.getString("USERNAME"), Role.valueOf(resultSet.getString("ROLE")));
+        Session session = openSession();
+        try{
+            if(session != null) {
+                User user = null;
+                session.beginTransaction();
+                user = (User) session.get(User.class, id);
+                session.getTransaction().commit();
+                return user;
             }
-        } catch (SQLException e) {
-            logger.error("Error (SQLException in load function!", e);
+        } catch (Exception e){
+            logger.error(e);
         } finally {
-            disconnect(connection);
+            closeSession();
         }
-
         return null;
     }
 
     public Collection<User> loadAll() {
-        Connection connection = getConnection(this);
-        Collection<User> users = new ArrayList<User>();
+        List<User> users = new ArrayList<User>();
+        Session session = openSession();
         try {
-            PreparedStatement preparedStatement = connection.prepareStatement(("SELECT * FROM user"));
-            ResultSet resultSet = preparedStatement.executeQuery();
-            while (resultSet.next()) {
-                User user = new User(resultSet.getLong("ID"), resultSet.getString("LDAPLOGIN"), resultSet.getString("USERNAME"), Role.valueOf(resultSet.getString("ROLE")));
-                users.add(user);
+            if (session != null) {
+                session.beginTransaction();
+                Query query = session.createQuery("select user from User user order by user.id");
+                users = query.list();
+                session.getTransaction().commit();
+                if (users != null) {
+                    return users;
+                }
             }
-            return users;
-        } catch (SQLException e) {
-            logger.error("Error in the function loadAll", e);
+        } catch (Exception e) {
+            logger.error(e);
         } finally {
-            disconnect(connection);
+            closeSession();
         }
-
-        return null;
+        return Collections.emptyList();
     }
 
 }

@@ -16,10 +16,14 @@ public class MenuItemDAOTest {
     private static MenuItemDAO menuItemDAO;
 
     @Before
-    public void setUp() throws Exception {
-        menuItem = new MenuItem(null, Weekday.MONDAY, "1", new Double(1));
-        menuItemDAO = new MenuItemDAO();
-        menuItemDAO.create(menuItem);
+    public void setUp() {
+        try {
+            menuItem = new MenuItem(null, Weekday.MONDAY, "1", new Double(1));
+            menuItemDAO = new MenuItemDAO();
+            menuItemDAO.create(menuItem);
+        } catch (Exception e) {
+            Assert.assertTrue(false);
+        }
     }
 
     @Test

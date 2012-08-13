@@ -11,6 +11,9 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Types;
 import org.apache.log4j.Logger;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.cfg.Configuration;
 
 /**
  * User: Василий Силин
@@ -19,6 +22,20 @@ import org.apache.log4j.Logger;
 
 public abstract class BaseDAO<E> implements DAO<E> {
     private Logger logger = Logger.getLogger(BaseDAO.class);
+    private Configuration configuration = new Configuration().configure();
+    private SessionFactory sessionFactory;
+    private Session session;
+
+    protected Session openSession() {
+        sessionFactory = configuration.buildSessionFactory();
+        session = sessionFactory.openSession();
+        return session;
+    }
+
+    protected void closeSession () {
+        session.close();
+        sessionFactory.close();
+    }
 
     protected Connection getConnection(DAO dao)  {
         Annotation annotation = dao.getClass().getAnnotation(DbConnection.class);

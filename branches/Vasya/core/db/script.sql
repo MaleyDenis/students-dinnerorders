@@ -8,15 +8,7 @@ date_payment  timestamp NULL DEFAULT NULL,
 date_order  timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' ON UPDATE CURRENT_TIMESTAMP,
 PRIMARY KEY (order_id)
 )
-ENGINE=InnoDB;
-
-CREATE TABLE IF NOT EXISTS  dinnerorders.order_menuitem (
-id bigint(20) NOT  NULL,
-order_id bigint(20) NOT  NULL,
-menu_item_id bigint(20) NOT NULL,
-PRIMARY KEY (id)
-)
-ENGINE=InnoDB;
+ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS dinnerorders.menu (
 menu_id  bigint(20) NOT NULL,
@@ -25,7 +17,7 @@ date_start timestamp NOT NULL,
 date_end timestamp NOT NULL,
 PRIMARY KEY (menu_id)
 )
-ENGINE=InnoDB;
+ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS dinnerorders.menuitem (
 menuitem_id bigint(20) NOT NULL,
@@ -34,15 +26,35 @@ description varchar(100) NOT NULL,
 cost double NOT NULL,
 PRIMARY KEY (menuitem_id)
 )
-ENGINE=InnoDB;
+ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE IF NOT EXISTS  dinnerorders.order_menuitem (
+id bigint(20) NOT  NULL,
+order_id bigint(20) NOT NULL,
+menuitem_id bigint(20) NOT NULL,
+PRIMARY KEY (id),
+CONSTRAINT order_id FOREIGN KEY (order_id) REFERENCES dinnerorders.order(order_id)
+ON UPDATE CASCADE
+ON DELETE CASCADE,
+CONSTRAINT menuitem_id FOREIGN KEY (menuitem_id) REFERENCES menuitem(menuitem_id)
+ON UPDATE CASCADE
+ON DELETE CASCADE
+)
+ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS dinnerorders.menu_menuitem (
 id bigint(20) NOT NULL AUTO_INCREMENT,
-menu_id  bigint(20) NOT NULL ,
+menu_id bigint(20) NOT NULL,
 menuitem_id bigint(20) NOT NULL,
-PRIMARY KEY (id)
+PRIMARY KEY (id),
+CONSTRAINT menu_item_id FOREIGN KEY (menuitem_id) REFERENCES menuitem(menuitem_id)
+ON UPDATE CASCADE
+ON DELETE CASCADE,
+CONSTRAINT menu_id FOREIGN KEY (menu_id) REFERENCES menu(menu_id)
+ON UPDATE CASCADE
+ON DELETE CASCADE
 )
-ENGINE=InnoDB;
+ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS dinnerorders.user (
 ID  INT NOT NULL AUTO_INCREMENT ,
@@ -50,12 +62,12 @@ LDAPLOGIN  VARCHAR(45) NOT NULL ,
 USERNAME  VARCHAR(45) NOT NULL ,
 ROLE  VARCHAR(45) NOT NULL,
 PRIMARY KEY (ID) )
-ENGINE=InnoDB;
+ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS dinnerorders.identifier (
 ID  INT ,
 PRIMARY KEY (ID) )
-ENGINE=InnoDB;
+ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 DELIMITER $$
 CREATE PROCEDURE dinnerorders.getID(OUT idOUT INT)

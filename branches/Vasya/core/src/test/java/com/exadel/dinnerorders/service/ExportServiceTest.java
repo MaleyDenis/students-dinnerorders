@@ -1,11 +1,10 @@
 package com.exadel.dinnerorders.service;
 
-import com.exadel.dinnerorders.entity.ExportStrategy;
-import com.exadel.dinnerorders.stategies.UserStrategy;
-import junit.framework.Assert;
 import org.junit.Test;
 
 import java.io.InputStream;
+
+import static junit.framework.Assert.assertTrue;
 
 /**
  * User: Dima Shulgin
@@ -14,12 +13,10 @@ import java.io.InputStream;
 public class ExportServiceTest {
     @Test
     public void testGetUsersExcel() throws Exception {
-        ExportStrategy exportStrategy = new UserStrategy();
-        InputStream inputStream = ExportService.getExcel(exportStrategy);
+        InputStream inputStream = ExportService.getUsersExcel();
         if (inputStream != null) {
-            Assert.assertTrue(true);
-        } else {
-            Assert.assertTrue(false);
-        }
+            assertTrue(true);
+        } else
+            assertTrue(false);
     }
 }
