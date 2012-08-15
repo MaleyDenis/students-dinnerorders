@@ -68,12 +68,15 @@ public class DayMenuPanel extends GridLayout {
             return;
         }
         GridLayout.Area area = getComponentArea(dishRow);
+        int nextRow;
         if (area == null){
-            return;
+            nextRow = getComponentCount();
+            dishRow.setParent(null);
+        } else {
+            nextRow = area.getRow1() + 1;
         }
-        int nextRow = area.getRow1() + 1;
         insertRow(nextRow);
-        addComponent(new DishDescriptionRow(), 0, nextRow);
+        addComponent(addDishEvent.getAddedDish(), 0, nextRow);
         setModifyingEnabled();
 
         MenuCreationPanel menuCreationPanel = (MenuCreationPanel)getParent().getParent();
@@ -125,7 +128,7 @@ public class DayMenuPanel extends GridLayout {
                 continue;
             }
             String dishName = (String)row.getDishName().getValue();
-            Double cost = Double.parseDouble((String)row.getCost().getValue());
+            Double cost = Double.parseDouble(row.getCost().getValue().toString());
             list.add(new MenuItem(null, weekday, dishName, cost));
         }
         flush();

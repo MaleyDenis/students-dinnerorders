@@ -7,6 +7,7 @@ import com.exadel.dinnerorders.service.DateUtils;
 import com.exadel.dinnerorders.service.MenuService;
 import com.exadel.dinnerorders.vaadinwindow.application.Application;
 import com.exadel.dinnerorders.vaadinwindow.events.SaveMenuEvent;
+import com.exadel.dinnerorders.vaadinwindow.listeners.CafeNameChangeListener;
 import com.exadel.dinnerorders.vaadinwindow.listeners.CancelButtonListener;
 import com.exadel.dinnerorders.vaadinwindow.listeners.DateBoxListener;
 import com.exadel.dinnerorders.vaadinwindow.listeners.SaveButtonListener;
@@ -20,14 +21,13 @@ import java.util.List;
 import java.util.Map;
 
 public class MenuCreationPanel extends Panel {
-    public final static int MAX_CAFE_NAME_LENGTH = 25;
     public static final int NUMBER_OF_SERVICE_DAYS = 5;
     public static final int DEFAULT_ITEMS_COUNT = 5;
     public static final int DEFAULT_LAYOUT_ROWS = 12;
     public static final int DEFAULT_LAYOUT_COLUMNS = 2;
     public static final String DATE_PATTERN = "YYYY-MM-DD";
     public static final int NOTIFICATION_DISPLAY_TIME = 2000;
-    private TextField cafeName;
+    private Select cafeName;
     private Button saveButton;
     private Button cancelButton;
     private GridLayout layout;
@@ -68,11 +68,12 @@ public class MenuCreationPanel extends Panel {
     }
 
     private void initTextFields() {
-        cafeName = new TextField("Cafe name");
+        cafeName = new Select("Cafe name");
         cafeName.setDescription("Input here the name of cafe");
         cafeName.setWidth(190, UNITS_PIXELS);
-        cafeName.setMaxLength(MAX_CAFE_NAME_LENGTH);
-        cafeName.setTextChangeEventMode(AbstractTextField.TextChangeEventMode.EAGER);
+        cafeName.setNewItemsAllowed(true);
+        cafeName.setImmediate(true);
+        cafeName.addListener(new CafeNameChangeListener(this));
     }
 
     private void initButtons() {
@@ -113,7 +114,7 @@ public class MenuCreationPanel extends Panel {
             return;
         }
         cafeName.setIcon(new ExternalResource(""));
-        String nameOfCafe = (String)cafeName.getValue();
+        String nameOfCafe = cafeName.getValue().toString();
         Map<Weekday, List<MenuItem>> items = new HashMap<Weekday, List<MenuItem>>();
 
         int startFromRow = 1;
@@ -145,13 +146,7 @@ public class MenuCreationPanel extends Panel {
         fridayDate = null;
         dateBox.setValue(null);
         dateBox.setIcon(new ExternalResource(""));
-
-        int startFromRow = 1;
-        for (int i = 0; i < MenuCreationPanel.NUMBER_OF_SERVICE_DAYS; i++) {
-            DayMenuPanel dayPanel = (DayMenuPanel)layout.getComponent(0, startFromRow);
-            dayPanel.flush();
-            startFromRow += 2;
-        }
+        flushDayPanels();
         menuItemsCounter = DEFAULT_ITEMS_COUNT;
     }
 
@@ -178,5 +173,22 @@ public class MenuCreationPanel extends Panel {
 
     public int getMenuItemsCounter(){
         return menuItemsCounter;
+    }
+
+    public Select getCafeName() {
+        return cafeName;
+    }
+
+    public NativeSelect getDateBox() {
+        return dateBox;
+    }
+
+    public void flushDayPanels() {
+        int startFromRow = 1;
+        for (int i = 0; i < MenuCreationPanel.NUMBER_OF_SERVICE_DAYS; i++) {
+            DayMenuPanel dayPanel = (DayMenuPanel)layout.getComponent(0, startFromRow);
+            dayPanel.flush();
+            startFromRow += 2;
+        }
     }
 }

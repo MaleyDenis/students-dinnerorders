@@ -1,9 +1,9 @@
 package com.exadel.dinnerorders.vaadinwindow.layouts.panels;
 
+import com.exadel.dinnerorders.service.LdapService;
 import com.exadel.dinnerorders.vaadinwindow.application.Application;
 import com.exadel.dinnerorders.vaadinwindow.events.SignOutEvent;
 import com.vaadin.terminal.ExternalResource;
-import com.vaadin.terminal.Sizeable;
 import com.vaadin.ui.*;
 
 import java.util.Scanner;
@@ -11,6 +11,8 @@ import java.util.Scanner;
 public class UserInfoPanel extends Panel{
     public static final int DEFAULT_LAYOUT_COLUMN_COUNT = 3;
     public static final int DEFAULT_LAYOUT_ROW_COUNT = 4;
+    public static final String PHOTO_EXTENSION = ".jpeg";
+    public static final String NO_PHOTO_URI = "Empty.jpeg";
     private Label nameLabel;
     private Label lastNameLabel;
     private Label nameCaption;
@@ -24,6 +26,7 @@ public class UserInfoPanel extends Panel{
     public UserInfoPanel() {
         super();
         setWidth(100, UNITS_PERCENTAGE);
+        setHeight(100, UNITS_PIXELS);
         Application.getInstance().getEventBus().register(this);
         setDefaultUserInfo();
         initComponents();
@@ -33,26 +36,38 @@ public class UserInfoPanel extends Panel{
     }
 
     private void setDefaultUserInfo() {
-        userPhoto = new Embedded("", new ExternalResource("/VAADIN/themes/runo/icons/64/user.png"));
+        LdapService ldapService = new LdapService();
+        int width = 70;
+        int height = 89;
+        String photoURI = ldapService.loadUserPhotoURI(Application.getInstance().getUser().getUserName()) + PHOTO_EXTENSION;
+        if (photoURI.equals(NO_PHOTO_URI)) {
+            photoURI = "/VAADIN/themes/runo/icons/64/user.png";
+            width = height = 64;
+        }
+        userPhoto = new Embedded(null, new ExternalResource(photoURI));
+        userPhoto.setWidth(width, UNITS_PIXELS);
+        userPhoto.setHeight(height, UNITS_PIXELS);
     }
 
     public void locateComponents() {
-        layout.addComponent(userPhoto, 0, 0, 0, 2);
+        layout.addComponent(userPhoto, 0, 0, 0, 3);
+        layout.setComponentAlignment(userPhoto, Alignment.MIDDLE_CENTER);
         layout.addComponent(nameCaption,  1, 0);
         layout.addComponent(lastNameCaption,  1, 1);
         layout.addComponent(roleCaption, 1, 2);
         layout.addComponent(nameLabel,  2, 0);
         layout.addComponent(lastNameLabel, 2, 1);
         layout.addComponent(roleLabel, 2, 2);
-        layout.addComponent(signOutButton, 1, 3);
+        layout.addComponent(signOutButton, 1, 3, 2, 3);
+        layout.setComponentAlignment(signOutButton, Alignment.MIDDLE_LEFT);
     }
 
     private void initLayout() {
         layout = new GridLayout(DEFAULT_LAYOUT_COLUMN_COUNT, DEFAULT_LAYOUT_ROW_COUNT);
-        layout.setWidth(100, Sizeable.UNITS_PERCENTAGE);
+        layout.setSizeFull();
         layout.setColumnExpandRatio(0, 0.15f);
         layout.setColumnExpandRatio(1, 0.35f);
-        layout.setColumnExpandRatio(2, 0.4f);
+        layout.setColumnExpandRatio(2, 0.5f);
         setContent(layout);
     }
 
@@ -62,7 +77,7 @@ public class UserInfoPanel extends Panel{
     }
 
     private void setComponentsSize() {
-        signOutButton.setWidth(100, UNITS_PERCENTAGE);
+        signOutButton.setWidth(80, UNITS_PERCENTAGE);
     }
 
     private void initLabels() {

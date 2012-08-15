@@ -7,7 +7,7 @@ import com.exadel.dinnerorders.vaadinwindow.layouts.panels.MenuCreationPanel;
 import com.vaadin.terminal.ExternalResource;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.GridLayout;
-import com.vaadin.ui.TextField;
+import com.vaadin.ui.Select;
 
 public class SaveButtonListener implements Button.ClickListener {
     @Override
@@ -45,7 +45,7 @@ public class SaveButtonListener implements Button.ClickListener {
     }
 
     private boolean checkCafeNameField(GridLayout mainPanel) {
-        if (((TextField)mainPanel.getComponent(0, 0)).getValue().equals("")) {
+        if (((Select)mainPanel.getComponent(0, 0)).getValue() == null) {
             mainPanel.getComponent(0, 0).setIcon(new ExternalResource("/VAADIN/themes/runo/icons/16/error.png"));
             return false;
         } else {

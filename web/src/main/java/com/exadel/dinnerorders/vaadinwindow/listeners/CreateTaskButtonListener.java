@@ -18,9 +18,13 @@ public class CreateTaskButtonListener implements Button.ClickListener {
         taskBuilder.append(' ');
         taskBuilder.append(tcPanel.getDaySelect().getValue());
         taskBuilder.append(' ');
-        taskBuilder.append(Month.valueOf(tcPanel.getMonthSelect().getValue().toString()).ordinal() + 1);
+        String month = tcPanel.getMonthSelect().getValue().toString().equals("*") ? "*" :
+                Integer.toString(Month.valueOf(tcPanel.getMonthSelect().getValue().toString()).ordinal() + 1);
+        taskBuilder.append(month);
+        String weekday = tcPanel.getWeekdaySelect().getValue().toString().equals("*") ? "*" :
+                Integer.toString(Weekday.valueOf(tcPanel.getWeekdaySelect().getValue().toString()).ordinal() + 1);
         taskBuilder.append(' ');
-        taskBuilder.append(Weekday.valueOf(tcPanel.getWeekdaySelect().getValue().toString()).ordinal() + 1);
+        taskBuilder.append(weekday);
         taskBuilder.append(' ');
         taskBuilder.append(chooseClass(tcPanel.getActionSelect().getValue()));
         Application.getInstance().getTasksManagerService().addTask(TasksFactory.createTask(taskBuilder.toString()));
@@ -35,6 +39,8 @@ public class CreateTaskButtonListener implements Button.ClickListener {
             return "com.exadel.dinnerorders.entity.tasks.ClearMenuTableTask";
         } else if (targetTask.equals("Delete old orders")) {
             return "com.exadel.dinnerorders.entity.tasks.ClearOrderTableTask";
+        } else if (targetTask.equals("Database auto-reimport")) {
+            return "com.exadel.dinnerorders.entity.tasks.ReimportDatabaseTask";
         }
         return null;
     }

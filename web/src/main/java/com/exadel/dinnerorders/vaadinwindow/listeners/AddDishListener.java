@@ -9,6 +9,8 @@ public class AddDishListener implements MouseEvents.ClickListener {
     @Override
     public void click(MouseEvents.ClickEvent clickEvent) {
         DishDescriptionRow parent = ((DishDescriptionRow)clickEvent.getComponent().getParent());
-        Application.getInstance().getEventBus().post(new AddDishEvent(parent));
+        AddDishEvent addDishEvent = new AddDishEvent(parent);
+        addDishEvent.setAddedDish(new DishDescriptionRow());
+        Application.getInstance().getEventBus().post(addDishEvent);
     }
 }
