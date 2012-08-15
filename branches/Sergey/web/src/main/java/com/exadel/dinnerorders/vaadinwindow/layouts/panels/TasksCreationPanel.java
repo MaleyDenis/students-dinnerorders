@@ -115,6 +115,7 @@ public class TasksCreationPanel extends Panel {
         actionSelect = new NativeSelect("Select task");
         actionSelect.addItem("Delete old menus");
         actionSelect.addItem("Delete old orders");
+        actionSelect.addItem("Database auto-reimport");
         actionSelect.setNullSelectionAllowed(false);
         actionSelect.setValue("Delete old menus");
     }
@@ -126,7 +127,7 @@ public class TasksCreationPanel extends Panel {
         cancel.addListener(new CancelTaskCreationListener());
         add = new Button("Add");
         add.addListener(new AddTaskButtonListener());
-        edit = new Button("Edit");
+        edit = new Button("Save new cofiguration");
         edit.setEnabled(false);
         edit.addListener(new EditTaskButtonListener());
         remove = new Button("Remove");
@@ -152,7 +153,7 @@ public class TasksCreationPanel extends Panel {
 
     private void setConstraints() {
         layout.setColumnExpandRatio(0, 0.2f);
-        layout.setColumnExpandRatio(1, 0.2f);
+        layout.setColumnExpandRatio(1, 1f);
         layout.setColumnExpandRatio(2, 0.2f);
         layout.setColumnExpandRatio(3, 2.5f);
         layout.setColumnExpandRatio(4, 2.5f);
@@ -205,16 +206,14 @@ public class TasksCreationPanel extends Panel {
             return index + ". Delete old menus";
         } else if (className.contains("ClearOrderTableTask")) {
             return index + ". Delete old order";
+        } else if (className.contains("ReimportDatabaseTask")) {
+            return index + ". Database auto-reimport";
         }
-        return "Task";
+        return index + ". Task";
     }
 
     public ListSelect getTasksList() {
         return tasksList;
-    }
-
-    public Button getAdd() {
-        return add;
     }
 
     public Button getEdit() {
@@ -223,14 +222,6 @@ public class TasksCreationPanel extends Panel {
 
     public Button getRemove() {
         return remove;
-    }
-
-    public Button getCreateButton() {
-        return create;
-    }
-
-    public Button getCancelButton() {
-        return cancel;
     }
 
     public void updateList() {
@@ -244,7 +235,7 @@ public class TasksCreationPanel extends Panel {
         tasksList.setMultiSelect(false);
         tasksList.setNullSelectionAllowed(false);
         tasksList.setWidth(100, UNITS_PERCENTAGE);
-        tasksList.addListener(new ListItemSelectListener());
+        tasksList.addListener(new TaskItemSelectListener());
         tasksList.setImmediate(true);
     }
 
@@ -275,6 +266,4 @@ public class TasksCreationPanel extends Panel {
         create.setVisible(true);
         cancel.setVisible(true);
     }
-
-
 }

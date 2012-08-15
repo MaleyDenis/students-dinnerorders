@@ -9,7 +9,7 @@ import com.vaadin.ui.Component;
 import com.vaadin.ui.ListSelect;
 import com.vaadin.ui.NativeSelect;
 
-public class ListItemSelectListener implements Component.Listener {
+public class TaskItemSelectListener implements Component.Listener {
     @Override
     public void componentEvent(Component.Event event) {
         if ( ((ListSelect)event.getComponent()).getValue() != null) {

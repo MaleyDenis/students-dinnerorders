@@ -8,12 +8,12 @@ import java.util.List;
 import java.util.concurrent.*;
 
 public class TasksManagerService implements Runnable {
+    private static final long DEFAULT_PERIOD = 1000;
     private List<Task> tasks;
     private List<Future<Boolean>> tasksExecutionResult;
     private ScheduledExecutorService executor;
     private ExecutorService taskExecutor;
     private ScheduledFuture sFuture;
-    private long period;
     private TimeUnit unit;
 
     public TasksManagerService() {
@@ -21,7 +21,6 @@ public class TasksManagerService implements Runnable {
         taskExecutor = Executors.newCachedThreadPool();
         tasks = new ArrayList<Task>();
         tasksExecutionResult = new ArrayList<Future<Boolean>>();
-        this.period = Long.parseLong(Configuration.getProperty(SystemResource.DELETION_SERVICE_INTERVAL_DELAY));
         this.unit = TimeUnit.valueOf(Configuration.getProperty(SystemResource.TIME_UNIT));
         loadDefaultTasks();
     }
@@ -29,10 +28,11 @@ public class TasksManagerService implements Runnable {
     private void loadDefaultTasks() {
         addTask(TasksFactory.createTask("1 * 2 8 * com.exadel.dinnerorders.entity.tasks.ClearMenuTableTask"));
         addTask(TasksFactory.createTask("2 * 2 8 * com.exadel.dinnerorders.entity.tasks.ClearOrderTableTask"));
+      //  addTask(TasksFactory.createTask("* * * * * com.exadel.dinnerorders.entity.tasks.ReimportDatabaseTask"));
     }
 
     public void start() {
-        sFuture = executor.scheduleAtFixedRate(this, 0, period, unit);
+        sFuture = executor.scheduleAtFixedRate(this, 0, DEFAULT_PERIOD, unit);
     }
 
     @Override

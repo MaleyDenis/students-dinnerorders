@@ -140,4 +140,24 @@ public class LdapService {
         }
         return nameList;
     }
+
+    public String loadUserPhotoURI(String userName) {
+        String photoURI = "";
+        try {
+            DirContext dirContext = new InitialDirContext(environment);
+
+            SearchControls controls = new SearchControls();
+            controls.setReturningAttributes(new String[]{"labeledURI"});
+            controls.setSearchScope(SearchControls.SUBTREE_SCOPE);
+
+            String searchFilter = "cn=" + userName;
+            String startSearchBase = Configuration.getProperty(SystemResource.LDAP_SEARCHING_START_BASE);
+            photoURI = dirContext.search(startSearchBase, searchFilter, controls).
+                    next().getAttributes().get("labeledURI").get().toString();
+            dirContext.close();
+        } catch (NamingException namingException) {
+            logger.error("Naming exception " + getClass().getPackage().getName() + " getAttributes", namingException);
+        }
+        return photoURI;
+    }
 }

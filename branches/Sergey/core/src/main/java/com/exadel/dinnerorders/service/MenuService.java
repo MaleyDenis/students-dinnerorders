@@ -5,7 +5,6 @@ import com.exadel.dinnerorders.dao.MenuDAO;
 import com.exadel.dinnerorders.dao.MenuItemDAO;
 import com.exadel.dinnerorders.entity.Menu;
 import com.exadel.dinnerorders.entity.MenuItem;
-import com.exadel.dinnerorders.entity.Weekday;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Collections2;
 
@@ -14,7 +13,6 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.Map;
 
 public class MenuService {
     private static MenuDAO menuDAO = new MenuDAO();
@@ -60,11 +58,6 @@ public class MenuService {
         if (existed == null) {
             return MenuService.save(menu);
         } else {
-            Map<Weekday, List<MenuItem>> alreadyExisted = existed.getItems();
-            for ( int i = 0 ; i < alreadyExisted.size(); i++) {
-                List<MenuItem> existedList = existed.getItems().get(Weekday.getWeekday(i+1));
-                menu.getItems().get(Weekday.getWeekday(i+1)).addAll(existedList);
-            }
             menu.setId(existed.getId());
             return MenuService.update(menu);
         }
@@ -135,5 +128,15 @@ public class MenuService {
             result = result && delete(menu);
         }
         return result;
+    }
+
+    public static Menu findMenuByDateAndCafename(String cafename, Timestamp menuDate) {
+        Collection<Menu> menus = findMenuByDate(menuDate);
+        for (Menu menu:menus) {
+            if (menu.getCafeName().equals(cafename)) {
+                return menu;
+            }
+        }
+        return null;
     }
 }
