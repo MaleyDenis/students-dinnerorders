@@ -147,8 +147,11 @@ public class MenuCreationPanel extends Panel {
     }
 
     private Menu isNewMenu(Menu menu, Collection<Menu> loaded) {
+        if(loaded == null){
+            return null;
+        }
         for (Menu loadedMenu : loaded) {
-            if (!loadedMenu.getCafeName().equals(menu.getCafeName())) {
+            if (loadedMenu.getCafeName().equals(menu.getCafeName())) {
                 return loadedMenu;
             }
         }

@@ -1,14 +1,12 @@
 package com.exadel.dinnerorders.vaadinwindow.application;
 
 import com.exadel.dinnerorders.entity.Menu;
+import com.exadel.dinnerorders.service.DateUtils;
 import com.exadel.dinnerorders.service.MenuService;
 import com.exadel.dinnerorders.vaadinwindow.events.*;
 import com.exadel.dinnerorders.vaadinwindow.layouts.LoginLayout;
 import com.exadel.dinnerorders.vaadinwindow.layouts.WelcomeLayout;
-import com.exadel.dinnerorders.vaadinwindow.layouts.panels.CurrentWeekMenuPanel;
-import com.exadel.dinnerorders.vaadinwindow.layouts.panels.MenuCreationPanel;
-import com.exadel.dinnerorders.vaadinwindow.layouts.panels.ShowMadeOrderPanel;
-import com.exadel.dinnerorders.vaadinwindow.layouts.panels.TableOrderPanel;
+import com.exadel.dinnerorders.vaadinwindow.layouts.panels.*;
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
 import com.vaadin.terminal.Sizeable;
@@ -20,9 +18,11 @@ public class WebApplicationController extends com.vaadin.Application {
     private EventBus eventBus = Application.getInstance().getEventBus();
     private Layout welcomeLayout;
     private Layout loginLayout;
+    private String datePattern = "YYYY-MM-DD";
 
     @Override
     public void init() {
+        setTheme("ownTheme");
         createLayouts();
         createMainWindow();
         eventBus.register(this);
@@ -71,33 +71,42 @@ public class WebApplicationController extends com.vaadin.Application {
     }
 
     @Subscribe
-    public void currentWeekMenuSelected(ShowCurrentWeekMenuEvent cwmEvent) {
-        Collection<Menu> currentWeek = MenuService.findMenuForCurrentWeek();
+    public void currentWeekMenuSelected(ShowCurrentWeekMenuEvent weekMenuEvent){
+        Collection<Menu> currentWeek  = MenuService.findMenuForCurrentWeek();
         if (currentWeek == null || currentWeek.isEmpty()) {
-            getMainWindow().showNotification("Sorry,", "no any meny for this week available", Window.Notification.TYPE_HUMANIZED_MESSAGE);
+            getMainWindow().showNotification("Sorry,", "no any menu for this week available", Window.Notification.TYPE_HUMANIZED_MESSAGE);
             return;
         }
-        CurrentWeekMenuPanel currentWeekMenuPanel = new CurrentWeekMenuPanel(currentWeek.iterator().next());
-        replaceCentralPanel(currentWeekMenuPanel);
+        String monday = DateUtils.getCurrentMondayTime().toString().substring(0, datePattern.length());
+        String friday = DateUtils.getCurrentFridayTime().toString().substring(0, datePattern.length());
+        SelectMenuPanel currentWeekMenusPanel = new SelectMenuPanel(currentWeek,monday,friday);
+        replaceCentralPanel(currentWeekMenusPanel);
+
     }
+
 
     @Subscribe
     public void nextWeekMenuSelected(ShowNextWeekMenuEvent nwmEvent){
         Collection<Menu> nextWeek = MenuService.findMenuForNextWeek();
+
         if (nextWeek == null || nextWeek.isEmpty()) {
             getMainWindow().showNotification("Sorry,", "no any meny for next week available", Window.Notification.TYPE_HUMANIZED_MESSAGE);
             return;
         }
-        CurrentWeekMenuPanel currentWeekMenuPanel = new CurrentWeekMenuPanel(nextWeek.iterator().next());
+        String monday = DateUtils.getNextMondayTime().toString().substring(0, datePattern.length());
+        String friday = DateUtils.getNextFridayTime().toString().substring(0, datePattern.length());
+        SelectMenuPanel currentWeekMenuPanel = new SelectMenuPanel(nextWeek,monday,friday);
         replaceCentralPanel(currentWeekMenuPanel);
     }
 
     @Subscribe
     public void showUserOrder(ShowUserOrdersEvent suoEvent) {
+        UserOrdersPanel showUserOrdersPanel = new UserOrdersPanel();
+        replaceCentralPanel(showUserOrdersPanel);
     }
 
     @Subscribe
-    public void showMadeOrderPanel(ShowMadeOrderEvent showMadeOrderEvent){
+    public void showMadeOrderPanel(SaveMenuUserEvent showOrderUserEvent){
         ShowMadeOrderPanel showMadeOrderPanel = new ShowMadeOrderPanel();
         replaceCentralPanel(showMadeOrderPanel);
     }

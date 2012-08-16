@@ -1,6 +1,7 @@
 package com.exadel.dinnerorders.service;
 
 import com.exadel.dinnerorders.dao.OrderDAO;
+import com.exadel.dinnerorders.entity.MenuItem;
 import com.exadel.dinnerorders.entity.Order;
 import com.exadel.dinnerorders.exception.WorkflowException;
 import com.google.common.base.Predicate;
@@ -11,11 +12,13 @@ import javax.annotation.Nullable;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.List;
 
 
 public class OrderService {
 
     private static OrderDAO orderDAO = new OrderDAO();
+    private int id;
 
     public static Comparator<Order> byDate = new Comparator<Order>() {
         public int compare(final Order p1, final Order p2) {
@@ -34,6 +37,12 @@ public class OrderService {
             getSortedOrders(ordersSorted);
         }
         return ordersSorted;
+    }
+
+    public static boolean saveOrder(Order order){
+
+        orderDAO.create(order);
+        return true;
     }
 
     public static Order findOrderByDate(final Date date){
@@ -56,8 +65,33 @@ public class OrderService {
         return result.iterator().next();
     }
 
+    public static Double getCostOrder(List<MenuItem> menuItems) {
+        Double costOrder = 0d;
+        for (MenuItem menuItem : menuItems) {
+            costOrder+=menuItem.getCost();
+        }
+        return costOrder;
+    }
+
+
+
+
     public static boolean deleteOrder(Order order){
         return orderDAO.delete(order);
+    }
+
+    public int hashCode() {
+        return ((id>>>32) ^ id);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        OrderService that = (OrderService) o;
+
+        if (id != that.id) return false;
+        return true;
     }
 }
 

@@ -3,7 +3,6 @@ package com.exadel.dinnerorders.vaadinwindow.layouts.panels;
 import com.exadel.dinnerorders.entity.Menu;
 import com.exadel.dinnerorders.entity.Weekday;
 import com.exadel.dinnerorders.service.DateUtils;
-import com.exadel.dinnerorders.vaadinwindow.listeners.SendOrderButtonListener;
 import com.vaadin.ui.*;
 
 
@@ -41,7 +40,7 @@ public class CurrentWeekMenuPanel extends Panel{
         cafeName.setMaxLength(MAX_CAFE_NAME_LENGTH);
         cafeName.setTextChangeEventMode(AbstractTextField.TextChangeEventMode.EAGER);
         sendOrderButton = new Button("Send order");
-        sendOrderButton.addListener(new SendOrderButtonListener());
+
 
 
     }
