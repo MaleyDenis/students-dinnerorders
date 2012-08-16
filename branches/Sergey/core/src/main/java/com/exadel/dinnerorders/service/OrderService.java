@@ -9,12 +9,16 @@ import com.google.common.collect.Collections2;
 import com.google.common.collect.Ordering;
 
 import javax.annotation.Nullable;
-import java.util.*;
+import java.util.Collection;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.List;
 
 
 public class OrderService {
 
     private static OrderDAO orderDAO = new OrderDAO();
+    private int id;
 
     public static Comparator<Order> byDate = new Comparator<Order>() {
         public int compare(final Order p1, final Order p2) {
@@ -35,6 +39,12 @@ public class OrderService {
         return ordersSorted;
     }
 
+    public static boolean saveOrder(Order order){
+
+        orderDAO.create(order);
+        return true;
+    }
+
     public static Order findOrderByDate(final Date date){
         Predicate<Order> predicate = new Predicate<Order>() {
             public boolean apply(@Nullable Order  order) {
@@ -46,6 +56,17 @@ public class OrderService {
 
         return result.iterator().next();
     }
+
+    public static Double getCostOrder(List<MenuItem> menuItems) {
+        Double costOrder = 0d;
+        for (MenuItem menuItem : menuItems) {
+            costOrder+=menuItem.getCost();
+        }
+        return costOrder;
+    }
+
+
+
 
     public static boolean deleteOrder(Order order){
         List<MenuItem> orderItems = order.getMenuItemList();

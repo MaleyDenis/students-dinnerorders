@@ -19,6 +19,7 @@ public class WelcomeLayout extends GridLayout {
         initComponents();
         setLayoutRatios();
         locateComponents();
+        setStyleName("welcomelayout");
     }
 
     private void setLayoutRatios() {
@@ -28,11 +29,11 @@ public class WelcomeLayout extends GridLayout {
         setColumnExpandRatio(3, 2f);
         setColumnExpandRatio(4, 0.1f);
 
-        setRowExpandRatio(0, 0.1f);
-        setRowExpandRatio(1, 2f);
-        setRowExpandRatio(2, 0.1f);
-        setRowExpandRatio(3, 6f);
-        setRowExpandRatio(4, 2f);
+        setRowExpandRatio(0, 0.01f);
+        setRowExpandRatio(1, 0.2f);
+        setRowExpandRatio(2, 0.01f);
+        setRowExpandRatio(3, 10f);
+        setRowExpandRatio(4, 0.2f);
         setRowExpandRatio(5, 0.1f);
     }
 
@@ -41,8 +42,8 @@ public class WelcomeLayout extends GridLayout {
         addComponent(userInfoPanel, 3, 1, 3, 1);
         addComponent(new Label("<br>", Label.CONTENT_RAW), 0, 2);
         addComponent(navigationPanel, 2, 1);
-        setComponentAlignment(navigationPanel, Alignment.MIDDLE_CENTER);
-        setComponentAlignment(userInfoPanel, Alignment.MIDDLE_CENTER);
+        setComponentAlignment(navigationPanel, Alignment.TOP_CENTER);
+        setComponentAlignment(userInfoPanel, Alignment.TOP_CENTER);
     }
 
     private void initComponents() {

@@ -5,6 +5,7 @@ import com.exadel.dinnerorders.vaadinwindow.application.Application;
 import com.exadel.dinnerorders.vaadinwindow.events.SignOutEvent;
 import com.vaadin.terminal.ExternalResource;
 import com.vaadin.ui.*;
+import com.vaadin.ui.themes.Reindeer;
 
 import java.util.Scanner;
 
@@ -78,6 +79,7 @@ public class UserInfoPanel extends Panel{
 
     private void setComponentsSize() {
         signOutButton.setWidth(80, UNITS_PERCENTAGE);
+        signOutButton.setStyleName(Reindeer.BUTTON_SMALL);
     }
 
     private void initLabels() {

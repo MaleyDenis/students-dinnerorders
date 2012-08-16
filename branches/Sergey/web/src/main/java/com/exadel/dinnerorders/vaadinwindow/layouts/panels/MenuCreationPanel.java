@@ -85,8 +85,7 @@ public class MenuCreationPanel extends Panel {
 
     private void initLayout() {
         layout = new GridLayout(DEFAULT_LAYOUT_COLUMNS, DEFAULT_LAYOUT_ROWS);
-        layout.setWidth(100, UNITS_PERCENTAGE);
-        layout.setHeight(100, UNITS_PERCENTAGE);
+        layout.setSizeFull();
     }
 
     private void locateComponents() {
