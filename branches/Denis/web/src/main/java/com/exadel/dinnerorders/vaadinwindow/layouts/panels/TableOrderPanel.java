@@ -16,38 +16,12 @@ public class TableOrderPanel extends Panel {
     private PopupView popupView;
     private PopupDateField datePayment;
 
-
-    private Label toBeUpdatedFromThread;
-    private Button startThread;
-    private Label running = new Label("");
-
-
     public TableOrderPanel(){
         super();
         Application.getInstance().getEventBus().register(this);
         initTableOrder();
         initComponent();
         setSizeFull();
-        example();
-
-    }
-
-    public void example(){
-        Label javascript = new Label("<h3>Run Native JavaScript</h3>",
-                Label.CONTENT_XHTML);
-        addComponent(javascript);
-
-        final TextArea script = new TextArea();
-        script.setWidth("100%");
-        script.setRows(3);
-        script.setValue("alert(\"Hello Vaadin\");");
-        addComponent(script);
-
-        addComponent(new Button("Run script", new Button.ClickListener() {
-            public void buttonClick(Button.ClickEvent event) {
-                getWindow().executeJavaScript(script.getValue().toString());
-            }
-        }));
 
     }
 
@@ -62,7 +36,6 @@ public class TableOrderPanel extends Panel {
         tableOrder.setSortDisabled(true);
         createTable();
         addComponent(tableOrder);
-
     }
 
     private void initComponent() {

@@ -79,7 +79,7 @@ public class SelectMenuPanel extends Panel {
 
     private Panel addPanelMenu(Menu menu){
         panel = new Panel();
-        panel.setStyleName("menu");
+        panel.setStyleName("");
         initComponents();
         for(int i=1; i<=NUMBER_OF_SERVICE_DAYS; i++){
             weekdayLabel = new Label(Weekday.getWeekday(i).toString());

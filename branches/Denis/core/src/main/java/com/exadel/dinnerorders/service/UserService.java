@@ -19,9 +19,7 @@ import java.util.Collection;
 public class UserService {
     private static UserDAO userDAO = new UserDAO();
 
-    public static User create(String ldapUsername)  {
-        User user = new User();
-        user.setUserName(ldapUsername);
+    public static User create(User user)  {
         user.setRole(Role.USER);
         if (!userDAO.create(user)) {
             throw new WorkflowException("User can't be created.");
