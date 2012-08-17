@@ -69,6 +69,7 @@ public class UserInfoPanel extends Panel{
         layout.setColumnExpandRatio(0, 0.15f);
         layout.setColumnExpandRatio(1, 0.35f);
         layout.setColumnExpandRatio(2, 0.5f);
+        layout.setStyleName("userinfo");
         setContent(layout);
     }
 
@@ -84,8 +85,11 @@ public class UserInfoPanel extends Panel{
 
     private void initLabels() {
         nameCaption = new Label("Name");
+        nameCaption.setStyleName("userinfocaption");
         lastNameCaption = new Label("Last name");
+        lastNameCaption.setStyleName("userinfocaption");
         roleCaption = new Label("Role");
+        roleCaption.setStyleName("userinfocaption");
         initUserName();
     }
 
@@ -104,7 +108,10 @@ public class UserInfoPanel extends Panel{
     public void initUserName() {
         Scanner scanner = new Scanner(Application.getInstance().getUser().getUserName());
         lastNameLabel = new Label(scanner.next());
+        lastNameLabel.setStyleName("userinfo");
         nameLabel = new Label(scanner.next());
+        nameLabel.setStyleName("userinfo");
         roleLabel = new Label(Application.getInstance().getUser().getRole().name());
+        roleLabel.setStyleName("userinfo");
     }
 }
