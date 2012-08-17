@@ -25,6 +25,7 @@ public class WebApplicationController extends com.vaadin.Application {
         createLayouts();
         createMainWindow();
         eventBus.register(this);
+        setTheme("apptheme");
     }
 
     private void createMainWindow() {
