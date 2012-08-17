@@ -1,5 +1,6 @@
 package com.exadel.dinnerorders.service;
 
+import com.exadel.dinnerorders.dao.MenuItemDAO;
 import com.exadel.dinnerorders.dao.OrderDAO;
 import com.exadel.dinnerorders.entity.MenuItem;
 import com.exadel.dinnerorders.entity.Order;
@@ -39,8 +40,7 @@ public class OrderService {
         return ordersSorted;
     }
 
-    public static boolean saveOrder(Order order){
-
+    public static boolean saveOrder(Order order) {
         orderDAO.create(order);
         return true;
     }
@@ -73,13 +73,6 @@ public class OrderService {
         return costOrder;
     }
 
-
-
-
-    public static boolean deleteOrder(Order order){
-        return orderDAO.delete(order);
-    }
-
     public int hashCode() {
         return ((id>>>32) ^ id);
     }
@@ -90,8 +83,34 @@ public class OrderService {
         if (o == null || getClass() != o.getClass()) return false;
         OrderService that = (OrderService) o;
 
-        if (id != that.id) return false;
-        return true;
+        return id == that.id;
+    }
+
+    public static boolean deleteOrder(Order order){
+        List<MenuItem> orderItems = order.getMenuItemList();
+        MenuItemDAO menuItemDAO = new MenuItemDAO();
+        for (MenuItem menuItem : orderItems){
+            menuItemDAO.delete(menuItem);
+        }
+        return orderDAO.delete(order);
+    }
+
+    public static Collection<Order> findOrderBeforeDate(final Date date) {
+        Predicate<Order> predicate = new Predicate<Order>() {
+            public boolean apply(@Nullable Order  order) {
+                return order != null &&
+                        (order.getDateOrder().equals(date) || order.getDateOrder().before(date));
+            }
+        };
+        return Collections2.filter(orderDAO.loadAll(), predicate);
+    }
+
+    public static boolean deleteAll(Collection<Order> orders) {
+        boolean result = true;
+        for (Order order : orders) {
+            result = result && deleteOrder(order);
+        }
+        return result;
     }
 }
 

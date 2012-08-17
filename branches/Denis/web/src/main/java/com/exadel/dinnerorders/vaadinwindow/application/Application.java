@@ -3,6 +3,7 @@ package com.exadel.dinnerorders.vaadinwindow.application;
 
 import com.exadel.dinnerorders.entity.Order;
 import com.exadel.dinnerorders.entity.User;
+import com.exadel.dinnerorders.service.TasksManagerService;
 import com.google.common.eventbus.EventBus;
 
 public class Application {
@@ -10,17 +11,15 @@ public class Application {
     private static Application INSTANCE = new Application();
     private User user;
     private Order order;
-//    private TasksManagerService tasksManagerService = new TasksManagerService();
-//
-//    private Application() {
-//        tasksManagerService.start();
-//    }
+    private TasksManagerService tasksManagerService = new TasksManagerService();
+
+    private Application() {
+        tasksManagerService.start();
+    }
 
     public synchronized static Application getInstance(){
         return INSTANCE;
     }
-
-
 
     public EventBus getEventBus() {
         return eventBus;
@@ -40,5 +39,9 @@ public class Application {
 
     public void setOrder(Order order) {
         this.order = order;
+    }
+
+    public TasksManagerService getTasksManagerService() {
+        return tasksManagerService;
     }
 }

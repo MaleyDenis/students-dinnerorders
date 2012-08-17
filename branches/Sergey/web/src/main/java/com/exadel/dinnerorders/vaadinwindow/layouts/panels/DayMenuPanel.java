@@ -29,6 +29,7 @@ public class DayMenuPanel extends GridLayout {
         initComponents();
         locateComponents();
         setModifyingEnabled();
+        setStyleName("daymenupanel");
     }
 
     public void setModifyingEnabled() {
@@ -53,6 +54,7 @@ public class DayMenuPanel extends GridLayout {
         dayLabel = new Label(weekday.name());
         int symbols = ((String)dayLabel.getValue()).length();
         dayLabel.setWidth(symbols * 9, UNITS_PIXELS);
+        dayLabel.setStyleName("weekday");
     }
 
     private void locateComponents(){
