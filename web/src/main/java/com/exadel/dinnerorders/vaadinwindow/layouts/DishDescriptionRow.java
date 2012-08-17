@@ -5,6 +5,7 @@ import com.exadel.dinnerorders.vaadinwindow.listeners.CostChangedListener;
 import com.exadel.dinnerorders.vaadinwindow.listeners.RemoveDishListener;
 import com.exadel.dinnerorders.vaadinwindow.listeners.SkipBoxListener;
 import com.vaadin.terminal.ExternalResource;
+import com.vaadin.terminal.ThemeResource;
 import com.vaadin.ui.*;
 
 public class DishDescriptionRow extends GridLayout {
@@ -31,8 +32,8 @@ public class DishDescriptionRow extends GridLayout {
     private void alignComponents() {
         setComponentAlignment(nameStatus, Alignment.MIDDLE_RIGHT);
         setComponentAlignment(costStatus, Alignment.MIDDLE_RIGHT);
-        setComponentAlignment(add, Alignment.TOP_CENTER);
-        setComponentAlignment(remove, Alignment.TOP_LEFT);
+        setComponentAlignment(add, Alignment.MIDDLE_CENTER);
+        setComponentAlignment(remove, Alignment.MIDDLE_CENTER);
         setComponentAlignment(skipBox, Alignment.MIDDLE_LEFT);
     }
 
@@ -74,8 +75,8 @@ public class DishDescriptionRow extends GridLayout {
     }
 
     private void initButtons() {
-        add = new Embedded("", new ExternalResource("/VAADIN/themes/runo/icons/16/document-add.png"));
-        remove = new Embedded("", new ExternalResource("/VAADIN/themes/runo/icons/16/document-delete.png"));
+        add = new Embedded(null, new ThemeResource("img/add.png"));
+        remove = new Embedded(null , new ThemeResource("img/remove.png"));
         add.setWidth(16, UNITS_PIXELS);
         add.setHeight(16, UNITS_PIXELS);
         add.setDescription("Add one more dish");

@@ -44,6 +44,7 @@ public class MenuCreationPanel extends Panel {
         initComponents();
         locateComponents();
         setContent(layout);
+        setStyleName("menucreation");
     }
 
     private void initComponents() {
