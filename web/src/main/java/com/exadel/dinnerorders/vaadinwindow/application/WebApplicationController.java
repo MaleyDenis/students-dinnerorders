@@ -22,7 +22,6 @@ public class WebApplicationController extends com.vaadin.Application {
 
     @Override
     public void init() {
-        setTheme("ownTheme");
         createLayouts();
         createMainWindow();
         eventBus.register(this);

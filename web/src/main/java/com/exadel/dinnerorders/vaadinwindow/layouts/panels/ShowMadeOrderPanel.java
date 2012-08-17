@@ -58,6 +58,10 @@ public class ShowMadeOrderPanel extends Panel {
 
     @Subscribe
     public void saveOrder(SaveOrderUserEvent saveOrderUserEvent){
+        GridLayout eventParent = saveOrderUserEvent.getParent();
+        if (eventParent != gridLayout) {
+            return;
+        }
         getWindow().showNotification("Your order is accept");
         OrderService.saveOrder(order);
     }
