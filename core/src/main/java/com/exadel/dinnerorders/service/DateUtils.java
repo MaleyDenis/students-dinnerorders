@@ -85,7 +85,9 @@ public class DateUtils {
     }
 
     public static Timestamp getCurrentTime() {
-        return new Timestamp(System.currentTimeMillis());
+        Timestamp currentTime = new Timestamp(System.currentTimeMillis());
+        currentTime.setNanos(0);
+        return currentTime;
     }
 
     public static Timestamp getNextMondayTime() {
