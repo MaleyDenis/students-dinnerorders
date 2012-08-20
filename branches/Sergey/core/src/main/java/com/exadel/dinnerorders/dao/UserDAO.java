@@ -35,7 +35,6 @@ public class UserDAO extends BaseDAO<User> {
     public boolean create(User newItem) {
         Connection connection = getConnection(this);
         try {
-
             PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO user (ID,LDAPLOGIN,USERNAME,ROLE) VALUES(?, ?, ?, ?);");
             newItem.setId(getID());
             preparedStatement.setLong(1, newItem.getId());

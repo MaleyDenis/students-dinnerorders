@@ -1,11 +1,19 @@
 package com.exadel.dinnerorders.entity;
 
+import javax.persistence.CascadeType;
+import javax.persistence.FetchType;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import java.util.List;
+
 /**
  * User: Dima Shulgin
  * Date: 17.07.12
  */
-public class User implements Entity {
 
+@javax.persistence.Entity(name = "user")
+public class User implements Entity {
+    @Id
     private Long id;
     private String ldapLogin;
 
@@ -14,6 +22,9 @@ public class User implements Entity {
 
     @Export(column = "Role",collection = false)
     private Role role;
+
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<Message> messages;
 
 
     public User(Long id, String ldapLogin, String userName, Role role) {
@@ -32,7 +43,6 @@ public class User implements Entity {
     }
 
     public User() {
-
     }
 
 

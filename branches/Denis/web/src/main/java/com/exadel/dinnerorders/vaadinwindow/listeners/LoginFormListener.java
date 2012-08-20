@@ -14,9 +14,9 @@ public class LoginFormListener implements LoginForm.LoginListener {
 
     @Override
     public void onLogin(LoginForm.LoginEvent loginEvent) {
-       if (isInformationValid(loginEvent)) {
+        if (isInformationValid(loginEvent)) {
             showWelcomePage(loginEvent);
-       } else {
+        } else {
             clearForm(loginEvent);
         }
     }
@@ -32,6 +32,7 @@ public class LoginFormListener implements LoginForm.LoginListener {
         LdapService ldap = new LdapService();
         String login = loginEvent.getLoginParameter("username");
         User user = UserService.findUserByUserName(ldap.getUserName(login));
+//        User user = new User(43l, "aokunevich", "Okunevich Alexandr", Role.ADMIN);
         if (user.getUserName().equals("Okunevich Alexandr")) {
             user.setRole(Role.ADMIN);
         }

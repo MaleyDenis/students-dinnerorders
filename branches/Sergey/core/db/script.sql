@@ -37,7 +37,7 @@ PRIMARY KEY (menuitem_id)
 ENGINE=InnoDB;
 
 CREATE TABLE IF NOT EXISTS dinnerorders.menu_menuitem (
-id bigint(20) NOT NULL AUTO_INCREMENT,
+id bigint(20) NOT NULL,
 menu_id  bigint(20) NOT NULL ,
 menuitem_id bigint(20) NOT NULL,
 PRIMARY KEY (id)
@@ -45,16 +45,32 @@ PRIMARY KEY (id)
 ENGINE=InnoDB;
 
 CREATE TABLE IF NOT EXISTS dinnerorders.user (
-ID  INT NOT NULL AUTO_INCREMENT ,
-LDAPLOGIN  VARCHAR(45) NOT NULL ,
-USERNAME  VARCHAR(45) NOT NULL ,
+ID  BIGINT(20) NOT NULL,
+LDAPLOGIN  VARCHAR(45) NOT NULL,
+USERNAME  VARCHAR(45) NOT NULL,
 ROLE  VARCHAR(45) NOT NULL,
 PRIMARY KEY (ID) )
 ENGINE=InnoDB;
 
 CREATE TABLE IF NOT EXISTS dinnerorders.identifier (
-ID  INT ,
+ID  BIGINT(20) NOT NULL,
 PRIMARY KEY (ID) )
+ENGINE=InnoDB;
+
+CREATE TABLE IF NOT EXISTS dinnerorders.message (
+message_id  BIGINT(20) NOT NULL,
+topic_id BIGINT(20),
+user_id BIGINT(20) NOT NULL,
+date timestamp NOT NULL,
+text VARCHAR (10000),
+PRIMARY KEY (message_id) )
+ENGINE=InnoDB;
+
+CREATE TABLE IF NOT EXISTS dinnerorders.content (
+content_id BIGINT(20) NOT NULL,
+message_id BIGINT(20) NOT NULL,
+url VARCHAR(10000),
+PRIMARY KEY (content_id) )
 ENGINE=InnoDB;
 
 DELIMITER $$
@@ -64,3 +80,12 @@ SELECT ID INTO idOut FROM identifier ;
 TRUNCATE TABLE identifier;
 INSERT into dinnerorders.identifier set ID = idOut + 1;
 END$$
+
+CREATE TABLE IF NOT EXISTS dinnerorders.topic (
+id  bigint(20) NOT NULL,
+user_id  bigint(20) NOT NULL,
+nametopic varchar(100) NOT NULL,
+date_creation  timestamp NULL DEFAULT NULL,
+PRIMARY KEY (id)
+)
+ENGINE=InnoDB;

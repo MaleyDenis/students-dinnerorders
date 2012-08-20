@@ -56,9 +56,8 @@ public class SelectMenuPanel extends Panel {
 
     public void locateComponents(){
         sendOrderButton = new Button("Make order");
-        for (Menu menu: menuCollection){
-
-            tabSheet.addTab(addPanelMenu(menu),menu.getCafeName());
+        for (Menu menu: menuCollection) {
+            tabSheet.addTab(addPanelMenu(menu), menu.getCafeName());
         }
 
         addComponent(new Label("Monday: "+dateStartWeek));

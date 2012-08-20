@@ -3,6 +3,9 @@ package com.exadel.dinnerorders.entity;
 import com.exadel.dinnerorders.exception.WorkflowException;
 import com.exadel.dinnerorders.service.Configuration;
 import org.apache.log4j.Logger;
+import org.hibernate.SessionFactory;
+import org.hibernate.service.ServiceRegistry;
+import org.hibernate.service.ServiceRegistryBuilder;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -37,4 +40,22 @@ public class DefaultMysqlConnectionProvider implements MysqlConnectionProvider {
         }
         return connection;
     }
+
+    @Override
+    public SessionFactory sessionFactory() {
+        SessionFactory sessionFactory = null;
+        try {
+            org.hibernate.cfg.Configuration configuration = new org.hibernate.cfg.Configuration().configure();
+            ServiceRegistry registry = new ServiceRegistryBuilder().applySettings(
+                    configuration.getProperties()).buildServiceRegistry();
+
+            sessionFactory = configuration.buildSessionFactory(registry);
+        } catch (Throwable ex) {
+            System.err.println("Initial SessionFactory creation failed." + ex);
+            throw new ExceptionInInitializerError(ex);
+        }
+        return sessionFactory;
+    }
+
+
 }
