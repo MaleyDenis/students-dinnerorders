@@ -37,6 +37,7 @@ public class NavigationPanel extends Panel {
         MenuBar.MenuItem menuList = menuBar.addItem("Menu", null);
         MenuBar.MenuItem orderList = menuBar.addItem("Order", null);
         MenuBar.MenuItem adminList = menuBar.addItem("Admin tools", null);
+        MenuBar.MenuItem chatList = menuBar.addItem("Show chat", new ShowChatCommand());
         User user = Application.getInstance().getUser();
         adminList.setVisible(user.getRole() == Role.ADMIN);
 

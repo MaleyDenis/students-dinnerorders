@@ -6,7 +6,7 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
-@javax.persistence.Entity(name = "message")
+@javax.persistence.Entity(name = "Message")
 public class Message {
     @Id
     @Column(name = "message_id", nullable = false)
@@ -16,7 +16,7 @@ public class Message {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "topic_id")
     private Topic topic;
 
