@@ -19,8 +19,12 @@ public class Topic {
     @Column(name = "user_id")
     private Long userID;
 
-    @OneToMany(mappedBy = "topic",fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "topic", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Message> topicMessage;
+
+    public Topic(){
+        super();
+    }
 
     public Topic(Long id, String name, Timestamp dateCreation, Long userID){
         this.id = id;

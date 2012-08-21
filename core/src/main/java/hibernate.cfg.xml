@@ -13,9 +13,9 @@
         <property name="show_sql">true</property>
         <property name="hibernate.dialect">org.hibernate.dialect.MySQLDialect</property>
         <property name="hibernate.current_session_context_class">thread</property>
-        <mapping class="com.exadel.dinnerorders.entity.Message" />
-        <mapping class="com.exadel.dinnerorders.entity.Topic" />
-        <mapping class="com.exadel.dinnerorders.entity.Content" />
+        <mapping class="com.exadel.dinnerorders.entity.Message"/>
+        <mapping class="com.exadel.dinnerorders.entity.Topic"/>
+        <mapping class="com.exadel.dinnerorders.entity.Content"/>
         <mapping class="com.exadel.dinnerorders.entity.User"/>
     </session-factory>
 </hibernate-configuration>

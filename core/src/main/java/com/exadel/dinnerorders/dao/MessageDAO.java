@@ -1,5 +1,6 @@
 package com.exadel.dinnerorders.dao;
 
+import com.exadel.dinnerorders.entity.Content;
 import com.exadel.dinnerorders.entity.DbConnection;
 import com.exadel.dinnerorders.entity.DefaultMysqlConnectionProvider;
 import com.exadel.dinnerorders.entity.Message;
@@ -19,11 +20,11 @@ public class MessageDAO extends BaseDAO<Message> {
     private static final Logger logger = Logger.getLogger(MessageDAO.class);
     @Override
     public boolean create(Message newItem)  {
-        if(newItem.getId() != null) {
-            return false;
-        }
         Session session = null;
         try {
+            for (Content content : newItem.getContentList()) {
+                content.setId(getID());
+            }
             SessionFactory factory = getSessionFactory(this);
             session = factory.openSession();
             Transaction transaction = session.beginTransaction();

@@ -97,7 +97,7 @@ public class SolrService {
         return result;
     }
 
-    public static Collection<Menu> loadAllMenus() {
+    public static Collection<Menu> loadAll() {
         getConnection();
         Collection<ProxyMenu> proxyMenus = readMenus();
         List<Menu> menus = new ArrayList<Menu>();
@@ -187,31 +187,31 @@ public class SolrService {
 
     public static Collection<Menu> findMenuForNextWeek() {
         Timestamp date = DateUtils.getNextMondayTime();
-        return findMenusByDate(date);
+        return findMenuByDate(date);
     }
 
     public static Collection<Menu> findMenuForCurrentWeek(){
         Timestamp date = DateUtils.getCurrentMondayTime();
-        return findMenusByDate(date);
+        return findMenuByDate(date);
     }
 
-    public static Collection<Menu> findMenusBeforeDate(final Timestamp date){
+    public static Collection<Menu> findMenuBeforeDate(final Timestamp date){
         Predicate<Menu> predicate = new Predicate<Menu>() {
             public boolean apply(@Nullable Menu o) {
                 return o != null && ((o.getDateStart().before(date) || (o.getDateStart().equals(date) )));
             }
         };
-        return Collections2.filter(loadAllMenus(), predicate);
+        return Collections2.filter(loadAll(), predicate);
     }
 
-    public static Collection<Menu> findMenusByDate(final Timestamp date){
+    public static Collection<Menu> findMenuByDate(final Timestamp date){
         Predicate<Menu> predicate = new Predicate<Menu>() {
             public boolean apply(@Nullable Menu o) {
                 return o != null && ((o.getDateStart().before(date) && o.getDateEnd().after(date)) ||
                         (o.getDateStart().equals(date) || o.getDateEnd().equals(date)));
             }
         };
-        Collection<Menu> result =  Collections2.filter(loadAllMenus(), predicate);
+        Collection<Menu> result =  Collections2.filter(loadAll(), predicate);
         if (result.isEmpty()) {
             return null;
         }
@@ -246,5 +246,15 @@ public class SolrService {
             logger.error("SolrService: can't load cafe names", ssException);
         }
         return names;
+    }
+
+    public static Menu findMenuByDateAndCafename(String cafename, Timestamp menuDate) {
+        Collection<Menu> menus = findMenuByDate(menuDate);
+        for (Menu menu:menus) {
+            if (menu.getCafeName().equals(cafename)) {
+                return menu;
+            }
+        }
+        return null;
     }
 }

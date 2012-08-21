@@ -135,6 +135,7 @@ public class MenuCreationPanel extends Panel {
         int type = result ? Window.Notification.TYPE_HUMANIZED_MESSAGE : Window.Notification.TYPE_ERROR_MESSAGE;
         Window.Notification message = new Window.Notification(messageText, type);
         message.setDelayMsec(NOTIFICATION_DISPLAY_TIME);
+        message.setStyleName("savedok");
         getApplication().getMainWindow().showNotification(message);
         flush();
     }
