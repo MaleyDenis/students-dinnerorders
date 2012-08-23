@@ -1,8 +1,6 @@
 package com.exadel.dinnerorders.dao;
 
-import com.exadel.dinnerorders.entity.DbConnection;
-import com.exadel.dinnerorders.entity.DefaultMysqlConnectionProvider;
-import com.exadel.dinnerorders.entity.Topic;
+import com.exadel.dinnerorders.entity.*;
 import org.apache.log4j.Logger;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -20,8 +18,16 @@ public class TopicDAO extends BaseDAO<Topic>{
         try {
             session  = sessionFactory.openSession();
             session.beginTransaction();
+            newItem.setId(getID());
+            for(Message message : newItem.getTopicMessage()){
+                message.setId(getID());
+                for (Content content: message.getContentList()){
+                    content.setId(getID());
+                }
+            }
             session.save(newItem);
             session.getTransaction().commit();
+            session.flush();
             return true;
         } catch (Exception e){
             logger.error("Create error the method",e);
@@ -42,7 +48,7 @@ public class TopicDAO extends BaseDAO<Topic>{
         session.beginTransaction();
             session.update(item);
             session.getTransaction().commit();
-            session.close();
+            session.flush();
             return true;
         } catch (Exception e){
             logger.error("Create error the method",e);
@@ -63,6 +69,7 @@ public class TopicDAO extends BaseDAO<Topic>{
             session.beginTransaction();
             session.delete(item);
             session.getTransaction().commit();
+            session.flush();
         } catch (Exception e){
             logger.error("Create error the method",e);
         } finally {
@@ -83,6 +90,7 @@ public class TopicDAO extends BaseDAO<Topic>{
             session.beginTransaction();
             topic = (Topic)session.get(Topic.class, value);
             session.getTransaction().commit();
+            session.flush();
         } catch (Exception e){
             logger.error("Load error the method",e);
         } finally {
