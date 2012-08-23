@@ -19,18 +19,21 @@ public class Topic {
     @Column(name = "date_creation")
     private Timestamp dateCreation;
 
-    @Column(name = "user_id")
-    private Long userID;
+    @ManyToOne
+    @JoinColumn(name = "user_id",nullable = false)
+    private User user;
+
+
 
     @OneToMany(mappedBy = "topic",fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Message> topicMessage;
 
-    public Topic(Long id, String name, Timestamp dateCreation, Long userID){
+    /*public Topic(Long id, String name, Timestamp dateCreation, Long userID){
         this.id = id;
         this.name = name;
         this.dateCreation = dateCreation;
         this.userID = userID;
-    }
+    }*/
 
     public Topic(){
 
@@ -61,13 +64,6 @@ public class Topic {
         this.dateCreation = dateCreation;
     }
 
-    public Long getUserID() {
-        return userID;
-    }
-
-    public void setUserID(Long userID) {
-        this.userID = userID;
-    }
 
     public List<Message> getTopicMessage() {
         return topicMessage;
@@ -82,5 +78,13 @@ public class Topic {
     public void addMessage(Message message){
         message.setTopic(this);
         topicMessage.add(message);
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 }
