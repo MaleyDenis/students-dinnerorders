@@ -26,7 +26,7 @@ public class SendMessageListener implements Button.ClickListener {
     public void buttonClick(Button.ClickEvent event) {
         ((Upload)layout.getComponent(2)).submitUpload();
         if (!((Upload)layout.getComponent(2)).isUploading()) {
-            if (((TextArea) ((HorizontalLayout) layout.getParent()).getComponent(0)).getValue().equals("")) {
+            if (((TextArea) ((GridLayout)layout.getParent()).getComponent(0, 0)).getValue().equals("")) {
                 return;
             }
             createNoContentMessage();
@@ -37,8 +37,8 @@ public class SendMessageListener implements Button.ClickListener {
         ChatBoard chatBoard = (ChatBoard)((VerticalLayout)layout.getParent().getParent().getParent()).getComponent(1);
         Message message = new Message();
         message.setTopic(chatBoard.getTopic());
-        message.setText((String) ((TextArea) ((HorizontalLayout) layout.getParent()).getComponent(0)).getValue());
-        ((TextArea)((HorizontalLayout)layout.getParent()).getComponent(0)).setValue("");
+        message.setText((String) ((TextArea) ((GridLayout)layout.getParent()).getComponent(0, 0)).getValue());
+        ((TextArea)((GridLayout)layout.getParent()).getComponent(0, 0)).setValue("");
         message.setDate(DateUtils.getCurrentTime());
         message.setUser(((WebApplicationController) chatBoard.getApplication()).getApplication().getUser());
         message.setContentList(new ArrayList<Content>());
@@ -51,8 +51,8 @@ public class SendMessageListener implements Button.ClickListener {
         ChatBoard chatBoard = (ChatBoard)((VerticalLayout)layout.getParent().getParent().getParent()).getComponent(1);
         Message message = ((CreateMessageChatPanel)((VerticalLayout)chatBoard.getParent()).getComponent(2)).getNewMessage();
         message.setTopic(chatBoard.getTopic());
-        message.setText((String) ((TextArea) ((HorizontalLayout) layout.getParent()).getComponent(0)).getValue());
-        ((TextArea)((HorizontalLayout)layout.getParent()).getComponent(0)).setValue("");
+        message.setText((String) ((TextArea) ((GridLayout) layout.getParent()).getComponent(0, 0)).getValue());
+        ((TextArea)((GridLayout)layout.getParent()).getComponent(0, 0)).setValue("");
         chatBoard.addMessage(message);
         MessageService.save(message);
     }

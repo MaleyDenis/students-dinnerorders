@@ -6,7 +6,7 @@ import com.exadel.dinnerorders.vaadinwindow.listeners.*;
 import com.vaadin.ui.*;
 
 public class CreateMessageChatPanel extends Panel {
-    private HorizontalLayout horizontalLayout;
+    private GridLayout gridLayout;
     private TextArea inputMessage;
     private Message newMessage;
     private VerticalLayout controlGroup;
@@ -15,14 +15,17 @@ public class CreateMessageChatPanel extends Panel {
     public CreateMessageChatPanel(Window window){
         super();
         this.window = window;
-        setSizeFull();
         initComponent();
         locateComponent();
+        setSizeFull();
     }
 
     public void initLayout(){
-        horizontalLayout = new HorizontalLayout();
-        setContent(horizontalLayout);
+        gridLayout = new GridLayout(2, 1);
+        gridLayout.setColumnExpandRatio(0, 7f);
+        gridLayout.setColumnExpandRatio(1, 3f);
+        setContent(gridLayout);
+        gridLayout.setSizeFull();
         controlGroup = new VerticalLayout();
         controlGroup.setSizeFull();
     }
@@ -32,6 +35,9 @@ public class CreateMessageChatPanel extends Panel {
         inputMessage  = new TextArea();
         inputMessage.setInputPrompt("message");
         inputMessage.setColumns(40);
+        inputMessage.setWidth(95, UNITS_PERCENTAGE);
+        inputMessage.setImmediate(true);
+        inputMessage.addListener(new KeyTypeListener());
         initControlGroup();
     }
 
@@ -57,9 +63,9 @@ public class CreateMessageChatPanel extends Panel {
     }
 
     public void locateComponent(){
-        horizontalLayout.addComponent(inputMessage);
-        horizontalLayout.addComponent(controlGroup);
-        horizontalLayout.setComponentAlignment(controlGroup, Alignment.MIDDLE_LEFT);
+        gridLayout.addComponent(inputMessage);
+        gridLayout.addComponent(controlGroup);
+        gridLayout.setComponentAlignment(controlGroup, Alignment.MIDDLE_LEFT);
     }
 
     public VerticalLayout getControlGroup() {
