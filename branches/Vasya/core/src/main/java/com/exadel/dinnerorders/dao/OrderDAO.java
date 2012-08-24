@@ -17,7 +17,7 @@ public class OrderDAO extends BaseDAO<Order> {
     private final Logger logger = Logger.getLogger(OrderDAO.class);
 
     public boolean create(Order orderItem)  {
-        Session session = openSession();
+        Session session = openSession(this);
         try{
             if(session != null) {
                 orderItem.setId(getID());
@@ -29,13 +29,13 @@ public class OrderDAO extends BaseDAO<Order> {
         } catch (Exception e){
             logger.error(e);
         } finally {
-            closeSession();
+            closeSession(session);
         }
         return false;
     }
 
     public boolean update(Order item) {
-        Session session = openSession();
+        Session session = openSession(this);
         try{
             if(session != null) {
                 session.beginTransaction();
@@ -46,13 +46,13 @@ public class OrderDAO extends BaseDAO<Order> {
         } catch (Exception e){
             logger.error(e);
         } finally {
-            closeSession();
+            closeSession(session);
         }
         return false;
     }
 
     public boolean delete(Order item)  {
-        Session session = openSession();
+        Session session = openSession(this);
         try{
             if(session != null) {
                 session.beginTransaction();
@@ -63,14 +63,14 @@ public class OrderDAO extends BaseDAO<Order> {
         } catch (Exception e){
             logger.error(e);
         } finally {
-            closeSession();
+            closeSession(session);
         }
         return false;
     }
 
     public Collection<Order> loadAll()  {
         List<Order> items = new ArrayList<Order>();
-        Session session = openSession();
+        Session session = openSession(this);
         try {
             if (session != null) {
                 session.beginTransaction();
@@ -84,7 +84,7 @@ public class OrderDAO extends BaseDAO<Order> {
         } catch (Exception e) {
             logger.error(e);
         } finally {
-            closeSession();
+            closeSession(session);
         }
         return Collections.emptyList();
     }

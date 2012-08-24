@@ -23,7 +23,7 @@ public class MenuItemDAO extends BaseDAO<MenuItem> {
     private Logger logger = Logger.getLogger(MenuItemDAO.class);
 
     public boolean create(MenuItem newItem)  {
-        Session session = openSession();
+        Session session = openSession(this);
         try {
             if (session != null) {
                 newItem.setId(getID());
@@ -35,13 +35,13 @@ public class MenuItemDAO extends BaseDAO<MenuItem> {
         } catch (Exception e) {
             logger.error(e);
         } finally {
-            closeSession();
+            closeSession(session);
         }
         return false;
     }
 
     public boolean update(MenuItem item)  {
-        Session session = openSession();
+        Session session = openSession(this);
         try {
             if (session != null) {
                 session.beginTransaction();
@@ -52,13 +52,13 @@ public class MenuItemDAO extends BaseDAO<MenuItem> {
         } catch (Exception e) {
             logger.error(e);
         } finally {
-            closeSession();
+            closeSession(session);
         }
         return false;
     }
 
     public boolean delete(MenuItem item) {
-        Session session = openSession();
+        Session session = openSession(this);
         try {
             if (session != null) {
                 session.beginTransaction();
@@ -69,13 +69,13 @@ public class MenuItemDAO extends BaseDAO<MenuItem> {
         } catch (Exception e) {
             logger.error(e);
         } finally {
-            closeSession();
+            closeSession(session);
         }
         return false;
     }
 
     public MenuItem load(Long id)  {
-        Session session = openSession();
+        Session session = openSession(this);
         try {
             if (session != null) {
                 session.beginTransaction();
@@ -86,14 +86,14 @@ public class MenuItemDAO extends BaseDAO<MenuItem> {
         } catch (Exception e) {
             logger.error(e);
         } finally {
-            closeSession();
+            closeSession(session);
         }
         return null;
     }
 
     public Collection<MenuItem> loadAll()   {
         List<MenuItem> items = new ArrayList<MenuItem>();
-        Session session = openSession();
+        Session session = openSession(this);
         try {
             if (session != null) {
                 session.beginTransaction();
@@ -108,7 +108,7 @@ public class MenuItemDAO extends BaseDAO<MenuItem> {
         } catch (Exception e) {
             logger.error(e);
         } finally {
-            closeSession();
+            closeSession(session);
         }
         return Collections.emptyList();
     }
