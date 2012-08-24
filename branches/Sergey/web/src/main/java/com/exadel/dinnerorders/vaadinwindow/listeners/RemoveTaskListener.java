@@ -5,13 +5,19 @@ import com.exadel.dinnerorders.vaadinwindow.layouts.panels.TasksCreationPanel;
 import com.vaadin.ui.Button;
 
 public class RemoveTaskListener implements Button.ClickListener {
+    private final Application application;
+
+    public RemoveTaskListener(Application application) {
+        this.application = application;
+    }
+
     @Override
     public void buttonClick(Button.ClickEvent event) {
         TasksCreationPanel panel = (TasksCreationPanel)event.getButton().getParent().getParent();
         String listValue = panel.getTasksList().getValue().toString();
         int taskIndex = getTaskIndex(listValue);
         panel.getTasksList().removeItem(listValue);
-        Application.getInstance().getTasksManagerService().getTasksList().remove(taskIndex);
+        application.getTasksManagerService().getTasksList().remove(taskIndex);
         panel.hideButtons();
         panel.hideSelections();
         panel.updateList();

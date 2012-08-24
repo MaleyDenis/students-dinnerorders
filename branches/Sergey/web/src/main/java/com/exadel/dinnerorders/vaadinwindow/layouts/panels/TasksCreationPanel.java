@@ -24,9 +24,11 @@ public class TasksCreationPanel extends Panel {
     private Button add;
     private Button edit;
     private Button remove;
+    private final Application application;
 
-    public TasksCreationPanel() {
+    public TasksCreationPanel(Application application) {
         super();
+        this.application = application;
         setSizeFull();
         initComponents();
         locateComponents();
@@ -122,17 +124,17 @@ public class TasksCreationPanel extends Panel {
 
     private void initButton() {
         create = new Button("Create");
-        create.addListener(new CreateTaskButtonListener());
+        create.addListener(new CreateTaskButtonListener(application));
         cancel = new Button("Cancel");
-        cancel.addListener(new CancelTaskCreationListener());
+        cancel.addListener(new CancelTaskCreationListener(application));
         add = new Button("Add");
         add.addListener(new AddTaskButtonListener());
         edit = new Button("Save new cofiguration");
         edit.setEnabled(false);
-        edit.addListener(new EditTaskButtonListener());
+        edit.addListener(new EditTaskButtonListener(application));
         remove = new Button("Remove");
         remove.setEnabled(false);
-        remove.addListener(new RemoveTaskListener());
+        remove.addListener(new RemoveTaskListener(application));
     }
 
     private void locateComponents() {
@@ -226,7 +228,7 @@ public class TasksCreationPanel extends Panel {
 
     public void updateList() {
         tasksList.removeAllItems();
-        List<Task> allTasksList = Application.getInstance().getTasksManagerService().getTasksList();
+        List<Task> allTasksList = application.getTasksManagerService().getTasksList();
         int index = 1;
         for (Task task : allTasksList) {
             tasksList.addItem(getTaskName(task, index));
@@ -235,7 +237,7 @@ public class TasksCreationPanel extends Panel {
         tasksList.setMultiSelect(false);
         tasksList.setNullSelectionAllowed(false);
         tasksList.setWidth(100, UNITS_PERCENTAGE);
-        tasksList.addListener(new TaskItemSelectListener());
+        tasksList.addListener(new TaskItemSelectListener(application));
         tasksList.setImmediate(true);
     }
 

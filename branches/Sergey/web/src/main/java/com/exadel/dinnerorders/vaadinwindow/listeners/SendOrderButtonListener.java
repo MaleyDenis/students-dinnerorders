@@ -6,9 +6,15 @@ import com.vaadin.ui.Button;
 
 
 public class SendOrderButtonListener implements Button.ClickListener {
+    private final Application application;
+
+    public SendOrderButtonListener(Application application) {
+        this.application = application;
+    }
+
     @Override
     public void buttonClick(Button.ClickEvent clickEvent) {
-        Application.getInstance().getEventBus().post(new ShowMadeOrderEvent());
+        application.getEventBus().post(new ShowMadeOrderEvent());
     }
 
 }

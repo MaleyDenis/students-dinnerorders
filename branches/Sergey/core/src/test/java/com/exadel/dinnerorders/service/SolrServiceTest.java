@@ -52,7 +52,7 @@ public class SolrServiceTest {
     @Test
     public void testFindMenuByDate() {
         try {
-            Collection<Menu> menus = SolrService.findMenusByDate(startDate);
+            Collection<Menu> menus = SolrService.findMenuByDate(startDate);
             Assert.assertTrue(isOneEqualExist(menus));
         } catch (Exception e) {
             Assert.assertTrue(false);
@@ -91,7 +91,7 @@ public class SolrServiceTest {
     @Test
     public void testLoadAll () {
         try {
-            Collection<Menu> menus = SolrService.loadAllMenus();
+            Collection<Menu> menus = SolrService.loadAll();
             Assert.assertTrue(isOneEqualExist(menus));
         } catch (Exception e) {
             Assert.assertTrue(false);

@@ -9,8 +9,11 @@ import com.vaadin.ui.*;
 public class NavigationPanel extends Panel {
     private MenuBar menuBar;
     private GridLayout layout;
-    public NavigationPanel() {
+    private final Application application;
+
+    public NavigationPanel(Application application) {
         super();
+        this.application = application;
         initLayout();
         initMenuBar();
         addMenuBar();
@@ -37,19 +40,19 @@ public class NavigationPanel extends Panel {
         MenuBar.MenuItem menuList = menuBar.addItem("Menu", null);
         MenuBar.MenuItem orderList = menuBar.addItem("Order", null);
         MenuBar.MenuItem adminList = menuBar.addItem("Admin tools", null);
-        MenuBar.MenuItem chatList = menuBar.addItem("Show chat", new ShowChatCommand());
-        User user = Application.getInstance().getUser();
+        MenuBar.MenuItem chatList = menuBar.addItem("Show chat", new ShowChatCommand(application));
+        User user = application.getUser();
         adminList.setVisible(user.getRole() == Role.ADMIN);
 
-        menuList.addItem("Current week", new ShowCurrentWeekMenuCommand());
-        menuList.addItem("Next week", new ShowNextWeekMenuCommand());
-        MenuBar.MenuItem allOrders = orderList.addItem("Show all orders", new ShowAllOrdersCommand() );
+        menuList.addItem("Current week", new ShowCurrentWeekMenuCommand(application));
+        menuList.addItem("Next week", new ShowNextWeekMenuCommand(application));
+        MenuBar.MenuItem allOrders = orderList.addItem("Show all orders", new ShowAllOrdersCommand(application) );
         allOrders.setVisible(user.getRole() == Role.ADMIN);
 
-        MenuBar.MenuItem userOrders = orderList.addItem("Show my orders", new ShowUserOrdersCommand() );
+        MenuBar.MenuItem userOrders = orderList.addItem("Show my orders", new ShowUserOrdersCommand(application) );
 
-        adminList.addItem("Create menu...", new CreateMenuCommand());
-        adminList.addItem("Manage tasks", new ManageTasksCommand());
+        adminList.addItem("Create menu...", new CreateMenuCommand(application));
+        adminList.addItem("Manage tasks", new ManageTasksCommand(application));
         menuBar.setStyleName("navigation");
     }
 }

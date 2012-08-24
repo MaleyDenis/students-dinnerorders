@@ -15,13 +15,21 @@ import com.vaadin.ui.*;
 import java.util.Collection;
 
 public class WebApplicationController extends com.vaadin.Application {
-    private EventBus eventBus = Application.getInstance().getEventBus();
-    private Layout welcomeLayout;
+    private Application application;
+    private EventBus eventBus;// = Application.getInstance().getEventBus();
     private Layout loginLayout;
     private String datePattern = "YYYY-MM-DD";
 
+    public Application getApplication() {
+        return application;
+    }
+
     @Override
     public void init() {
+
+        application = new Application();
+        eventBus = application.getEventBus();
+
         createLayouts();
         createMainWindow();
         eventBus.register(this);
@@ -35,7 +43,7 @@ public class WebApplicationController extends com.vaadin.Application {
     }
 
     private void createLayouts() {
-        loginLayout = new LoginLayout();
+        loginLayout = new LoginLayout(application);
     }
 
     private void replaceCentralPanel(Component newComponent) {
@@ -45,12 +53,15 @@ public class WebApplicationController extends com.vaadin.Application {
         ((GridLayout)getMainWindow().getContent()).setComponentAlignment(newComponent, Alignment.TOP_CENTER);
     }
 
+
+
     /////====================EventBus listeners===========================/////
 
     @Subscribe
     public void authenticationPassed(AuthenticationEvent authenticationEvent) {
-        welcomeLayout = new WelcomeLayout();
+        Layout welcomeLayout = new WelcomeLayout(application);
         getMainWindow().setContent(welcomeLayout);
+        replaceCentralPanel(new ChatPanel(getMainWindow()));
     }
 
     @Subscribe
@@ -60,13 +71,13 @@ public class WebApplicationController extends com.vaadin.Application {
 
     @Subscribe
     public void showAllOrders(ShowAllOrdersEvent showAllOrdersEvent) {
-        TableOrderPanel tableOrderPanel = new TableOrderPanel();
+        TableOrderPanel tableOrderPanel = new TableOrderPanel(application);
         replaceCentralPanel(tableOrderPanel);
     }
 
     @Subscribe
     public void showMenuEditor(ShowMenuCreationPanelEvent smcEvent) {
-        MenuCreationPanel menuCreationPanel = new MenuCreationPanel();
+        MenuCreationPanel menuCreationPanel = new MenuCreationPanel(application);
         replaceCentralPanel(menuCreationPanel);
     }
 
@@ -79,7 +90,7 @@ public class WebApplicationController extends com.vaadin.Application {
         }
         String monday = DateUtils.getCurrentMondayTime().toString().substring(0, datePattern.length());
         String friday = DateUtils.getCurrentFridayTime().toString().substring(0, datePattern.length());
-        SelectMenuPanel currentWeekMenusPanel = new SelectMenuPanel(currentWeek,monday,friday);
+        SelectMenuPanel currentWeekMenusPanel = new SelectMenuPanel(currentWeek,monday,friday, application);
         replaceCentralPanel(currentWeekMenusPanel);
 
     }
@@ -95,19 +106,24 @@ public class WebApplicationController extends com.vaadin.Application {
         }
         String monday = DateUtils.getNextMondayTime().toString().substring(0, datePattern.length());
         String friday = DateUtils.getNextFridayTime().toString().substring(0, datePattern.length());
-        SelectMenuPanel currentWeekMenuPanel = new SelectMenuPanel(nextWeek,monday,friday);
+        SelectMenuPanel currentWeekMenuPanel = new SelectMenuPanel(nextWeek,monday,friday, application);
         replaceCentralPanel(currentWeekMenuPanel);
     }
 
     @Subscribe
     public void showUserOrder(ShowUserOrdersEvent suoEvent) {
-        UserOrdersPanel showUserOrdersPanel = new UserOrdersPanel();
+        UserOrdersPanel showUserOrdersPanel = new UserOrdersPanel(application);
         replaceCentralPanel(showUserOrdersPanel);
     }
 
     @Subscribe
     public void showMadeOrderPanel(SaveMenuUserEvent showOrderUserEvent){
-        ShowMadeOrderPanel showMadeOrderPanel = new ShowMadeOrderPanel();
+        ShowMadeOrderPanel showMadeOrderPanel = new ShowMadeOrderPanel(application);
         replaceCentralPanel(showMadeOrderPanel);
+    }
+
+    @Subscribe
+    public void showChatPanel(ShowChatBoardEvent scbEvent) {
+        replaceCentralPanel(new ChatPanel(getMainWindow()));
     }
 }

@@ -5,7 +5,13 @@ import com.exadel.dinnerorders.vaadinwindow.events.ShowAllOrdersEvent;
 import com.vaadin.ui.MenuBar;
 
 public class ShowAllOrdersCommand implements MenuBar.Command {
+    private final Application application;
+
+    public ShowAllOrdersCommand(Application application) {
+        this.application = application;
+    }
+
     public void menuSelected(MenuBar.MenuItem menuItem) {
-        Application.getInstance().getEventBus().post(new ShowAllOrdersEvent());
+        application.getEventBus().post(new ShowAllOrdersEvent());
     }
 }

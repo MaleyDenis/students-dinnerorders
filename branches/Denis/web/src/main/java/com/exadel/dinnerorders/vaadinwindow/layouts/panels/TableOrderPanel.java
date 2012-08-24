@@ -16,9 +16,9 @@ public class TableOrderPanel extends Panel {
     private PopupView popupView;
     private PopupDateField datePayment;
 
-    public TableOrderPanel(){
+    public TableOrderPanel(Application application){
         super();
-        Application.getInstance().getEventBus().register(this);
+        application.getEventBus().register(this);
         initTableOrder();
         initComponent();
         setSizeFull();

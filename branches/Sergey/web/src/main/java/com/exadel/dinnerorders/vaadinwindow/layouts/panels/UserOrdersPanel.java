@@ -18,9 +18,11 @@ public class UserOrdersPanel extends Panel {
     private GridLayout gridLayout;
     private Table orderUserTable;
     private PopupView popupView;
+    private final Application application;
 
-    public UserOrdersPanel(){
+    public UserOrdersPanel(Application application){
         super();
+        this.application = application;
         initComponent();
         locateComponent();
     }
@@ -49,7 +51,7 @@ public class UserOrdersPanel extends Panel {
 
     private void createTable(){
         Collection<Order> orderUser = OrderService.getAllSortedOrders();
-        User user = UserService.findUserByUserName(Application.getInstance().getUser().getUserName());
+        User user = UserService.findUserByUserName(application.getUser().getUserName());
         int i = 1;
         Long userID = user.getId();
         for(Order order: orderUser){

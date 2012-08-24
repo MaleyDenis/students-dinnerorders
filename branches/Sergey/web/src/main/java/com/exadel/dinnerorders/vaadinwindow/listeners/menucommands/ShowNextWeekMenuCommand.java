@@ -6,8 +6,14 @@ import com.vaadin.ui.MenuBar;
 
 
 public class ShowNextWeekMenuCommand implements MenuBar.Command {
+    private final Application application;
+
+    public ShowNextWeekMenuCommand(Application application) {
+        this.application = application;
+    }
+
     @Override
     public void menuSelected(MenuBar.MenuItem menuItem) {
-        Application.getInstance().getEventBus().post(new ShowNextWeekMenuEvent());
+        application.getEventBus().post(new ShowNextWeekMenuEvent());
     }
 }

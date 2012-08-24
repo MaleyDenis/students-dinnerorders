@@ -23,12 +23,14 @@ public class UserInfoPanel extends Panel{
     private Button signOutButton;
     private GridLayout layout;
     private Embedded userPhoto;
+    private final Application application;
 
-    public UserInfoPanel() {
+    public UserInfoPanel(Application application) {
         super();
+        this.application = application;
         setWidth(100, UNITS_PERCENTAGE);
         setHeight(100, UNITS_PIXELS);
-        Application.getInstance().getEventBus().register(this);
+        this.application.getEventBus().register(this);
         setDefaultUserInfo();
         initComponents();
         initLayout();
@@ -40,7 +42,7 @@ public class UserInfoPanel extends Panel{
         LdapService ldapService = new LdapService();
         int width = 70;
         int height = 89;
-        String photoURI = ldapService.loadUserPhotoURI(Application.getInstance().getUser().getUserName()) + PHOTO_EXTENSION;
+        String photoURI = ldapService.loadUserPhotoURI(application.getUser().getUserName()) + PHOTO_EXTENSION;
         if (photoURI.equals(NO_PHOTO_URI)) {
             photoURI = "/VAADIN/themes/runo/icons/64/user.png";
             width = height = 64;
@@ -99,19 +101,19 @@ public class UserInfoPanel extends Panel{
         signOutButton.addListener(new Button.ClickListener() {
             @Override
             public void buttonClick(Button.ClickEvent clickEvent) {
-                Application.getInstance().getEventBus().post(new SignOutEvent());
-                Application.getInstance().setUser(null);
+                application.getEventBus().post(new SignOutEvent());
+                application.setUser(null);
             }
         });
     }
 
     public void initUserName() {
-        Scanner scanner = new Scanner(Application.getInstance().getUser().getUserName());
+        Scanner scanner = new Scanner(application.getUser().getUserName());
         lastNameLabel = new Label(scanner.next());
         lastNameLabel.setStyleName("userinfo");
         nameLabel = new Label(scanner.next());
         nameLabel.setStyleName("userinfo");
-        roleLabel = new Label(Application.getInstance().getUser().getRole().name());
+        roleLabel = new Label(application.getUser().getRole().name());
         roleLabel.setStyleName("userinfo");
     }
 }

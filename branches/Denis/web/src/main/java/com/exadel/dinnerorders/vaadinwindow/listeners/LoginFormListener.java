@@ -12,6 +12,12 @@ import com.vaadin.ui.Window;
 
 public class LoginFormListener implements LoginForm.LoginListener {
 
+    private final Application application;
+
+    public LoginFormListener(Application application) {
+        this.application = application;
+    }
+
     @Override
     public void onLogin(LoginForm.LoginEvent loginEvent) {
         if (isInformationValid(loginEvent)) {
@@ -36,8 +42,8 @@ public class LoginFormListener implements LoginForm.LoginListener {
         if (user.getUserName().equals("Okunevich Alexandr")) {
             user.setRole(Role.ADMIN);
         }
-        Application.getInstance().setUser(user);
-        Application.getInstance().getEventBus().post(new AuthenticationEvent());
+        application.setUser(user);
+        application.getEventBus().post(new AuthenticationEvent());
     }
 
     private boolean isInformationValid(LoginForm.LoginEvent loginEvent) {

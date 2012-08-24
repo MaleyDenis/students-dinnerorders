@@ -1,5 +1,6 @@
 package com.exadel.dinnerorders.vaadinwindow.layouts;
 
+import com.exadel.dinnerorders.vaadinwindow.application.Application;
 import com.exadel.dinnerorders.vaadinwindow.layouts.panels.NavigationPanel;
 import com.exadel.dinnerorders.vaadinwindow.layouts.panels.UserInfoPanel;
 import com.vaadin.ui.Alignment;
@@ -12,9 +13,11 @@ public class WelcomeLayout extends GridLayout {
     public static final int DEFAULT_ROW_COUNT = 6;
     private NavigationPanel navigationPanel;
     private Panel userInfoPanel;
+    private final Application application;
 
-    public WelcomeLayout() {
+    public WelcomeLayout(Application application) {
         super(DEFAULT_COLUMN_COUNT, DEFAULT_ROW_COUNT);
+        this.application = application;
         setWidth("100%");
         initComponents();
         setLayoutRatios();
@@ -47,7 +50,7 @@ public class WelcomeLayout extends GridLayout {
     }
 
     private void initComponents() {
-        navigationPanel = new NavigationPanel();
-        userInfoPanel = new UserInfoPanel();
+        navigationPanel = new NavigationPanel(application);
+        userInfoPanel = new UserInfoPanel(application);
     }
 }

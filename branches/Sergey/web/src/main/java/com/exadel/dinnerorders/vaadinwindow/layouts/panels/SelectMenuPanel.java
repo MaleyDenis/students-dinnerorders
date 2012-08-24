@@ -32,17 +32,19 @@ public class SelectMenuPanel extends Panel {
     private List<DayMenusPanel>currentWeekMenusPanels;
     private String dateStartWeek;
     private String dateEndWeek;
+    private final Application application;
 
 
-    public SelectMenuPanel(Collection<Menu> menuCollection,String dateStartWeek, String dateEndWeek ){
+    public SelectMenuPanel(Collection<Menu> menuCollection, String dateStartWeek, String dateEndWeek, Application application){
         this.menuCollection = menuCollection;
         this.dateStartWeek = dateStartWeek;
         this.dateEndWeek = dateEndWeek;
+        this.application = application;
         tabSheet = new TabSheet();
         currentWeekMenusPanels = new ArrayList<DayMenusPanel>();
         locateComponents();
 
-        Application.getInstance().getEventBus().register(this);
+        this.application.getEventBus().register(this);
 
 
     }
@@ -64,7 +66,7 @@ public class SelectMenuPanel extends Panel {
         addComponent(new Label("Friday: "+dateEndWeek));
         addComponent(tabSheet);
         addComponent(sendOrderButton);
-        sendOrderButton.addListener(new UserOrderButtonListener());
+        sendOrderButton.addListener(new UserOrderButtonListener(application));
     }
 
     private GridLayout locateLayoutWeek(Label label){
@@ -120,10 +122,10 @@ public class SelectMenuPanel extends Panel {
         }
         Timestamp date = DateUtils.getCurrentTime();
         Double cost = OrderService.getCostOrder(menuItems);
-        User user = UserService.findUserByUserName(Application.getInstance().getUser().getUserName());
+        User user = UserService.findUserByUserName(application.getUser().getUserName());
         Order order = new Order(null, user.getId(), cost, date, date);
         order.setMenuItemList(menuItems);
-        Application.getInstance().setOrder(order);
+        application.setOrder(order);
 
     }
 }

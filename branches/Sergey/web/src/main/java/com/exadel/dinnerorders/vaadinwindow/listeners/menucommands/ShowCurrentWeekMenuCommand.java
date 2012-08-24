@@ -5,8 +5,14 @@ import com.exadel.dinnerorders.vaadinwindow.events.ShowCurrentWeekMenuEvent;
 import com.vaadin.ui.MenuBar;
 
 public class ShowCurrentWeekMenuCommand implements MenuBar.Command {
+    private final Application application;
+
+    public ShowCurrentWeekMenuCommand(Application application) {
+        this.application = application;
+    }
+
     @Override
     public void menuSelected(MenuBar.MenuItem menuItem) {
-        Application.getInstance().getEventBus().post(new ShowCurrentWeekMenuEvent());
+        application.getEventBus().post(new ShowCurrentWeekMenuEvent());
     }
 }

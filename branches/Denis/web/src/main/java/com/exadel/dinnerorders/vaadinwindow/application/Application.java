@@ -8,17 +8,18 @@ import com.google.common.eventbus.EventBus;
 
 public class Application {
     private EventBus eventBus = new EventBus();
-    private static Application INSTANCE = new Application();
+    //private static Application INSTANCE = new Application();
     private User user;
     private Order order;
-    private TasksManagerService tasksManagerService = new TasksManagerService();
+    private TasksManagerService tasksManagerService; //= new TasksManagerService();
 
-    private Application() {
+    public Application() {
+        tasksManagerService = new TasksManagerService();
         tasksManagerService.start();
     }
 
-    public synchronized static Application getInstance(){
-        return INSTANCE;
+    public synchronized Application getInstance(){
+        return this;
     }
 
     public EventBus getEventBus() {

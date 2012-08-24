@@ -5,8 +5,14 @@ import com.exadel.dinnerorders.vaadinwindow.events.ShowMenuCreationPanelEvent;
 import com.vaadin.ui.MenuBar;
 
 public class CreateMenuCommand implements MenuBar.Command {
+    private final Application application;
+
+    public CreateMenuCommand(Application application) {
+        this.application = application;
+    }
+
     @Override
     public void menuSelected(MenuBar.MenuItem menuItem) {
-        Application.getInstance().getEventBus().post(new ShowMenuCreationPanelEvent());
+        application.getEventBus().post(new ShowMenuCreationPanelEvent());
     }
 }

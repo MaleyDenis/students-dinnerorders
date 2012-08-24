@@ -18,13 +18,15 @@ public class ShowMadeOrderPanel extends Panel {
     private GridLayout gridLayout;
     private Button saveOrderButton;
     private Order order;
+    private final Application application;
 
-    public ShowMadeOrderPanel(){
+    public ShowMadeOrderPanel(Application application){
         super();
-        order = Application.getInstance().getOrder();
+        this.application = application;
+        order = this.application.getOrder();
         initComponent();
         locateComponents();
-        Application.getInstance().getEventBus().register(this);
+        application.getEventBus().register(this);
 
     }
 
@@ -44,7 +46,7 @@ public class ShowMadeOrderPanel extends Panel {
         initLayout();
         orderLabel = new Label("Your order");
         saveOrderButton = new Button("Send Order");
-        saveOrderButton.addListener(new SaveOrderButtonListener());
+        saveOrderButton.addListener(new SaveOrderButtonListener(application));
 
     }
 
