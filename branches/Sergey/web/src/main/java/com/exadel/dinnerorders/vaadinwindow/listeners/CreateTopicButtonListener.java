@@ -18,5 +18,6 @@ public class CreateTopicButtonListener implements Button.ClickListener{
         Component topicChatBoard = ((VerticalLayout)clickEvent.getButton().getParent().getParent().getParent().getParent()).getComponent(1);
         CreateTopicPanel createTopicPanel = new CreateTopicPanel(clickEvent.getButton().getApplication().getMainWindow());
         chatPanel.replaceComponent(topicChatBoard,createTopicPanel);
+        chatPanel.hideMessageCreate();
     }
 }

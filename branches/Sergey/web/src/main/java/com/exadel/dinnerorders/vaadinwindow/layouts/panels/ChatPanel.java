@@ -36,5 +36,9 @@ public class ChatPanel extends Panel {
         replaceComponent(old, newComp);
         createMessageChatPanel.setVisible(true);
     }
+
+    public void hideMessageCreate() {
+        createMessageChatPanel.setVisible(false);
+    }
 }
 
