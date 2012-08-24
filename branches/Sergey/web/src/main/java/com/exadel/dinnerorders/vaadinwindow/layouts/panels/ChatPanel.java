@@ -1,43 +1,40 @@
 package com.exadel.dinnerorders.vaadinwindow.layouts.panels;
 
+import com.vaadin.ui.Component;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.Window;
 
 public class ChatPanel extends Panel {
-    private ChatBoard chatBoard;
     private TopicChatBoard topicChatBoard;
     private NavigationChatPanel navigationChatPanel;
     private CreateMessageChatPanel createMessageChatPanel;
-    private final Window window;
+    private Window window;
+
     public ChatPanel(Window window) {
         super();
         this.window = window;
         initComponents();
         locateComponents();
         setStyleName("chatpanel");
-        setHeight(750, UNITS_PIXELS);
     }
 
     private void initComponents() {
-        chatBoard = new ChatBoard();
         navigationChatPanel = new NavigationChatPanel();
         topicChatBoard  = new TopicChatBoard();
         createMessageChatPanel = new CreateMessageChatPanel(window);
-        createMessageChatPanel.setVisible(false);
-        //TODO: init bar, topics list, chat field, chat board
+        CreateTopicPanel createTopicPanel = new CreateTopicPanel(window);
     }
 
     private void locateComponents() {
-        //TODO: Locate bar, topics list, chat field, chat board
         addComponent(navigationChatPanel);
         addComponent(topicChatBoard);
         addComponent(createMessageChatPanel);
-        exchangeTopicsListAndChatBoard();
+        createMessageChatPanel.setVisible(false);
     }
 
-    public void exchangeTopicsListAndChatBoard() {
+    public void exchangeTopicsListAndChatBoard(Component old, Component newComp) {
+        replaceComponent(old, newComp);
         createMessageChatPanel.setVisible(true);
-        replaceComponent(topicChatBoard, chatBoard);
     }
 }
 

@@ -43,6 +43,7 @@ public class SendMessageListener implements Button.ClickListener {
         message.setUser(((WebApplicationController) chatBoard.getApplication()).getApplication().getUser());
         message.setContentList(new ArrayList<Content>());
         chatBoard.addMessage(message);
+        chatBoard.getTopic().addMessage(message);
         MessageService.save(message);
     }
 
@@ -54,6 +55,7 @@ public class SendMessageListener implements Button.ClickListener {
         message.setText((String) ((TextArea) ((GridLayout) layout.getParent()).getComponent(0, 0)).getValue());
         ((TextArea)((GridLayout)layout.getParent()).getComponent(0, 0)).setValue("");
         chatBoard.addMessage(message);
+        chatBoard.getTopic().addMessage(message);
         MessageService.save(message);
     }
 }

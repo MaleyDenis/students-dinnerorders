@@ -1,38 +1,79 @@
 package com.exadel.dinnerorders.vaadinwindow.layouts.panels;
 
-import com.vaadin.ui.Panel;
-import com.vaadin.ui.Table;
+import com.exadel.dinnerorders.entity.Topic;
+import com.exadel.dinnerorders.service.TopicService;
+import com.exadel.dinnerorders.vaadinwindow.layouts.ContentTopicLayout;
+import com.exadel.dinnerorders.vaadinwindow.listeners.ShowTopicPostButtonListener;
+import com.vaadin.ui.*;
+import com.vaadin.ui.themes.BaseTheme;
 
 import java.sql.Timestamp;
-import java.util.Date;
+import java.util.Collection;
 
 public class TopicChatBoard extends Panel {
-
-    private Table topicBoardTable;
+    private ContentTopicLayout contentTopicLayout;
+    private HorizontalLayout horizontalLayout;
+    private Table table;
+    private Label label;
 
     public TopicChatBoard(){
         super();
+//        initComponent();
+//        locateComponent();
         initTable();
-        locateComponent();
+        locateTable();
     }
 
     private void locateComponent() {
-        addComponent(topicBoardTable);
-        topicBoardTable.addItem(new Object[]{"topic1","Author1",new Timestamp(new Date().getTime())},1);
-        topicBoardTable.addItem(new Object[]{"topic2","Author2",new Timestamp(new Date().getTime())},2);
+        Collection<Topic> topics = TopicService.loadAll();
+        for (Topic topic : topics){
+            contentTopicLayout = new ContentTopicLayout(topic.getName(),topic.getDateCreation(),topic.getUser().getUserName(),45);
+            addComponent(contentTopicLayout);
+        }
+    }
+
+    private void initTable(){
+        table = new Table();
+        table.addContainerProperty("Theme",Button.class,"Theme topic");
+        table.setColumnHeaderMode(50);
+        table.addContainerProperty("Started By",String.class,"Author topic");
+        table.addContainerProperty("Posts",Integer.class,"Number posts in a topic ");
+        table.addContainerProperty("Created on",Timestamp.class,"Creation date topic");
+        table.setSizeFull();
+    }
+
+    private void locateTable(){
+        Collection<Topic> topics = TopicService.loadAll();
+        int i = 0;
+        for (Topic topic : topics){
+            table.addItem(new Object[]{getButton(topic.getName()),topic.getUser().getUserName(),
+           TopicService.posts(topic),topic.getDateCreation() },i++);
+            table.setPageLength(20);
+            table.setSelectable(true);
+
+        }
+        addComponent(table);
 
     }
 
-    public void initTable(){
-        topicBoardTable = new Table();
-        topicBoardTable.addContainerProperty("User",String.class,null);
-        topicBoardTable.addContainerProperty("Topic",String.class,null);
-        topicBoardTable.addContainerProperty("Date", Timestamp.class,null);
-        topicBoardTable.isSelectable();
-        topicBoardTable.setMultiSelect(true);
-        topicBoardTable.setImmediate(true);
-        topicBoardTable.setSortDisabled(true);
-        topicBoardTable.setSizeFull();
-
+    private Button getButton(String value){
+        Label label = new Label(value);
+        label.setWidth(40,UNITS_EM);
+        Button button = new Button(value);
+        button.setStyleName(BaseTheme.BUTTON_LINK);
+        button.addListener(new ShowTopicPostButtonListener());
+        return button;
     }
+
+    private void initComponent(){
+        horizontalLayout = new HorizontalLayout();
+        horizontalLayout.addComponent(new Label("Theme"));
+        horizontalLayout.addComponent(new Label("Started By"));
+        horizontalLayout.addComponent(new Label("Posts"));
+        horizontalLayout.addComponent(new Label("Date created"));
+        horizontalLayout.setSizeFull();
+        addComponent(horizontalLayout);
+    }
+
+
 }

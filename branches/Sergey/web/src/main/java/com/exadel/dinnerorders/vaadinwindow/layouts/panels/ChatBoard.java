@@ -2,7 +2,6 @@ package com.exadel.dinnerorders.vaadinwindow.layouts.panels;
 
 import com.exadel.dinnerorders.entity.Message;
 import com.exadel.dinnerorders.entity.Topic;
-import com.exadel.dinnerorders.service.MessageService;
 import com.exadel.dinnerorders.vaadinwindow.layouts.MessageRow;
 import com.exadel.dinnerorders.vaadinwindow.listeners.UpdateChatBoardListener;
 import com.vaadin.ui.Button;
@@ -16,9 +15,6 @@ public class ChatBoard extends Panel {
     public ChatBoard() {
         super();
         initComponents();
-        addMessages();
-        Collection<Message> messages = MessageService.loadAll();
-        addMessages(messages);
         //////////////////////////////////////////////////////////////
         setWidth(100, UNITS_PERCENTAGE);
         setHeight(525, UNITS_PIXELS);
