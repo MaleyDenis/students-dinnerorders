@@ -38,7 +38,10 @@ public class LoginFormListener implements LoginForm.LoginListener {
         LdapService ldap = new LdapService();
         String login = loginEvent.getLoginParameter("username");
         User user = UserService.findUserByUserName(ldap.getUserName(login));
-//        User user = new User(43l, "aokunevich", "Okunevich Alexandr", Role.ADMIN);
+        if (user.getId() == null) {
+            user.setLdapLogin(login);
+            UserService.create(user);
+        }
         if (user.getUserName().equals("Okunevich Alexandr")) {
             user.setRole(Role.ADMIN);
         }
