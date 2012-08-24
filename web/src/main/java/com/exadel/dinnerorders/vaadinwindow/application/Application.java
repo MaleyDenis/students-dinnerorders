@@ -9,11 +9,11 @@ public class Application {
     private EventBus eventBus = new EventBus();
     private static Application INSTANCE = new Application();
     private User user;
-    private TasksManagerService tasksManagerService = new TasksManagerService();
+    /*private TasksManagerService tasksManagerService = new TasksManagerService();
 
     private Application() {
         tasksManagerService.start();
-    }
+    }*/
 
     public synchronized static Application getInstance(){
         return INSTANCE;

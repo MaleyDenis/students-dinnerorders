@@ -1,5 +1,7 @@
 package com.exadel.dinnerorders.entity;
 
+import org.hibernate.SessionFactory;
+
 import java.sql.Connection;
 
 /**
@@ -8,4 +10,5 @@ import java.sql.Connection;
  */
 public interface MysqlConnectionProvider {
     public Connection connection();
+    public SessionFactory getSessionFactory();
 }

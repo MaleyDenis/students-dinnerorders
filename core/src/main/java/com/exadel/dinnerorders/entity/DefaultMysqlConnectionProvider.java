@@ -3,6 +3,7 @@ package com.exadel.dinnerorders.entity;
 import com.exadel.dinnerorders.exception.WorkflowException;
 import com.exadel.dinnerorders.service.Configuration;
 import org.apache.log4j.Logger;
+import org.hibernate.SessionFactory;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -36,5 +37,9 @@ public class DefaultMysqlConnectionProvider implements MysqlConnectionProvider {
             throw new WorkflowException(e);
         }
         return connection;
+    }
+
+    public SessionFactory getSessionFactory () {
+        return new org.hibernate.cfg.Configuration().configure().buildSessionFactory();
     }
 }

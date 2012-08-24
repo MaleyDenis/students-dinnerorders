@@ -22,19 +22,28 @@ import org.hibernate.cfg.Configuration;
 
 public abstract class BaseDAO<E> implements DAO<E> {
     private Logger logger = Logger.getLogger(BaseDAO.class);
-    private Configuration configuration = new Configuration().configure();
-    private SessionFactory sessionFactory;
-    private Session session;
+    private SessionFactory factory;
 
-    protected Session openSession() {
-        sessionFactory = configuration.buildSessionFactory();
-        session = sessionFactory.openSession();
-        return session;
+    protected void closeSession (Session session) {
+        if(session != null){
+            session.close();
+            factory.close();
+        }
     }
 
-    protected void closeSession () {
-        session.close();
-        sessionFactory.close();
+    protected Session openSession(DAO dao) {
+        Annotation annotation = dao.getClass().getAnnotation(DbConnection.class);
+        DbConnection dbConnection = (DbConnection) annotation;
+        try {
+            factory = ((MysqlConnectionProvider) dbConnection.connectionType().newInstance()).getSessionFactory();
+            return factory.openSession();
+        } catch (InstantiationException e) {
+            logger.error("Error! Connection hasn't been returned",e);
+            throw new WorkflowException(e);
+        } catch (IllegalAccessException e) {
+            logger.error("Error! Connection hasn't been returned",e);
+            throw new WorkflowException(e);
+        }
     }
 
     protected Connection getConnection(DAO dao)  {

@@ -32,7 +32,7 @@ public class UserDAO extends BaseDAO<User> {
      * @return true | false.
      */
     public boolean create(User newItem) {
-        Session session = openSession();
+        Session session = openSession(this);
         try{
             if(session != null) {
                 newItem.setId(getID());
@@ -44,14 +44,14 @@ public class UserDAO extends BaseDAO<User> {
         } catch (Exception e){
             logger.error(e);
         } finally {
-            closeSession();
+            closeSession(session);
         }
         return false;
     }
 
 
     public boolean update(User item) {
-        Session session = openSession();
+        Session session = openSession(this);
         try{
             if(session != null) {
                 session.beginTransaction();
@@ -62,14 +62,14 @@ public class UserDAO extends BaseDAO<User> {
         } catch (Exception e){
             logger.error(e);
         } finally {
-            closeSession();
+            closeSession(session);
         }
         return false;
     }
 
 
     public boolean delete(User item) {
-        Session session = openSession();
+        Session session = openSession(this);
         try{
             if(session != null) {
                 session.beginTransaction();
@@ -80,13 +80,13 @@ public class UserDAO extends BaseDAO<User> {
         } catch (Exception e){
             logger.error(e);
         } finally {
-            closeSession();
+            closeSession(session);
         }
         return false;
     }
 
     public User load(Long id) {
-        Session session = openSession();
+        Session session = openSession(this);
         try{
             if(session != null) {
                 User user = null;
@@ -98,14 +98,14 @@ public class UserDAO extends BaseDAO<User> {
         } catch (Exception e){
             logger.error(e);
         } finally {
-            closeSession();
+            closeSession(session);
         }
         return null;
     }
 
     public Collection<User> loadAll() {
         List<User> users = new ArrayList<User>();
-        Session session = openSession();
+        Session session = openSession(this);
         try {
             if (session != null) {
                 session.beginTransaction();
@@ -119,7 +119,7 @@ public class UserDAO extends BaseDAO<User> {
         } catch (Exception e) {
             logger.error(e);
         } finally {
-            closeSession();
+            closeSession(session);
         }
         return Collections.emptyList();
     }

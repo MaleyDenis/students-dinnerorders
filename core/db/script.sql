@@ -29,7 +29,7 @@ PRIMARY KEY (menuitem_id)
 ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS  dinnerorders.order_menuitem (
-id bigint(20) NOT  NULL,
+id bigint(20) NOT NULL AUTO_INCREMENT,
 order_id bigint(20) NOT NULL,
 menuitem_id bigint(20) NOT NULL,
 PRIMARY KEY (id),

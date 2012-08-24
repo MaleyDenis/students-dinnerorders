@@ -22,7 +22,7 @@ public class MenuDAO extends BaseDAO<Menu> {
     private Logger logger = Logger.getLogger(MenuDAO.class);
 
     public boolean create(Menu newMenu) {
-        Session session = openSession();
+        Session session = openSession(this);
         try{
             if(session != null) {
                 newMenu.setId(getID());
@@ -34,13 +34,13 @@ public class MenuDAO extends BaseDAO<Menu> {
         } catch (Exception e){
             logger.error(e);
         } finally {
-            closeSession();
+            closeSession(session);
         }
         return false;
     }
 
     public boolean update(Menu menu) {
-        Session session = openSession();
+        Session session = openSession(this);
         try{
             if(session != null) {
                 session.beginTransaction();
@@ -51,13 +51,13 @@ public class MenuDAO extends BaseDAO<Menu> {
         } catch (Exception e){
             logger.error(e);
         } finally {
-            closeSession();
+            closeSession(session);
         }
         return false;
     }
 
     public boolean delete(Menu menu) {
-        Session session = openSession();
+        Session session = openSession(this);
         try{
             if(session != null) {
                 session.beginTransaction();
@@ -68,13 +68,13 @@ public class MenuDAO extends BaseDAO<Menu> {
         } catch (Exception e){
             logger.error(e);
         } finally {
-            closeSession();
+            closeSession(session);
         }
         return false;
     }
 
     public Menu load(Long id) {
-        Session session = openSession();
+        Session session = openSession(this);
         try{
             if(session != null) {
                 Menu menu = null;
@@ -86,14 +86,14 @@ public class MenuDAO extends BaseDAO<Menu> {
         } catch (Exception e){
             logger.error(e);
         } finally {
-            closeSession();
+            closeSession(session);
         }
         return null;
     }
 
     public Collection<Menu> loadAll(){
         List<Menu> items = new ArrayList<Menu>();
-        Session session = openSession();
+        Session session = openSession(this);
         try {
             if (session != null) {
                 session.beginTransaction();
@@ -107,14 +107,14 @@ public class MenuDAO extends BaseDAO<Menu> {
         } catch (Exception e) {
             logger.error(e);
         } finally {
-            closeSession();
+            closeSession(session);
         }
         return Collections.emptyList();
     }
 
     public Collection<Long> getMenuIds() {
         List<Long> items = new ArrayList<Long>();
-        Session session = openSession();
+        Session session = openSession(this);
         try {
             if (session != null) {
                 session.beginTransaction();
@@ -128,7 +128,7 @@ public class MenuDAO extends BaseDAO<Menu> {
         } catch (Exception e) {
             logger.error(e);
         } finally {
-            closeSession();
+            closeSession(session);
         }
         return Collections.emptyList();
     }
