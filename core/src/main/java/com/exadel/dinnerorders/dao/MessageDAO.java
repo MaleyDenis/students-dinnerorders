@@ -31,13 +31,14 @@ public class MessageDAO extends BaseDAO<Message> {
             newItem.setId(getID());
             session.save(newItem);
             transaction.commit();
-            session.close();
         } catch (Exception e) {
             logger.error("MessageDAO: error while creating message", e);
-            if (session != null) {
-                session.close();
-            }
             return false;
+        } finally {
+            if (session != null) {
+            session.flush();
+            session.close();
+            }
         }
         return true;
     }
@@ -51,13 +52,14 @@ public class MessageDAO extends BaseDAO<Message> {
             Transaction transaction = session.beginTransaction();
             session.update(item);
             transaction.commit();
-            session.close();
         } catch (Exception e) {
             logger.error("MessageDAO: error while updating message", e);
+            return false;
+        } finally {
             if (session != null) {
+                session.flush();
                 session.close();
             }
-            return false;
         }
         return true;
     }
@@ -71,13 +73,14 @@ public class MessageDAO extends BaseDAO<Message> {
             Transaction transaction = session.beginTransaction();
             session.delete(item);
             transaction.commit();
-            session.close();
         } catch (Exception e) {
             logger.error("MessageDAO: error while deleting message", e);
+            return false;
+        } finally {
             if (session != null) {
+                session.flush();
                 session.close();
             }
-            return false;
         }
         return true;
     }
@@ -92,11 +95,12 @@ public class MessageDAO extends BaseDAO<Message> {
             Transaction transaction = session.beginTransaction();
             message = (Message)session.get(Message.class, value);
             transaction.commit();
-            session.close();
         } catch (Exception e) {
             logger.error("MessageDAO: error while loading message", e);
             message = null;
+        } finally {
             if (session != null) {
+                session.flush();
                 session.close();
             }
         }
@@ -120,10 +124,11 @@ public class MessageDAO extends BaseDAO<Message> {
             }
             //messages = session.createCriteria(Message.class).list();
             transaction.commit();
-            session.close();
         } catch (Exception e) {
             logger.error("MessageDAO: error while loadAll messages", e);
+        } finally {
             if (session != null) {
+                session.flush();
                 session.close();
             }
         }
@@ -133,8 +138,7 @@ public class MessageDAO extends BaseDAO<Message> {
     private Collection<Message> readContent(List loaded, Session session) {
         List<Message> messages = new ArrayList<Message>();
         for (Object object : loaded) {
-            Message message = new Message();
-            message = (Message)session.get(Message.class, ((BigInteger)((Object[])object)[0]).longValue());
+            Message message = (Message)session.get(Message.class, ((BigInteger)((Object[])object)[0]).longValue());
             messages.add(message);
         }
         return messages;

@@ -8,6 +8,11 @@ import com.exadel.dinnerorders.vaadinwindow.layouts.panels.TasksCreationPanel;
 import com.vaadin.ui.Button;
 
 public class CreateTaskButtonListener implements Button.ClickListener {
+    private final Application application;
+    public CreateTaskButtonListener(Application application) {
+        this.application = application;
+    }
+
     @Override
     public void buttonClick(Button.ClickEvent clickEvent) {
         StringBuilder taskBuilder = new StringBuilder();
@@ -27,7 +32,9 @@ public class CreateTaskButtonListener implements Button.ClickListener {
         taskBuilder.append(weekday);
         taskBuilder.append(' ');
         taskBuilder.append(chooseClass(tcPanel.getActionSelect().getValue()));
-        Application.getInstance().getTasksManagerService().addTask(TasksFactory.createTask(taskBuilder.toString()));
+
+        application.getTasksManagerService().addTask(TasksFactory.createTask(taskBuilder.toString()));
+
         tcPanel.hideButtons();
         tcPanel.hideSelections();
         tcPanel.updateList();

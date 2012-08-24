@@ -30,7 +30,8 @@ public enum SystemResource {
     ELAPSED_TIME("elapsedTimeForDeletion"),
 
     SOLR_HOST("solrHost"),
-    SOLR_PORT("solrPort");
+    SOLR_PORT("solrPort"),
+    MAX_FILE_LENGTH("maxUploadLength");
 
 
     public String getValue() {

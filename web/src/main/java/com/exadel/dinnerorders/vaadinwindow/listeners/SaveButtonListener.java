@@ -10,6 +10,12 @@ import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.Select;
 
 public class SaveButtonListener implements Button.ClickListener {
+    private final Application application;
+
+    public SaveButtonListener(Application application) {
+        this.application = application;
+    }
+
     @Override
     public void buttonClick(Button.ClickEvent clickEvent) {
         GridLayout mainPanel = (GridLayout)clickEvent.getButton().getParent();
@@ -30,7 +36,7 @@ public class SaveButtonListener implements Button.ClickListener {
         }
 
         if (actual == expected) {
-            Application.getInstance().getEventBus().post(new SaveMenuEvent(mainPanel));
+            application.getEventBus().post(new SaveMenuEvent(mainPanel));
         }
     }
 

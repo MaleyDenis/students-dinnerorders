@@ -19,12 +19,14 @@ public class DayMenuPanel extends GridLayout {
     public static final int DEFAULT_ROWS = 2;
     private Weekday weekday;
     private Label dayLabel;
+    private final Application application;
 
-    public DayMenuPanel(Weekday weekday) {
+    public DayMenuPanel(Weekday weekday, Application application) {
         super(DEFAULT_COLUMNS, DEFAULT_ROWS);
         setWidth(100, UNITS_PERCENTAGE);
         setHeight(100, UNITS_PERCENTAGE);
-        Application.getInstance().getEventBus().register(this);
+        this.application = application;
+        this.application.getEventBus().register(this);
         this.weekday = weekday;
         initComponents();
         locateComponents();
@@ -60,7 +62,7 @@ public class DayMenuPanel extends GridLayout {
     private void locateComponents(){
         addComponent(dayLabel);
         setComponentAlignment(dayLabel, Alignment.MIDDLE_CENTER);
-        addComponent(new DishDescriptionRow());
+        addComponent(new DishDescriptionRow(application));
     }
 
     @Subscribe
@@ -147,6 +149,5 @@ public class DayMenuPanel extends GridLayout {
 
         DishDescriptionRow row = (DishDescriptionRow) getComponent(0, startRow);
         row.flushValues();
-
     }
 }

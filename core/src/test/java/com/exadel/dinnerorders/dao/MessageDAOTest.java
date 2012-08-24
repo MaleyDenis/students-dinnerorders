@@ -5,13 +5,11 @@ import com.exadel.dinnerorders.entity.Message;
 import com.exadel.dinnerorders.entity.Role;
 import com.exadel.dinnerorders.entity.User;
 import com.exadel.dinnerorders.service.DateUtils;
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import com.exadel.dinnerorders.service.UserService;
 import junit.framework.Assert;
+import org.junit.*;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
 public class MessageDAOTest {
@@ -26,15 +24,13 @@ public class MessageDAOTest {
     public static void initUser() {
         userDAO = new UserDAO();
         messageDAO = new MessageDAO();
-        user = new User(null, "ldaplogin", "unreal User", Role.ADMIN);
+        user = new User(null, "ldaplogin", "Unreal User", Role.ADMIN);
         userDAO.create(user);
 
         content1 = new Content();
-        content1.setId(messageDAO.getID());
         content1.setUrl("content1");
 
         content2 = new Content();
-        content2.setId(messageDAO.getID());
         content2.setUrl("content2");
     }
 
@@ -79,7 +75,7 @@ public class MessageDAOTest {
 
     @Test
     public void testLoadAll() {
-        Collection<Message> messages = new MessageDAO().loadAll();
+       Collection<Message> messages = new MessageDAO().loadAll();
         Assert.assertTrue(isOneContains(messages));
     }
 
@@ -110,6 +106,32 @@ public class MessageDAOTest {
         message = messageDAO.load(message.getId());
 
         Assert.assertTrue(isEquals(modified, message));
+    }
+
+    @Test
+    public void testInsert() {
+        Message message1 = new Message();
+        message1.setUser(UserService.findUserByID(43L));
+        message1.setDate(DateUtils.getCurrentTime());
+        message1.setText("This message doesn't contains any external content.\nIt was created to test parsing");
+        message1.setContentList(new ArrayList<Content>());
+
+        Message message2 = new Message();
+        message2.setUser(UserService.findUserByID(43L));
+        message2.setDate(DateUtils.getCurrentTime());
+        message2.setText("");
+        ArrayList<Content> list1 = new ArrayList<Content>();
+        Content content3 = new Content();
+        content3.setId(messageDAO.getID());
+        content3.setUrl("http://media.treehugger.com/assets/images/2011/10/ec-rnd-005.jpg");
+        list1.add(content3);
+        Content content4 = new Content();
+        content4.setId(messageDAO.getID());
+        content4.setUrl("http://openclipart.org/image/250px/svg_to_png/116785/yellow_convertible_sports_car.png");
+        list1.add(content4);
+        message2.setContentList(list1);
+        messageDAO.create(message1);
+        messageDAO.create(message2);
     }
 
     @Test

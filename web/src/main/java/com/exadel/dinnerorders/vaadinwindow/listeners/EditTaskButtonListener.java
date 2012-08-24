@@ -8,6 +8,12 @@ import com.exadel.dinnerorders.vaadinwindow.layouts.panels.TasksCreationPanel;
 import com.vaadin.ui.Button;
 
 public class EditTaskButtonListener implements Button.ClickListener {
+    private final Application application;
+
+    public EditTaskButtonListener(Application application) {
+        this.application = application;
+    }
+
     @Override
     public void buttonClick(Button.ClickEvent event) {
         TasksCreationPanel panel = (TasksCreationPanel)event.getButton().getParent().getParent();
@@ -35,7 +41,7 @@ public class EditTaskButtonListener implements Button.ClickListener {
     private Task getSelectedTask(TasksCreationPanel panel) {
         String taskName = panel.getTasksList().getValue().toString();
         int index = getTaskIndex(taskName);
-        return Application.getInstance().getTasksManagerService().getTasksList().get(index);
+        return application.getTasksManagerService().getTasksList().get(index);
     }
 
     private int getTaskIndex(String taskName) {

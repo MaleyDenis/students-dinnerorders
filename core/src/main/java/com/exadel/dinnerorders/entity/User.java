@@ -26,6 +26,8 @@ public class User implements Entity {
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Message> messages;
 
+    @OneToMany(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
+    private List<Topic>topics;
 
     public User(Long id, String ldapLogin, String userName, Role role) {
         this.id = id;

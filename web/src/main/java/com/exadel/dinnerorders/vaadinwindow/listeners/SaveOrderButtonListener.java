@@ -6,9 +6,15 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.GridLayout;
 
 public class SaveOrderButtonListener implements Button.ClickListener{
+    private final Application application;
+
+    public SaveOrderButtonListener(Application application) {
+        this.application = application;
+    }
+
     @Override
     public void buttonClick(Button.ClickEvent clickEvent) {
         GridLayout mainPanel = (GridLayout)clickEvent.getButton().getParent();
-        Application.getInstance().getEventBus().post(new SaveOrderUserEvent(mainPanel));
+        application.getEventBus().post(new SaveOrderUserEvent(mainPanel));
     }
 }

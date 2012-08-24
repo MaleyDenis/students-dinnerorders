@@ -6,9 +6,15 @@ import com.exadel.dinnerorders.vaadinwindow.layouts.DishDescriptionRow;
 import com.vaadin.event.MouseEvents;
 
 public class RemoveDishListener implements MouseEvents.ClickListener {
+    private final Application application;
+
+    public RemoveDishListener(Application application) {
+        this.application = application;
+    }
+
     @Override
     public void click(MouseEvents.ClickEvent clickEvent) {
         DishDescriptionRow parent = ((DishDescriptionRow)clickEvent.getComponent().getParent());
-        Application.getInstance().getEventBus().post(new RemoveDishEvent(parent));
+        application.getEventBus().post(new RemoveDishEvent(parent));
     }
 }

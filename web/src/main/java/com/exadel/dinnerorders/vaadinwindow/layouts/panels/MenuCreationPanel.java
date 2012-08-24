@@ -35,10 +35,12 @@ public class MenuCreationPanel extends Panel {
     private Timestamp fridayDate;
     private NativeSelect dateBox;
     private int menuItemsCounter = DEFAULT_ITEMS_COUNT;
+    private final Application application;
 
-    public MenuCreationPanel() {
+    public MenuCreationPanel(Application application) {
         super();
-        Application.getInstance().getEventBus().register(this);
+        this.application = application;
+        application.getEventBus().register(this);
         setWidth(90, UNITS_PERCENTAGE);
         setHeight(90, UNITS_PERCENTAGE);
         initComponents();
@@ -74,14 +76,14 @@ public class MenuCreationPanel extends Panel {
         cafeName.setWidth(190, UNITS_PIXELS);
         cafeName.setNewItemsAllowed(true);
         cafeName.setImmediate(true);
-        cafeName.addListener(new CafeNameChangeListener(this));
+        cafeName.addListener(new CafeNameChangeListener(this, application));
     }
 
     private void initButtons() {
         saveButton = new Button("Save");
-        saveButton.addListener(new SaveButtonListener());
+        saveButton.addListener(new SaveButtonListener(application));
         cancelButton = new Button("Cancel");
-        cancelButton.addListener(new CancelButtonListener());
+        cancelButton.addListener(new CancelButtonListener(application));
     }
 
     private void initLayout() {
@@ -97,7 +99,7 @@ public class MenuCreationPanel extends Panel {
 
         int insertRowNumber = 1;
         for (int i = 0; i < NUMBER_OF_SERVICE_DAYS; i++) {
-            layout.addComponent(new DayMenuPanel(Weekday.getWeekday(i + 1)), 0, insertRowNumber, 1, insertRowNumber++);
+            layout.addComponent(new DayMenuPanel(Weekday.getWeekday(i + 1), application), 0, insertRowNumber, 1, insertRowNumber++);
             layout.addComponent(new Label("<br>", Label.CONTENT_RAW), 0, insertRowNumber, 1, insertRowNumber++);
         }
 

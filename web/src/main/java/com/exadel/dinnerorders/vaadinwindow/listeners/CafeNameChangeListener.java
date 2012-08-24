@@ -22,8 +22,10 @@ import java.util.Map;
 
 public class CafeNameChangeListener implements Component.Listener {
     private MenuCreationPanel panel;
-    public CafeNameChangeListener(MenuCreationPanel menuCreationPanel) {
+    private final Application application;
+    public CafeNameChangeListener(MenuCreationPanel menuCreationPanel, Application application) {
         panel = menuCreationPanel;
+        this.application = application;
     }
 
     @Override
@@ -57,7 +59,7 @@ public class CafeNameChangeListener implements Component.Listener {
                 dishRow.setParent(dayMenuPanel);
                 AddDishEvent addDishEvent = new AddDishEvent(dishRow);
                 addDishEvent.setAddedDish(dishRow);
-                Application.getInstance().getEventBus().post(addDishEvent);
+                application.getEventBus().post(addDishEvent);
             }
             startRow += 2;
         }
@@ -67,7 +69,7 @@ public class CafeNameChangeListener implements Component.Listener {
         Map<Weekday, List<DishDescriptionRow>> rows = new HashMap<Weekday, List<DishDescriptionRow>>();
         for (List<MenuItem> menuItems:menu.getItems().values()) {
             for (MenuItem menuItem : menuItems) {
-                DishDescriptionRow row = new DishDescriptionRow();
+                DishDescriptionRow row = new DishDescriptionRow(application);
                 row.getDishName().setValue(menuItem.getDescription());
                 row.getCost().setValue(menuItem.getCost().toString());
                 List<DishDescriptionRow> weekdayRows = rows.get(menuItem.getWeekday());

@@ -10,6 +10,12 @@ import com.vaadin.ui.ListSelect;
 import com.vaadin.ui.NativeSelect;
 
 public class TaskItemSelectListener implements Component.Listener {
+    private final Application application;
+
+    public TaskItemSelectListener(Application application) {
+        this.application = application;
+    }
+
     @Override
     public void componentEvent(Component.Event event) {
         if ( ((ListSelect)event.getComponent()).getValue() != null) {
@@ -35,7 +41,7 @@ public class TaskItemSelectListener implements Component.Listener {
         NativeSelect month = panel.getMonthSelect();
         NativeSelect weekday = panel.getWeekdaySelect();
         int index = getTaskIndex(listValue);
-        Task task = Application.getInstance().getTasksManagerService().getTasksList().get(index);
+        Task task = application.getTasksManagerService().getTasksList().get(index);
         setNewValues(task, minutes, hours, day, month, weekday);
         panel.showSelections();
     }

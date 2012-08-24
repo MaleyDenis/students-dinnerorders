@@ -1,5 +1,6 @@
 package com.exadel.dinnerorders.vaadinwindow.layouts;
 
+import com.exadel.dinnerorders.vaadinwindow.application.Application;
 import com.exadel.dinnerorders.vaadinwindow.listeners.LoginFormListener;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.Label;
@@ -10,9 +11,11 @@ public class LoginLayout extends GridLayout {
     public static final int DEFAULT_ROW_COUNT = 3;
     private LoginForm loginForm;
     private final Label emptyLabel = new Label("<br><br>", Label.CONTENT_RAW);
+    private final Application application;
 
-    public LoginLayout() {
+    public LoginLayout(Application application) {
         super(DEFAULT_ROW_COUNT, DEFAULT_COLUMN_COUNT);
+        this.application = application;
         initComponents();
         locateComponents();
         constraintRatios();
@@ -36,6 +39,6 @@ public class LoginLayout extends GridLayout {
     private void initComponents() {
         loginForm = new LoginForm();
         loginForm.setCaption("Enter login and password");
-        loginForm.addListener(new LoginFormListener());
+        loginForm.addListener(new LoginFormListener(application));
     }
 }

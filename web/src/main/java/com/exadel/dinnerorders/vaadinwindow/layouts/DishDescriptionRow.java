@@ -1,5 +1,6 @@
 package com.exadel.dinnerorders.vaadinwindow.layouts;
 
+import com.exadel.dinnerorders.vaadinwindow.application.Application;
 import com.exadel.dinnerorders.vaadinwindow.listeners.AddDishListener;
 import com.exadel.dinnerorders.vaadinwindow.listeners.CostChangedListener;
 import com.exadel.dinnerorders.vaadinwindow.listeners.RemoveDishListener;
@@ -18,9 +19,11 @@ public class DishDescriptionRow extends GridLayout {
     private Embedded nameStatus;
     private Embedded costStatus;
     private CheckBox skipBox;
+    private final Application application;
 
-    public DishDescriptionRow() {
+    public DishDescriptionRow(Application application) {
         super(DEFAULT_COLUMNS, DEFAULT_ROWS);
+        this.application = application;
         setExpandRatios();
         setWidth(100, UNITS_PERCENTAGE);
         setHeight(80, UNITS_PERCENTAGE);
@@ -84,8 +87,8 @@ public class DishDescriptionRow extends GridLayout {
         remove.setWidth(16, UNITS_PIXELS);
         remove.setHeight(16, UNITS_PIXELS);
         remove.setDescription("Remove dish from menu");
-        add.addListener(new AddDishListener());
-        remove.addListener(new RemoveDishListener());
+        add.addListener(new AddDishListener(application));
+        remove.addListener(new RemoveDishListener(application));
 
         skipBox = new CheckBox("Skip");
         skipBox.setImmediate(true);
