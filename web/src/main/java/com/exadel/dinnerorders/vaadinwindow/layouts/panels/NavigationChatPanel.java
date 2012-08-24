@@ -1,5 +1,6 @@
 package com.exadel.dinnerorders.vaadinwindow.layouts.panels;
 
+import com.exadel.dinnerorders.vaadinwindow.listeners.CreateTopicButtonListener;
 import com.vaadin.ui.*;
 
 public class NavigationChatPanel extends Panel {
@@ -25,12 +26,11 @@ public class NavigationChatPanel extends Panel {
         initLayout();
         initButton();
         topicComboBox = new ComboBox();
-
-
     }
 
     public void initButton(){
         createTopicButton = new Button("Crate topic");
+        createTopicButton.addListener(new CreateTopicButtonListener());
         favoriteTopicButton = new Button("Favorite topic");
         addFavoriteButton = new Button("add topic");
     }
@@ -42,7 +42,4 @@ public class NavigationChatPanel extends Panel {
         horizontalLayout.addComponent(addFavoriteButton);
         horizontalLayout.addComponent(topicComboBox);
     }
-
-
-
 }

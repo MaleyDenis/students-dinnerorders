@@ -89,6 +89,9 @@ public class TopicDAO extends BaseDAO<Topic>{
             session = sessionFactory.openSession();
             session.beginTransaction();
             topic = (Topic)session.get(Topic.class, value);
+            for (Message message : topic.getTopicMessage()){
+               message.getContentList();
+            }
             session.getTransaction().commit();
             session.flush();
         } catch (Exception e){
@@ -105,10 +108,15 @@ public class TopicDAO extends BaseDAO<Topic>{
     public Collection<Topic> loadAll() {
         SessionFactory sessionFactory = getSessionFactory(this);
         Session session = null;
-        List topics = null;
+        List<Topic> topics = null;
         try {
             session = sessionFactory.openSession();
             topics = session.createCriteria(Topic.class).list();
+            for (Topic topic : topics){
+                for(Message message : topic.getTopicMessage()){
+                    message.getContentList();
+                }
+            }
         } catch (Exception e){
             logger.error("loadAll error the method",e);
         } finally {
