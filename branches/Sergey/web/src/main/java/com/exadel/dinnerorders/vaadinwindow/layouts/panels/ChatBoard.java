@@ -21,7 +21,7 @@ public class ChatBoard extends Panel {
         addMessages(messages);
         //////////////////////////////////////////////////////////////
         setWidth(100, UNITS_PERCENTAGE);
-        setHeight(515, UNITS_PIXELS);
+        setHeight(525, UNITS_PIXELS);
     }
 
     private void initComponents() {
