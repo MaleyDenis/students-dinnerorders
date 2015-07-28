@@ -1,0 +1,44 @@
+#How to add new property
+# Introduction #
+
+if you want to add new property, you should write your property's name   in `properties.properties` file in the following format:
+
+```
+<name> = ${<name>}
+```
+
+for example:
+```
+host = ${host}
+```
+
+then you should write your property in `development.properties` and `production.properties` in the next format:
+```
+<name> = <value>
+```
+
+for example:
+host = smtp.gmail.com
+
+thereafter you must add to SystemResource class (enum) in the next format:
+```
+NAME("<name>")
+```
+
+
+for example:
+```
+public enum SystemResource {
+....
+    HOST("host"),...
+```
+
+Done. Use your property.
+
+
+for example:
+
+```
+email.setHostName(Configuration.getProperty(SystemResource.HOST));
+```
+
