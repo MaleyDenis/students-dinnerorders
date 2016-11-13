@@ -29,6 +29,7 @@ public class MenuDAOTest {
     @Before
     public void setUp() throws Exception {
         menuDAO = new MenuDAO();
+
         menuItemDAO = new MenuItemDAO();
         date = new Timestamp((new Date()).getTime());
         menuItem1 = new MenuItem(null, Weekday.MONDAY, "rrrrr", new Double(6.7));
